@@ -7,9 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class Display {
     @Getter
     private DisplayHandler.Order order;
 
-    private FontRenderer ren = Minecraft.getMinecraft().fontRendererObj;
+    private FontRenderer ren = Minecraft.getMinecraft().fontRenderer;
 
     public Display() {
         lines = new ArrayList<>();
@@ -320,7 +320,7 @@ public class Display {
         float f1 = (float)(color >> 8 & 255) / 255.0F;
         float f2 = (float)(color & 255) / 255.0F;
         Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        BufferBuilder worldrenderer = tessellator.getBuffer();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);

@@ -17,6 +17,7 @@
 *.zip
 *.tar.gz
 *.rar
+*.iml
 
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
@@ -29,6 +30,8 @@ build/
 out/
 ct.js.ipr
 ct.js.iws
+ct.js1.12.2.ipr
+ct.js1.12.2.iws
 jsCT_api.iml
 jsCT_main.iml
 jsCT_test.iml
@@ -36,3 +39,4 @@ run/
 eclipse
 *.hprof
 jsCT.iml
+gradle.properties

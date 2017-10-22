@@ -38,7 +38,7 @@ public class WorldListener {
             shouldTriggerWorldLoad = false;
         }
 
-        if (event.type == RenderGameOverlayEvent.ElementType.TEXT) {
+        if (event.getType() == RenderGameOverlayEvent.ElementType.TEXT) {
             // render overlay trigger
             TriggerType.RENDER_OVERLAY.triggerAll();
 
@@ -59,7 +59,7 @@ public class WorldListener {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
-        if (Minecraft.getMinecraft().theWorld == null) return;
+        if (Minecraft.getMinecraft().world == null) return;
 
         TriggerType.TICK.triggerAll(ticksPassed);
         ticksPassed++;

@@ -34,7 +34,7 @@ public class Config {
 
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.modID.equals(Reference.MODID)) {
+        if (event.getModID().equals(Reference.MODID)) {
             saveConfig();
         }
     }

@@ -37,7 +37,7 @@ public class Gui extends GuiScreen {
      */
     public void close() {
         if (Minecraft.getMinecraft().currentScreen == this)
-            Minecraft.getMinecraft().thePlayer.closeScreen();
+            Minecraft.getMinecraft().player.closeScreen();
     }
 
     /**

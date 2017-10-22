@@ -3,14 +3,16 @@ package com.chattriggers.ctjs.utils;
 import com.chattriggers.ctjs.libs.ChatLib;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.util.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Message {
     @Getter
-    private IChatComponent chatMessage;
+    private ITextComponent chatMessage;
     private ArrayList<Object> messageParts;
     @Getter @Setter
     private int chatLineId;
@@ -47,16 +49,16 @@ public class Message {
     }
 
     private void parseMessages(Object... messages) {
-        chatMessage = new ChatComponentText("");
+        chatMessage = new TextComponentString("");
 
         for (Object message : messages) {
             if (message instanceof String) {
-                ChatComponentText cct = new ChatComponentText(ChatLib.addColor((String) message));
-                cct.setChatStyle(new ChatStyle().setParentStyle(null));
+                TextComponentString cct = new TextComponentString(ChatLib.addColor((String) message));
+                cct.setStyle(new Style().setParentStyle(null));
 
                 chatMessage.appendSibling(cct);
-            } else if (message instanceof IChatComponent) {
-                chatMessage.appendSibling((IChatComponent) message);
+            } else if (message instanceof ITextComponent) {
+                chatMessage.appendSibling((ITextComponent) message);
             }
         }
     }

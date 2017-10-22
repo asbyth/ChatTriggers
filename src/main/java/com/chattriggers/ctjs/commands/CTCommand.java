@@ -8,7 +8,8 @@ import com.chattriggers.ctjs.utils.console.Console;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextFormatting;
 
 import javax.script.ScriptEngine;
 import java.awt.*;
@@ -27,6 +28,7 @@ public class CTCommand extends CommandBase {
     }
 
     @Override
+    public String getName() {return getCommandName();}
     public String getCommandName() {
         return "chattriggers";
     }
@@ -37,16 +39,19 @@ public class CTCommand extends CommandBase {
     }
 
     @Override
+    public String getUsage(ICommandSender sender) {return getUsage(sender);}
     public String getCommandUsage(ICommandSender sender) {
         return "/ct <reload/files/console>";
     }
 
     @Override
+    public List<String> getAliases() {return getCommandAliases();}
     public List<String> getCommandAliases() {
         return Collections.singletonList("ct");
     }
 
     @Override
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {processCommand(sender, args);}
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         if (args.length > 0) {
             switch (args[0].toLowerCase()) {
@@ -55,7 +60,7 @@ public class CTCommand extends CommandBase {
                     TriggerType.WORLD_UNLOAD.triggerAll();
                     CTJS.getInstance().getConfig().loadConfig();
                     CTJS.getInstance().initMain(false);
-                    ChatLib.chat(EnumChatFormatting.RED + "Reloaded js files");
+                    ChatLib.chat(TextFormatting.RED + "Reloaded js files");
                     TriggerType.WORLD_LOAD.triggerAll();
                     break;
                 case("files"):
@@ -66,11 +71,11 @@ public class CTCommand extends CommandBase {
                     Console.clear();
                     break;
                 default:
-                    ChatLib.chat(EnumChatFormatting.RED + getCommandUsage(sender));
+                    ChatLib.chat(TextFormatting.RED + getCommandUsage(sender));
                     break;
             }
         } else {
-            ChatLib.chat(EnumChatFormatting.RED + getCommandUsage(sender));
+            ChatLib.chat(TextFormatting.RED + getCommandUsage(sender));
         }
     }
 
@@ -81,7 +86,7 @@ public class CTCommand extends CommandBase {
             Desktop.getDesktop().open(new File("./mods/ChatTriggers"));
         } catch (IOException exception) {
             Console.getConsole().printStackTrace(exception);
-            ChatLib.chat(EnumChatFormatting.RED + "Could not open file location");
+            ChatLib.chat(TextFormatting.RED + "Could not open file location");
         }
     }
 }

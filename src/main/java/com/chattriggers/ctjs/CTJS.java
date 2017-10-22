@@ -38,7 +38,6 @@ import java.util.List;
 @Mod(modid = Reference.MODID,
         name = Reference.MODNAME,
         version = Reference.MODVERSION,
-        guiFactory = "com.chattriggers.ctjs.utils.config.ConfigGuiFactory",
         clientSideOnly = true)
 public class CTJS {
     @Getter

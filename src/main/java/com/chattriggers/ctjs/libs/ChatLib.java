@@ -7,12 +7,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.event.HoverEvent;
-import net.minecraft.network.play.server.S02PacketChat;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.network.play.server.SPacketChat;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -33,12 +33,12 @@ public class ChatLib {
     public static void chat(String message, boolean recursive) {
         if (!isPlayer("[CHAT]: " + message)) return;
 
-        ChatComponentText cct = new ChatComponentText(addColor(message));
+        TextComponentString cct = new TextComponentString(addColor(message));
 
         if (recursive) {
-            Minecraft.getMinecraft().getNetHandler().handleChat(new S02PacketChat(cct, (byte) 0));
+            Minecraft.getMinecraft().getConnection().handleChat(new SPacketChat(cct));
         } else {
-            Minecraft.getMinecraft().thePlayer.addChatMessage(cct);
+            Minecraft.getMinecraft().player.sendMessage(cct);
         }
     }
 
@@ -63,9 +63,9 @@ public class ChatLib {
         }
 
         if (recursive) {
-            Minecraft.getMinecraft().getNetHandler().handleChat(new S02PacketChat(message.getChatMessage(), (byte) 0));
+            Minecraft.getMinecraft().getConnection().handleChat(new SPacketChat(message.getChatMessage()));
         } else {
-            Minecraft.getMinecraft().thePlayer.addChatMessage(message.getChatMessage());
+            Minecraft.getMinecraft().player.sendMessage(message.getChatMessage());
         }
     }
 
@@ -88,7 +88,7 @@ public class ChatLib {
     public static void chat(String message, int chatLineID) {
         if (!isPlayer("[CHAT]: " + message)) return;
 
-        ChatComponentText cct = new ChatComponentText(addColor(message));
+        TextComponentString cct = new TextComponentString(addColor(message));
         Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(cct, chatLineID);
     }
 
@@ -99,7 +99,7 @@ public class ChatLib {
     public static void say(String message) {
         if (!isPlayer("[SAY]: " + message)) return;
 
-        Minecraft.getMinecraft().thePlayer.sendChatMessage(message);
+        Minecraft.getMinecraft().player.sendChatMessage(message);
     }
 
     /**
@@ -109,14 +109,14 @@ public class ChatLib {
     public static void command(String command) {
         if (!isPlayer("[COMMAND]: /" + command)) return;
 
-        Minecraft.getMinecraft().thePlayer.sendChatMessage("/" + command);
+        Minecraft.getMinecraft().player.sendChatMessage("/" + command);
     }
 
     /**
      * Clear chat
      */
     public static void clearChat() {
-        Minecraft.getMinecraft().ingameGUI.getChatGUI().clearChatMessages();
+        Minecraft.getMinecraft().ingameGUI.getChatGUI().clearChatMessages(true);
     }
 
     /**
@@ -137,7 +137,7 @@ public class ChatLib {
      */
     public static String getChatBreak(String seperator) {
         StringBuilder stringBuilder = new StringBuilder();
-        FontRenderer fRenderer = Minecraft.getMinecraft().fontRendererObj;
+        FontRenderer fRenderer = Minecraft.getMinecraft().fontRenderer;
 
         while (fRenderer.getStringWidth(stringBuilder.toString()) < Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatWidth()) {
             stringBuilder.append(seperator);
@@ -173,7 +173,7 @@ public class ChatLib {
     public static String getCenteredText(String input) {
         boolean left = true;
         StringBuilder stringBuilder = new StringBuilder(removeFormatting(input));
-        FontRenderer fRenderer = Minecraft.getMinecraft().fontRendererObj;
+        FontRenderer fRenderer = Minecraft.getMinecraft().fontRenderer;
 
         if (fRenderer.getStringWidth(stringBuilder.toString()) > Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatWidth()) {
             return stringBuilder.toString();
@@ -212,7 +212,7 @@ public class ChatLib {
         List<ChatLine> chatLines = ReflectionHelper.getPrivateValue(GuiNewChat.class, Minecraft.getMinecraft().ingameGUI.getChatGUI(),
                 "chatLines", "field_146252_h");
 
-        ChatComponentText cct = new ChatComponentText(addColor(toReplace));
+        TextComponentString cct = new TextComponentString(addColor(toReplace));
 
         for (ChatLine chatLine : drawnChatLines) {
             if (removeFormatting(chatLine.getChatComponent().getUnformattedText()).equals(chatMessage)) {
@@ -252,16 +252,16 @@ public class ChatLib {
      * @param hoverText the text to show when hovered over
      * @return the chat component created
      */
-    public static IChatComponent clickable(String text, String action, String value, String hoverText) {
-        ChatComponentText cct = new ChatComponentText(addColor(text));
+    public static ITextComponent clickable(String text, String action, String value, String hoverText) {
+        TextComponentString cct = new TextComponentString(addColor(text));
 
-        cct.setChatStyle(new ChatStyle().setChatClickEvent(new ClickEvent(
+        cct.setStyle(new Style().setClickEvent(new ClickEvent(
                 ClickEvent.Action.getValueByCanonicalName(action), value
         )));
 
         if (hoverText != null) {
-            cct.getChatStyle().setChatHoverEvent(new HoverEvent(
-                    HoverEvent.Action.SHOW_TEXT, new ChatComponentText(addColor(hoverText))
+            cct.getStyle().setHoverEvent(new HoverEvent(
+                    HoverEvent.Action.SHOW_TEXT, new TextComponentString(addColor(hoverText))
             ));
         }
 
@@ -275,7 +275,7 @@ public class ChatLib {
      * @param value the value to perform the action with
      * @return the chat component created
      */
-    public static IChatComponent clickable(String text, String action, String value) {
+    public static ITextComponent clickable(String text, String action, String value) {
         return clickable(text, action, value, null);
     }
 
@@ -285,11 +285,11 @@ public class ChatLib {
      * @param hover the text to show when hovered over
      * @return the chat component created
      */
-    public static IChatComponent hover(String text, String hover) {
-        ChatComponentText cct = new ChatComponentText(addColor(text));
+    public static ITextComponent hover(String text, String hover) {
+        TextComponentString cct = new TextComponentString(addColor(text));
 
-        cct.setChatStyle(new ChatStyle().setChatHoverEvent(new HoverEvent(
-                HoverEvent.Action.SHOW_TEXT, new ChatComponentText(addColor(hover))
+        cct.setStyle(new Style().setHoverEvent(new HoverEvent(
+                HoverEvent.Action.SHOW_TEXT, new TextComponentString(addColor(hover))
         )));
 
         return cct;
@@ -304,9 +304,9 @@ public class ChatLib {
      */
     public static String getChatMessage(ClientChatReceivedEvent event, boolean formatted) {
         if (formatted) {
-            return event.message.getFormattedText().replace('\u00A7', '&');
+            return event.getMessage().getFormattedText().replace('\u00A7', '&');
         } else {
-            return event.message.getUnformattedText();
+            return event.getMessage().getUnformattedText();
         }
     }
 
@@ -320,7 +320,7 @@ public class ChatLib {
     }
 
     private Boolean isPlayer(String out) {
-        if (Minecraft.getMinecraft().thePlayer == null) {
+        if (Minecraft.getMinecraft().player == null) {
             CTJS.getInstance().getConsole().out.println(out);
             return false;
         }

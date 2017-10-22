@@ -2,6 +2,8 @@ package com.chattriggers.ctjs.libs;
 
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -15,7 +17,8 @@ public class WorldLib {
      * @param pitch the pitch of the sound
      */
     public static void playSound(String name, float volume, float pitch) {
-        Minecraft.getMinecraft().thePlayer.playSound(name, volume, pitch);
+        ResourceLocation location = new ResourceLocation("minecraft", name);
+        Minecraft.getMinecraft().player.playSound(SoundEvent.REGISTRY.getObject(location), volume, pitch);
     }
 
     /**

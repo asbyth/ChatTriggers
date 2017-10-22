@@ -32,7 +32,7 @@ public class OnSoundPlayTrigger extends OnTrigger {
 
         PlaySoundEvent event = (PlaySoundEvent) args[0];
 
-        if (soundNameCriteria != null && !event.name.equalsIgnoreCase(soundNameCriteria)) {
+        if (soundNameCriteria != null && !event.getName().equalsIgnoreCase(soundNameCriteria)) {
             return;
         }
 
@@ -40,7 +40,7 @@ public class OnSoundPlayTrigger extends OnTrigger {
             Object returned = CTJS.getInstance().getInvocableEngine().invokeFunction(methodName, event);
 
             if (returned.equals(TriggerResult.CANCEL)) {
-                event.result = null;
+                event.setResult(null);
             }
         } catch (ScriptException | NoSuchMethodException e) {
             Console.getConsole().printStackTrace(e);

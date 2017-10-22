@@ -6,8 +6,8 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -61,7 +61,7 @@ public class MinecraftVars {
      * @return The player's HP.
      */
     public static Float getPlayerHP() {
-        return mc.thePlayer == null ? null : mc.thePlayer.getHealth();
+        return mc.player == null ? null : mc.player.getHealth();
     }
 
     /**
@@ -70,7 +70,7 @@ public class MinecraftVars {
      * @return The player's hunger level.
      */
     public static Integer getPlayerHunger() {
-        return mc.thePlayer == null ? null : mc.thePlayer.getFoodStats().getFoodLevel();
+        return mc.player == null ? null : mc.player.getFoodStats().getFoodLevel();
     }
 
     /**
@@ -79,7 +79,7 @@ public class MinecraftVars {
      * @return The player's saturation level.
      */
     public static Float getPlayerSaturation() {
-        return mc.thePlayer == null ? null : mc.thePlayer.getFoodStats().getSaturationLevel();
+        return mc.player == null ? null : mc.player.getFoodStats().getSaturationLevel();
     }
 
     /**
@@ -88,7 +88,7 @@ public class MinecraftVars {
      * @return The player's armor points.
      */
     public static Integer getPlayerArmorPoints() {
-        return mc.thePlayer == null ? null : mc.thePlayer.getTotalArmorValue();
+        return mc.player == null ? null : mc.player.getTotalArmorValue();
     }
 
     /**
@@ -101,7 +101,7 @@ public class MinecraftVars {
      * @return An integer corresponding to the player's air level.
      */
     public static Integer getPlayerAirLevel() {
-        return mc.thePlayer == null ? null : mc.thePlayer.getAir();
+        return mc.player == null ? null : mc.player.getAir();
     }
 
     /**
@@ -110,7 +110,7 @@ public class MinecraftVars {
      * @return The player's XP level.
      */
     public static Integer getXPLevel() {
-        return mc.thePlayer == null ? null : mc.thePlayer.experienceLevel;
+        return mc.player == null ? null : mc.player.experienceLevel;
     }
 
     /**
@@ -119,7 +119,7 @@ public class MinecraftVars {
      * @return The player's xp progress.
      */
     public static Float getXPProgress() {
-        return mc.thePlayer == null ? null : mc.thePlayer.experience;
+        return mc.player == null ? null : mc.player.experience;
     }
 
     /**
@@ -128,13 +128,13 @@ public class MinecraftVars {
      * @return The biome the player is in.
      */
     public static String getPlayerBiome() {
-        if (mc.thePlayer == null) {
+        if (mc.player == null) {
             return null;
         }
-        Chunk chunk = mc.theWorld.getChunkFromBlockCoords(mc.thePlayer.getPosition());
-        BiomeGenBase biome = chunk.getBiome(mc.thePlayer.getPosition(), mc.theWorld.getWorldChunkManager());
+        Chunk chunk = mc.world.getChunkFromBlockCoords(mc.player.getPosition());
+        Biome biome = chunk.getBiome(mc.player.getPosition(), mc.world.getBiomeProvider());
 
-        return biome.biomeName;
+        return biome.getBiomeName();
     }
 
     /**
@@ -143,9 +143,9 @@ public class MinecraftVars {
      * @return The light level at the player's current position.
      */
     public static Integer getPlayerLightLevel() {
-        if (mc.thePlayer == null || mc.theWorld == null) return null;
+        if (mc.player == null || mc.world == null) return null;
 
-        return mc.theWorld.getLight(mc.thePlayer.getPosition());
+        return mc.world.getLight(mc.player.getPosition());
     }
 
     /**
@@ -172,7 +172,7 @@ public class MinecraftVars {
      * @return True if the player is sneaking, false otherwise.
      */
     public static boolean isSneaking() {
-        return mc.thePlayer != null && mc.thePlayer.isSneaking();
+        return mc.player != null && mc.player.isSneaking();
     }
 
     /**
@@ -181,7 +181,7 @@ public class MinecraftVars {
      * @return True if the player is sprinting, false otherwise.
      */
     public static boolean isSprinting() {
-        return mc.thePlayer != null && mc.thePlayer.isSprinting();
+        return mc.player != null && mc.player.isSprinting();
     }
 
     /**
@@ -227,15 +227,15 @@ public class MinecraftVars {
      *          is in a single player world.
      */
     public static Long getPing() {
-        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        EntityPlayer player = Minecraft.getMinecraft().player;
 
         if (player == null || mc.isSingleplayer()) {
             return 5L;
         }
 
-        if(Minecraft.getMinecraft().getNetHandler().getPlayerInfo(UUID.fromString(Minecraft.getMinecraft().thePlayer.getGameProfile().getId().toString())) != null) {
-            return (long) Minecraft.getMinecraft().getNetHandler().getPlayerInfo(
-                    UUID.fromString(Minecraft.getMinecraft().thePlayer.getGameProfile().getId().toString())
+        if(Minecraft.getMinecraft().getConnection().getPlayerInfo(UUID.fromString(Minecraft.getMinecraft().player.getGameProfile().getId().toString())) != null) {
+            return (long) Minecraft.getMinecraft().getConnection().getPlayerInfo(
+                    UUID.fromString(Minecraft.getMinecraft().player.getGameProfile().getId().toString())
             ).getResponseTime();
         }
 
@@ -276,11 +276,11 @@ public class MinecraftVars {
      */
     public static ArrayList<String> getTabList() {
         if (mc.isSingleplayer()) return new ArrayList<>(Collections.singletonList(getPlayerName()));
-        if (mc.getNetHandler() == null || mc.getNetHandler().getPlayerInfoMap() == null) return null;
+        if (mc.getConnection() == null || mc.getConnection().getPlayerInfoMap() == null) return null;
 
         ArrayList<String> playerNames = new ArrayList<>();
 
-        for (NetworkPlayerInfo playerInfo : mc.getNetHandler().getPlayerInfoMap()) {
+        for (NetworkPlayerInfo playerInfo : mc.getConnection().getPlayerInfoMap()) {
             playerNames.add(playerInfo.getGameProfile().getName());
         }
 
@@ -293,7 +293,7 @@ public class MinecraftVars {
      * @return The player's X position.
      */
     public static Double getPlayerPosX() {
-        return mc.thePlayer == null ? null : mc.thePlayer.posX;
+        return mc.player == null ? null : mc.player.posX;
     }
 
     /**
@@ -302,7 +302,7 @@ public class MinecraftVars {
      * @return The player's Y position.
      */
     public static Double getPlayerPosY() {
-        return mc.thePlayer == null ? null : mc.thePlayer.posY;
+        return mc.player == null ? null : mc.player.posY;
     }
 
     /**
@@ -311,7 +311,7 @@ public class MinecraftVars {
      * @return The player's Z position.
      */
     public static Double getPlayerPosZ() {
-        return mc.thePlayer == null ? null : mc.thePlayer.posZ;
+        return mc.player == null ? null : mc.player.posZ;
     }
 
     /**
@@ -320,7 +320,7 @@ public class MinecraftVars {
      * @return The player's X motion.
      */
     public static Double getPlayerMotionX() {
-        return mc.thePlayer == null ? null : mc.thePlayer.motionX;
+        return mc.player == null ? null : mc.player.motionX;
     }
 
     /**
@@ -329,7 +329,7 @@ public class MinecraftVars {
      * @return The player's Y motion.
      */
     public static Double getPlayerMotionY() {
-        return mc.thePlayer == null ? null : mc.thePlayer.motionY;
+        return mc.player == null ? null : mc.player.motionY;
     }
 
     /**
@@ -338,7 +338,7 @@ public class MinecraftVars {
      * @return The player's Z motion.
      */
     public static Double getPlayerMotionZ() {
-        return mc.thePlayer == null ? null : mc.thePlayer.motionZ;
+        return mc.player == null ? null : mc.player.motionZ;
     }
 
     /**
@@ -347,7 +347,7 @@ public class MinecraftVars {
      * @return The player's camera pitch.
      */
     public static Float getPlayerPitch() {
-        return mc.thePlayer == null ? null : MathHelper.wrapAngleTo180_float(mc.thePlayer.rotationPitch);
+        return mc.player == null ? null : MathHelper.wrapDegrees(mc.player.rotationPitch);
     }
 
     /**
@@ -356,7 +356,7 @@ public class MinecraftVars {
      * @return The player's camera yaw.
      */
     public static Float getPlayerYaw() {
-        return mc.thePlayer == null ? null : MathHelper.wrapAngleTo180_float(mc.thePlayer.rotationYaw);
+        return mc.player == null ? null : MathHelper.wrapDegrees(mc.player.rotationYaw);
     }
 
     /**
@@ -365,7 +365,7 @@ public class MinecraftVars {
      * @return The direction the player is facing, one of the four cardinal directions.
      */
     public static String getPlayerFacing() {
-        if (mc.thePlayer == null) {
+        if (mc.player == null) {
             return null;
         }
 

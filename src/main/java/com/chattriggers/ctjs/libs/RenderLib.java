@@ -6,7 +6,6 @@ import lombok.experimental.UtilityClass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
@@ -48,7 +47,7 @@ public class RenderLib {
      * @return the width of the text
      */
     public static int getStringWidth(String text) {
-        return Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
+        return Minecraft.getMinecraft().fontRenderer.getStringWidth(text);
     }
 
     /**
@@ -59,7 +58,7 @@ public class RenderLib {
      * @param color the color
      */
     public static void drawString(String text, float x, float y, int color) {
-        Minecraft.getMinecraft().fontRendererObj.drawString(text, x, y, color, false);
+        Minecraft.getMinecraft().fontRenderer.drawString(text, x, y, color, false);
     }
 
     /**
@@ -70,7 +69,7 @@ public class RenderLib {
      * @param color the color
      */
     public static void drawStringWithShadow(String text, float x, float y, int color) {
-        Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(text, x, y, color);
+        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(text, x, y, color);
     }
 
     /**
@@ -199,7 +198,7 @@ public class RenderLib {
 
         GlStateManager.pushMatrix();
         Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        BufferBuilder worldrenderer = tessellator.getBuffer();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
@@ -248,7 +247,7 @@ public class RenderLib {
             GlStateManager.pushMatrix();
 
             Tessellator tessellator = Tessellator.getInstance();
-            WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+            BufferBuilder worldrenderer = tessellator.getBuffer();
 
             GlStateManager.enableBlend();
             GlStateManager.disableTexture2D();
@@ -285,7 +284,7 @@ public class RenderLib {
         GlStateManager.pushMatrix();
 
         Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        BufferBuilder worldrenderer = tessellator.getBuffer();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
@@ -410,7 +409,7 @@ public class RenderLib {
     public static void drawPlayerOnScreen(int posX, int posY, int scale, boolean rotate) {
         float mouseX = -30;
         float mouseY = 0;
-        EntityLivingBase ent = Minecraft.getMinecraft().thePlayer;
+        EntityLivingBase ent = Minecraft.getMinecraft().player;
 
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
@@ -437,7 +436,7 @@ public class RenderLib {
         RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
         rendermanager.setPlayerViewY(180.0F);
         rendermanager.setRenderShadow(false);
-        rendermanager.renderEntityWithPosYaw(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+        rendermanager.renderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
         rendermanager.setRenderShadow(true);
         ent.renderYawOffset = f;
         ent.rotationYaw = f1;
