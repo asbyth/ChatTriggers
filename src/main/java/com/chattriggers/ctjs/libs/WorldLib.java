@@ -18,7 +18,7 @@ public class WorldLib {
      */
     public static void playSound(String name, float volume, float pitch) {
         ResourceLocation location = new ResourceLocation("minecraft", name);
-        Minecraft.getMinecraft().player.playSound(SoundEvent.REGISTRY.getObject(location), volume, pitch);
+        MinecraftVars.getPlayer().playSound(SoundEvent.REGISTRY.getObject(location), volume, pitch);
     }
 
     /**

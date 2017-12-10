@@ -1,17 +1,18 @@
 package com.chattriggers.ctjs;
 
 import com.chattriggers.ctjs.commands.CTCommand;
+import com.chattriggers.ctjs.handlers.GuiHandler;
 import com.chattriggers.ctjs.libs.MinecraftVars;
 import com.chattriggers.ctjs.listeners.ChatListener;
+import com.chattriggers.ctjs.listeners.ClientListener;
 import com.chattriggers.ctjs.listeners.WorldListener;
-import com.chattriggers.ctjs.loader.ScriptLoader;
-import com.chattriggers.ctjs.objects.DisplayHandler;
-import com.chattriggers.ctjs.objects.KeyBind;
+import com.chattriggers.ctjs.loader.ModuleManager;
+import com.chattriggers.ctjs.handlers.DisplayHandler;
+import com.chattriggers.ctjs.objects.CPS;
 import com.chattriggers.ctjs.triggers.TriggerType;
-import com.chattriggers.ctjs.utils.capes.DLCape;
+import com.chattriggers.ctjs.utils.ImagesPack;
 import com.chattriggers.ctjs.utils.capes.LayerCape;
 import com.chattriggers.ctjs.utils.config.Config;
-import com.chattriggers.ctjs.utils.ImagesPack;
 import com.chattriggers.ctjs.utils.console.Console;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,9 +29,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -44,13 +42,9 @@ public class CTJS {
     private static CTJS instance;
 
     @Getter @Setter
-    private ScriptEngine scriptEngine;
-    @Getter @Setter
-    private Invocable invocableEngine;
-    @Getter @Setter
-    private ScriptLoader scriptLoader;
-    @Getter @Setter
     private DisplayHandler displayHandler;
+    @Getter
+    private GuiHandler guiHandler;
     @Getter
     private ChatListener chatListener;
     @Getter
@@ -59,23 +53,29 @@ public class CTJS {
     private File assetsDir;
     @Getter
     private Console console;
-
     @Getter
     private Config config;
+    @Getter
+    private ModuleManager moduleManager;
+    @Getter
+    private CPS cps;
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
         instance = this;
 
         this.displayHandler = new DisplayHandler();
+        this.guiHandler = new GuiHandler();
         this.chatListener = new ChatListener();
         this.console = new Console();
-
-        initMain(true);
+        this.moduleManager = new ModuleManager();
+        this.cps = new CPS();
 
         registerListeners();
 
         registerHooks();
+
+        moduleManager.load();
     }
 
     @EventHandler
@@ -83,8 +83,6 @@ public class CTJS {
         this.injectResourcePack(event.getModConfigurationDirectory().toString());
 
         this.config = new Config();
-        this.config.setConfigFile(new File(event.getModConfigurationDirectory().toString(), "ChatTriggers.cfg"));
-        this.config.loadConfig();
     }
 
     @EventHandler
@@ -92,27 +90,6 @@ public class CTJS {
         for (RenderPlayer render : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
             render.addLayer(new LayerCape(render));
         }
-    }
-
-    public void initMain(boolean firstTime) {
-        this.scriptEngine = new ScriptEngineManager(null).getEngineByName("nashorn");
-        this.invocableEngine = ((Invocable) scriptEngine);
-
-        if (!firstTime) {
-            MinecraftForge.EVENT_BUS.unregister(scriptLoader);
-            KeyBind.clearKeyBinds();
-            TriggerType.clearAllTriggers();
-        } else {
-            DLCape.getCapes();
-        }
-
-        this.displayHandler.clearDisplays();
-
-        this.console.clearConsole();
-        this.scriptLoader = new ScriptLoader();
-        MinecraftForge.EVENT_BUS.register(scriptLoader);
-
-        System.gc();
     }
 
     private void injectResourcePack(String path) {
@@ -133,9 +110,11 @@ public class CTJS {
 
     private void registerListeners() {
         MinecraftForge.EVENT_BUS.register(this.displayHandler);
+        MinecraftForge.EVENT_BUS.register(this.guiHandler);
         MinecraftForge.EVENT_BUS.register(new WorldListener());
-        MinecraftForge.EVENT_BUS.register(new ChatListener());
-        MinecraftForge.EVENT_BUS.register(this.config);
+        MinecraftForge.EVENT_BUS.register(new ClientListener());
+        MinecraftForge.EVENT_BUS.register(this.chatListener);
+        MinecraftForge.EVENT_BUS.register(this.cps);
     }
 
     private void registerHooks() {
@@ -145,6 +124,8 @@ public class CTJS {
         ClientRegistry.registerKeyBinding(MinecraftVars.keyDownArrow);
 
         ClientCommandHandler.instance.registerCommand(new CTCommand());
+
+        Runtime.getRuntime().addShutdownHook(new Thread(TriggerType.GAME_UNLOAD::triggerAll));
     }
 }
 

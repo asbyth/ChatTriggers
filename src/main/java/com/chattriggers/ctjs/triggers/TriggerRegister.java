@@ -9,7 +9,7 @@ public class TriggerRegister {
      * Available modifications:<br>
      * {@link OnChatTrigger#setChatCriteria(String)} Sets the chat criteria<br>
      * {@link OnChatTrigger#setParameter(String)} Sets the chat parameter<br>
-     * {@link OnTrigger#setPriority(Priority)} Sets the priority<br>
+     * {@link OnTrigger#setPriority(OnTrigger.Priority)} Sets the priority<br>
      * @param methodName the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
@@ -20,7 +20,7 @@ public class TriggerRegister {
     /**
      * Registers a new world load trigger.<br>
      * Available modifications:<br>
-     * {@link OnTrigger#setPriority(Priority)} Sets the priority<br>
+     * {@link OnTrigger#setPriority(OnTrigger.Priority)} Sets the priority<br>
      * @param methodName the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
@@ -31,7 +31,7 @@ public class TriggerRegister {
     /**
      * Registers a new world unload trigger.<br>
      * Available modifications:<br>
-     * {@link OnTrigger#setPriority(Priority)} Sets the priority<br>
+     * {@link OnTrigger#setPriority(OnTrigger.Priority)} Sets the priority<br>
      * @param methodName the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
@@ -40,10 +40,21 @@ public class TriggerRegister {
     }
 
     /**
+     * Registers a new clicked trigger.<br>
+     * Available modifications:<br>
+     * {@link OnTrigger#setPriority(OnTrigger.Priority)} Sets the priority<br>
+     * @param methodName the name of the method to callback when the event is fired
+     * @return the trigger for additional modification
+     */
+    public static OnRegularTrigger registerClicked(String methodName) {
+        return new OnRegularTrigger(methodName, TriggerType.CLICKED);
+    }
+
+    /**
      * Registers a new sound play trigger.<br>
      * Available modifications:<br>
      * {@link OnSoundPlayTrigger#setSoundNameCriteria(String)} Sets the sound name criteria<br>
-     * {@link OnTrigger#setPriority(Priority)} Sets the priority<br>
+     * {@link OnTrigger#setPriority(OnTrigger.Priority)} Sets the priority<br>
      * @param methodName the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
@@ -54,7 +65,7 @@ public class TriggerRegister {
     /**
      * Registers a new tick trigger.<br>
      * Available modifications:<br>
-     * {@link OnTrigger#setPriority(Priority)} Sets the priority<br>
+     * {@link OnTrigger#setPriority(OnTrigger.Priority)} Sets the priority<br>
      * @param methodName the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
@@ -66,7 +77,7 @@ public class TriggerRegister {
      * Registers a new step trigger.<br>
      * Available modifications:<br>
      * {@link OnStepTrigger#setFps(long)} Sets the fps<br>
-     * {@link OnTrigger#setPriority(Priority)} Sets the priority<br>
+     * {@link OnTrigger#setPriority(OnTrigger.Priority)} Sets the priority<br>
      * @param methodName the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
@@ -77,12 +88,34 @@ public class TriggerRegister {
     /**
      * Registers a new render overlay trigger.<br>
      * Available modifications:<br>
-     * {@link OnTrigger#setPriority(Priority)} Sets the priority<br>
+     * {@link OnTrigger#setPriority(OnTrigger.Priority)} Sets the priority<br>
      * @param methodName the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
     public static OnRegularTrigger registerRenderOverlay(String methodName) {
         return new OnRegularTrigger(methodName, TriggerType.RENDER_OVERLAY);
+    }
+
+    /**
+     * Registers a new game load trigger.<br>
+     * Available modifications:<br>
+     * {@link OnTrigger#setPriority(OnTrigger.Priority)} Sets the priority<br>
+     * @param methodName the name of the method to callback when the event is fired
+     * @return the trigger for additional modification
+     */
+    public static OnRegularTrigger registerGameLoad(String methodName) {
+        return new OnRegularTrigger(methodName, TriggerType.GAME_LOAD);
+    }
+
+    /**
+     * Registers a new game unload trigger.<br>
+     * Available modifications:<br>
+     * {@link OnTrigger#setPriority(OnTrigger.Priority)} Sets the priority<br>
+     * @param methodName the name of the method to callback when the event is fired
+     * @return the trigger for additional modification
+     */
+    public static OnRegularTrigger registerGameUnload(String methodName) {
+        return new OnRegularTrigger(methodName, TriggerType.GAME_UNLOAD);
     }
 
     /**

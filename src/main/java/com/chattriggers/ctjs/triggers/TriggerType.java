@@ -1,5 +1,6 @@
 package com.chattriggers.ctjs.triggers;
 
+import com.chattriggers.ctjs.CTJS;
 import com.chattriggers.ctjs.utils.console.Console;
 
 import java.util.ArrayList;
@@ -7,7 +8,14 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public enum TriggerType {
-    CHAT, WORLD_LOAD, SOUND_PLAY, TICK, STEP, RENDER_OVERLAY, WORLD_UNLOAD, COMMAND, OTHER;
+    // client
+    CHAT, TICK, STEP, RENDER_OVERLAY, GAME_UNLOAD, GAME_LOAD, CLICKED,
+
+    // world
+    SOUND_PLAY, WORLD_LOAD, WORLD_UNLOAD,
+
+    // misc
+    COMMAND, OTHER;
 
     private Comparator<OnTrigger> triggerComparator = (o1, o2) -> {
 
@@ -43,6 +51,8 @@ public enum TriggerType {
     }
 
     public void triggerAll(Object... args) {
+        if (CTJS.getInstance().getModuleManager().isLoading()) return;
+
         ArrayList<OnTrigger> triggersCopy = new ArrayList<>(triggers.size());
 
         while (!triggers.isEmpty()){

@@ -16,7 +16,7 @@ public class FileLib {
      */
     public static void write(String importName, String fileName, String toWrite) {
         try {
-            FileUtils.write(new File("./mods/ChatTriggers/Imports/" + importName + "/" + fileName), toWrite);
+            FileUtils.write(new File("./mods/ChatTriggers/modules/" + importName + "/" + fileName), toWrite);
         } catch (IOException exception) {
             Console.getConsole().printStackTrace(exception);
         }
@@ -30,8 +30,8 @@ public class FileLib {
      */
     public static String read(String importName, String fileName) {
         try {
-            File file = new File("./mods/ChatTriggers/Imports/" + importName + "/" + fileName);
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            File file = new File("./mods/ChatTriggers/modules/" + importName + "/" + fileName);
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF8"));
 
             if (!file.exists() || br.readLine() == null) {
                 br.close();

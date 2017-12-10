@@ -1,0 +1,93 @@
+package com.chattriggers.ctjs.loader;
+
+import com.chattriggers.ctjs.CTJS;
+import com.chattriggers.ctjs.libs.ChatLib;
+import com.chattriggers.ctjs.modules.Module;
+import com.chattriggers.ctjs.objects.KeyBind;
+import com.chattriggers.ctjs.triggers.TriggerType;
+import com.chattriggers.ctjs.utils.capes.DLCape;
+import lombok.Getter;
+import net.minecraftforge.common.MinecraftForge;
+
+import javax.script.ScriptException;
+import java.io.File;
+import java.util.ArrayList;
+
+public class ModuleManager {
+    private ArrayList<ScriptLoader> scriptLoaders;
+    @Getter
+    private boolean isLoading;
+
+    public ModuleManager() {
+        this.scriptLoaders = new ArrayList<>();
+
+        DLCape.getCapes();
+    }
+
+    public void load() {
+        this.isLoading = true;
+        scriptLoaders.add(new JSScriptLoader());
+
+        for (ScriptLoader sl : scriptLoaders) {
+            sl.preLoad();
+        }
+
+        for (ScriptLoader sl : scriptLoaders) {
+            sl.loadModules();
+        }
+
+        for (ScriptLoader sl : scriptLoaders) {
+            sl.postLoad();
+        }
+
+
+        System.gc();
+        this.isLoading = false;
+
+        TriggerType.GAME_LOAD.triggerAll();
+    }
+
+    public void unload() {
+        for (ScriptLoader sl : scriptLoaders) {
+            MinecraftForge.EVENT_BUS.unregister(sl);
+        }
+
+        scriptLoaders.clear();
+
+        KeyBind.clearKeyBinds();
+        TriggerType.clearAllTriggers();
+        CTJS.getInstance().getDisplayHandler().clearDisplays();
+        CTJS.getInstance().getConsole().clearConsole();
+    }
+
+    public ArrayList<Module> getModules() {
+        ArrayList<Module> modules = new ArrayList<>();
+
+        for (ScriptLoader sl : scriptLoaders) {
+            modules.addAll(sl.loadModules());
+        }
+
+        return modules;
+    }
+
+    public void invokeFunction(String name, Object... args) throws ScriptException, NoSuchMethodException {
+        for (ScriptLoader sl : scriptLoaders) {
+            sl.getInvocableEngine().invokeFunction(name, args);
+        }
+    }
+
+    public Object eval(String script) throws ScriptException {
+        //TODO: Make this elegant, I'm not sure yet how to.
+        return scriptLoaders.get(0).getScriptEngine().eval(script);
+    }
+
+    public void importModule(String name) {
+        new Thread(() -> {
+            JSScriptLoader scriptLoader = (JSScriptLoader) scriptLoaders.get(0);
+            if(scriptLoader.downloadModule(name,true)) {
+                    scriptLoader.loadModule(new File(scriptLoader.modulesDir, name), false);
+                    ChatLib.chat("&6Successfully imported " + name + "!");
+                }
+        }).start();
+    }
+}

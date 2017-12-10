@@ -1,11 +1,10 @@
 package com.chattriggers.ctjs.triggers;
 
 import lombok.Getter;
-import lombok.Setter;
 
 public abstract class OnTrigger {
     protected String methodName;
-    @Getter @Setter
+    @Getter
     protected Priority priority;
     @Getter
     protected TriggerType type;
@@ -59,5 +58,10 @@ public abstract class OnTrigger {
 
     public enum TriggerResult {
         CANCEL
+    }
+
+    public enum Priority {
+        //LOWEST IS RAN LAST
+        LOWEST, LOW, NORMAL, HIGH, HIGHEST
     }
 }

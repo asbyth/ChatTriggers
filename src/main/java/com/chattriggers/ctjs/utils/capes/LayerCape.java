@@ -1,6 +1,5 @@
 package com.chattriggers.ctjs.utils.capes;
 
-import com.chattriggers.ctjs.CTJS;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -67,7 +66,6 @@ public class LayerCape implements LayerRenderer<AbstractClientPlayer> {
     }
 
     public void doRenderLayer(AbstractClientPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-        if (!CTJS.getInstance().getConfig().getShowCapes()) return;
         if (!entitylivingbaseIn.hasPlayerInfo()) return;
         if (entitylivingbaseIn.isInvisible()) return;
         if (!entitylivingbaseIn.isWearing(EnumPlayerModelParts.CAPE)) return;

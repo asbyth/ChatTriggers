@@ -1,13 +1,14 @@
 package com.chattriggers.ctjs.libs;
 
 import com.chattriggers.ctjs.CTJS;
-import com.chattriggers.ctjs.utils.Message;
+import com.chattriggers.ctjs.objects.Message;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.network.play.server.SPacketChat;
+import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
@@ -36,9 +37,10 @@ public class ChatLib {
         TextComponentString cct = new TextComponentString(addColor(message));
 
         if (recursive) {
-            Minecraft.getMinecraft().getConnection().handleChat(new SPacketChat(cct));
+            MinecraftVars.getConnection().handleChat(new SPacketChat(cct, ChatType.CHAT));
         } else {
-            Minecraft.getMinecraft().player.sendMessage(cct);
+            MinecraftVars.getPlayer().sendMessage(cct);
+            CTJS.getInstance().getChatListener().addMessageToChatHistory(cct.getFormattedText().replace('\u00A7', '&'));
         }
     }
 
@@ -63,9 +65,9 @@ public class ChatLib {
         }
 
         if (recursive) {
-            Minecraft.getMinecraft().getConnection().handleChat(new SPacketChat(message.getChatMessage()));
+            MinecraftVars.getConnection().handleChat(new SPacketChat(message.getChatMessage(), ChatType.CHAT));
         } else {
-            Minecraft.getMinecraft().player.sendMessage(message.getChatMessage());
+            MinecraftVars.getPlayer().sendMessage(message.getChatMessage());
         }
     }
 
@@ -99,7 +101,7 @@ public class ChatLib {
     public static void say(String message) {
         if (!isPlayer("[SAY]: " + message)) return;
 
-        Minecraft.getMinecraft().player.sendChatMessage(message);
+        MinecraftVars.getPlayer().sendChatMessage(message);
     }
 
     /**
@@ -109,7 +111,7 @@ public class ChatLib {
     public static void command(String command) {
         if (!isPlayer("[COMMAND]: /" + command)) return;
 
-        Minecraft.getMinecraft().player.sendChatMessage("/" + command);
+        MinecraftVars.getPlayer().sendChatMessage("/" + command);
     }
 
     /**
@@ -137,13 +139,21 @@ public class ChatLib {
      */
     public static String getChatBreak(String seperator) {
         StringBuilder stringBuilder = new StringBuilder();
-        FontRenderer fRenderer = Minecraft.getMinecraft().fontRenderer;
+        FontRenderer fRenderer = RenderLib.getFontRenderer();
 
         while (fRenderer.getStringWidth(stringBuilder.toString()) < Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatWidth()) {
             stringBuilder.append(seperator);
         }
 
         return stringBuilder.deleteCharAt(stringBuilder.length() - 1).toString();
+    }
+
+    /**
+     * Gets the width of minecraft's chat
+     * @return the width of chat
+     */
+    public static int getChatWidth() {
+        return Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatWidth();
     }
 
     /**
@@ -173,7 +183,7 @@ public class ChatLib {
     public static String getCenteredText(String input) {
         boolean left = true;
         StringBuilder stringBuilder = new StringBuilder(removeFormatting(input));
-        FontRenderer fRenderer = Minecraft.getMinecraft().fontRenderer;
+        FontRenderer fRenderer = RenderLib.getFontRenderer();
 
         if (fRenderer.getStringWidth(stringBuilder.toString()) > Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatWidth()) {
             return stringBuilder.toString();
@@ -189,7 +199,7 @@ public class ChatLib {
             }
         }
 
-        return stringBuilder.deleteCharAt(left ? 0 : stringBuilder.length() - 1).toString().replaceAll(removeFormatting(input), input);
+        return stringBuilder.deleteCharAt(left ? 0 : stringBuilder.length() - 1).toString().replace(removeFormatting(input), input);
     }
 
     /**
@@ -304,9 +314,9 @@ public class ChatLib {
      */
     public static String getChatMessage(ClientChatReceivedEvent event, boolean formatted) {
         if (formatted) {
-            return event.getMessage().getFormattedText().replace('\u00A7', '&');
+            return EventLib.getMessage(event).getFormattedText().replace('\u00A7', '&');
         } else {
-            return event.getMessage().getUnformattedText();
+            return EventLib.getMessage(event).getUnformattedText();
         }
     }
 
@@ -320,7 +330,7 @@ public class ChatLib {
     }
 
     private Boolean isPlayer(String out) {
-        if (Minecraft.getMinecraft().player == null) {
+        if (MinecraftVars.getPlayer() == null) {
             CTJS.getInstance().getConsole().out.println(out);
             return false;
         }

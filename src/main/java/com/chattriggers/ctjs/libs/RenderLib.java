@@ -4,6 +4,7 @@ import com.chattriggers.ctjs.CTJS;
 import com.chattriggers.ctjs.utils.console.Console;
 import lombok.experimental.UtilityClass;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -22,24 +23,77 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 @UtilityClass
 @SideOnly(Side.CLIENT)
 public class RenderLib {
-
+    public static final int BLACK = color(0, 0, 0, 255);
+    public static final int DARK_BLUE = color(0, 0, 190, 255);
+    public static final int DARK_GREEN = color(0, 190, 0, 255);
+    public static final int DARK_AQUA = color(0, 190, 190, 255);
+    public static final int DARK_RED = color(190, 0, 0, 255);
+    public static final int DARK_PURPLE = color(190, 0, 190, 255);
+    public static final int GOLD = color(217, 163, 52, 255);
+    public static final int GRAY = color(190, 190, 190, 255);
+    public static final int DARK_GRAY = color(63, 63, 63, 255);
+    public static final int BLUE = color(63, 63, 254, 255);
+    public static final int GREEN = color(63, 254, 63, 255);
+    public static final int AQUA = color(63, 254, 254, 255);
+    public static final int RED = color(254, 63, 63, 255);
+    public static final int LIGHT_PURPLE = color(254, 63, 254, 255);
+    public static final int YELLOW = color(254, 254, 63, 255);
     public static final int WHITE = color(255, 255, 255, 255);
-    public static final int BLACK = color(255, 255, 255, 255);
-    public static final int GRAY = color(192, 192, 192, 255);
-    public static final int LIGHT_GRAY = color(128, 128, 128, 255);
-    public static final int DARK_GRAY = color(64, 64, 64, 255);
-    public static final int RED = color(255, 0, 0, 255);
-    public static final int PINK = color(255, 175, 175, 255);
-    public static final int ORANGE = color(255, 200, 0, 255);
-    public static final int YELLOW = color(255, 255, 0, 255);
-    public static final int GREEN = color(0, 255, 0, 255);
-    public static final int MAGENTA = color(255, 0, 255, 255);
-    public static final int CYAN = color(0, 255, 255, 255);
-    public static final int BLUE = color(0, 0, 255, 255);
+
+    /**
+     * Gets a color based off of a hex integer input
+     * @param color the hex integer
+     * @return the color
+     */
+    public static int getColor(int color) {
+        switch(color) {
+            case(0):
+                return BLACK;
+            case(1):
+                return DARK_BLUE;
+            case(2):
+                return DARK_GREEN;
+            case(3):
+                return DARK_AQUA;
+            case(4):
+                return DARK_RED;
+            case(5):
+                return DARK_PURPLE;
+            case(6):
+                return GOLD;
+            case(7):
+                return GRAY;
+            case(8):
+                return DARK_GRAY;
+            case(9):
+                return BLUE;
+            case(10):
+                return GREEN;
+            case(11):
+                return AQUA;
+            case(12):
+                return RED;
+            case(13):
+                return LIGHT_PURPLE;
+            case(14):
+                return YELLOW;
+            default:
+                return WHITE;
+        }
+    }
+
+    /**
+     * Gets the font renderer object.
+     * @return the font renderer object
+     */
+    public static FontRenderer getFontRenderer() {
+        return MinecraftVars.getMinecraft().fontRenderer;
+    }
 
     /**
      * Gets a strings width.
@@ -47,7 +101,87 @@ public class RenderLib {
      * @return the width of the text
      */
     public static int getStringWidth(String text) {
-        return Minecraft.getMinecraft().fontRenderer.getStringWidth(text);
+        return getFontRenderer().getStringWidth(text);
+    }
+
+    /**
+     * Returns a wrapped list of lines based on a max width with a max number of lines.
+     * @param lines the input list of lines
+     * @param width the max width of a line
+     * @param maxLines the max number of lines
+     * @return the wrapped line list
+     */
+    public static ArrayList<String> lineWrap(ArrayList<String> lines, int width, int maxLines) {
+        int lineWrapIterator = 0;
+        Boolean lineWrapContinue = true;
+        Boolean addExtra = false;
+
+        lines = new ArrayList<>(lines);
+
+        while (lineWrapContinue) {
+            String line = lines.get(lineWrapIterator).replace("\u0009", "     ");
+            if (line.contains(" ") && getStringWidth(line) > width) {
+                String[] lineParts = line.split(" ");
+                StringBuilder lineBefore = new StringBuilder();
+                StringBuilder lineAfter = new StringBuilder();
+
+                Boolean fillBefore = true;
+                for (String linePart : lineParts) {
+                    if (fillBefore) {
+                        if (getStringWidth(lineBefore.toString() + linePart) < width)
+                            lineBefore.append(linePart).append(" ");
+                        else
+                            fillBefore = false;
+                    }
+
+                    if (!fillBefore) {
+                        lineAfter.append(" ").append(linePart);
+                    }
+                }
+
+                lines.set(lineWrapIterator, lineBefore.toString());
+
+                if (lines.size() < maxLines) {
+                    lines.add(lineWrapIterator + 1, lineAfter.toString());
+                } else {
+                    addExtra = true;
+                    lineWrapContinue = false;
+                }
+            }
+
+            lineWrapIterator++;
+            if (lineWrapIterator >= lines.size()) {
+                lineWrapContinue = false;
+            }
+            if (lines.size() > maxLines) {
+                addExtra = true;
+                while (lines.size() > maxLines) {
+                    lines.remove(lines.size()-1);
+                }
+                break;
+            }
+        }
+
+        if (addExtra) lines.add("...");
+
+        return lines;
+    }
+
+    /**
+     * Draws a string to the screen.
+     * @param text the text to draw
+     * @param x the x coordinate on screen
+     * @param y the y coordinate on screen
+     * @param scale scales the text size
+     * @param color the color
+     */
+    public static void drawString(String text, float x, float y, float scale, int color, Boolean dropShadow) {
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.scale(scale, scale, scale);
+        getFontRenderer().drawString(text, x / scale, y / scale, color, dropShadow);
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
     }
 
     /**
@@ -58,7 +192,19 @@ public class RenderLib {
      * @param color the color
      */
     public static void drawString(String text, float x, float y, int color) {
-        Minecraft.getMinecraft().fontRenderer.drawString(text, x, y, color, false);
+        drawString(text, x, y, 1, color, false);
+    }
+
+    /**
+     * Draws a string with drop shadow to the screen.
+     * @param text the text to draw
+     * @param x the x coordinate on screen
+     * @param y the y coordinate on screen
+     * @param scale scales the text size
+     * @param color the color
+     */
+    public static void drawStringWithShadow(String text, float x, float y, float scale, int color) {
+        drawString(text, x, y, scale, color, true);
     }
 
     /**
@@ -69,7 +215,7 @@ public class RenderLib {
      * @param color the color
      */
     public static void drawStringWithShadow(String text, float x, float y, int color) {
-        Minecraft.getMinecraft().fontRenderer.drawStringWithShadow(text, x, y, color);
+        drawStringWithShadow(text, x, y, 1, color);
     }
 
     /**
@@ -99,6 +245,19 @@ public class RenderLib {
     }
 
     /**
+     * Gets a determined rainbow color based on step and speed.
+     * @param step time elapsed
+     * @param speed speed of time
+     * @return integer color
+     */
+    public static int[] getRainbowColors(float step, float speed) {
+        int red = (int) ((Math.sin(step / speed) + 0.75) * 170);
+        int green = (int) ((Math.sin(step / speed + ((2 * Math.PI) / 3)) + 0.75) * 170);
+        int blue = (int) ((Math.sin(step / speed + ((4 * Math.PI) / 3)) + 0.75) * 170);
+        return new int[] {red, green, blue};
+    }
+
+    /**
      * Gets a determined rainbow color based on step with a default speed of 1.
      * @param step time elapsed
      * @return integer color
@@ -108,7 +267,7 @@ public class RenderLib {
     }
 
     // helper method to limit numbers between 0 and 255
-    private int limit255(int a) {
+    public static int limit255(int a) {
         return (a > 255) ? 255 : (a < 0 ? 0 : a);
     }
 
@@ -154,6 +313,7 @@ public class RenderLib {
         float green = (float) (color >> 8 & 255) / 255.0F;
         float blue = (float) (color & 255) / 255.0F;
 
+        GlStateManager.pushMatrix();
         GlStateManager.color(red, green, blue, alpha);
 
         GL11.glBegin(GL11.GL_LINE_LOOP);
@@ -197,10 +357,11 @@ public class RenderLib {
         float b = (float) (color & 255) / 255.0F;
 
         GlStateManager.pushMatrix();
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder worldrenderer = tessellator.getBuffer();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
+
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder worldrenderer = tessellator.getBuffer();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.color(r, g, b, a);
         worldrenderer.begin(7, DefaultVertexFormats.POSITION);
@@ -210,9 +371,9 @@ public class RenderLib {
         worldrenderer.pos(x, y, 0.0D).endVertex();
         tessellator.draw();
         GlStateManager.color(1, 1, 1, 1);
+
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
-
         GlStateManager.popMatrix();
     }
 
@@ -308,7 +469,7 @@ public class RenderLib {
 
     /**
      * Draws an image to the screen.<br>
-     * Images must be in the imports /assets/ directory on launch, <br>
+     * Images must be in the modules /assets/ directory on launch, <br>
      * and have a size of 256x256.
      * @param resourceName the file name, i.e. block.png
      * @param renderXLoc the x position on the screen to render to
@@ -327,7 +488,7 @@ public class RenderLib {
 
     /**
      * Draws an image to the screen.<br>
-     * Images must be in the imports /assets/ directory on launch, <br>
+     * Images must be in the modules /assets/ directory on launch, <br>
      * and have a size of 256x256.
      * @param resourceDomain the domain of the file, i.e minecraft
      * @param resourceName the file name, i.e. block.png
@@ -381,22 +542,72 @@ public class RenderLib {
 
     /**
      * Renders an item icon on screen.
+     *
      * @param x x coordinate to render item icon to
      * @param y y coordinate to render item icon to
+     * @param scale scales the icon size
      * @param item name or id of item to render
+     * @param metadata metadata of item to render
      */
-    public static void drawItemIcon(int x, int y, String item) {
-        ItemStack itemStack = new ItemStack(Item.getByNameOrId(item));
+    public static void drawItemIcon(int x, int y, float scale, String item, Integer metadata) {
+        if (item.equals("minecraft:air")) return;
+
+        if (item.equals("minecraft:cocoa")) {
+            item = "minecraft:dye";
+            metadata = 3;
+        } else if ((item.equals("minecraft:dirt") || item.equals("minecraft:potato") || item.equals("minecraft:carrot"))) {
+            metadata = 0;
+        }
+
+        ItemStack itemStack;
+        if (metadata != null) {
+            itemStack = new ItemStack(Item.getByNameOrId(item), 1, metadata);
+        } else {
+            itemStack = new ItemStack(Item.getByNameOrId(item));
+        }
+
+        x /= scale;
+        y /= scale;
+
         RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
 
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(scale, scale, 1f);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         RenderHelper.enableStandardItemLighting();
         RenderHelper.enableGUIStandardItemLighting();
         itemRenderer.zLevel = 200.0F;
 
-        itemRenderer.renderItemIntoGUI(itemStack, x, y);
+        try {
+            itemRenderer.renderItemIntoGUI(itemStack, x, y);
+        } catch (NullPointerException e) {
+            Console.getConsole().printStackTrace(e);
+        }
 
         GlStateManager.popMatrix();
+    }
+
+    /**
+     * Renders an item icon on screen.
+     *
+     * @param x x coordinate to render item icon to
+     * @param y y coordinate to render item icon to
+     * @param item name or id of item to render
+     * @param metadata metadata of item to render
+     */
+    public static void drawItemIcon(int x, int y, String item, Integer metadata) {
+        drawItemIcon(x, y, 1, item, metadata);
+    }
+
+    /**
+     * Renders an item icon on screen.
+     * 
+     * @param x x coordinate to render item icon to
+     * @param y y coordinate to render item icon to
+     * @param item name or id of item to render
+     */
+    public static void drawItemIcon(int x, int y, String item) {
+        drawItemIcon(x, y, 1, item, null);
     }
 
     /**
@@ -409,7 +620,7 @@ public class RenderLib {
     public static void drawPlayerOnScreen(int posX, int posY, int scale, boolean rotate) {
         float mouseX = -30;
         float mouseY = 0;
-        EntityLivingBase ent = Minecraft.getMinecraft().player;
+        EntityLivingBase ent = MinecraftVars.getPlayer();
 
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
@@ -436,7 +647,7 @@ public class RenderLib {
         RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
         rendermanager.setPlayerViewY(180.0F);
         rendermanager.setRenderShadow(false);
-        rendermanager.renderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+        rendermanager.renderEntity(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, true);
         rendermanager.setRenderShadow(true);
         ent.renderYawOffset = f;
         ent.rotationYaw = f1;
@@ -449,7 +660,5 @@ public class RenderLib {
         GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GlStateManager.disableTexture2D();
         GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-
-        GlStateManager.popMatrix();
     }
 }

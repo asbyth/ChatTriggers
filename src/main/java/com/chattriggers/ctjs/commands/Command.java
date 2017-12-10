@@ -1,6 +1,8 @@
 package com.chattriggers.ctjs.commands;
 
+import com.chattriggers.ctjs.libs.ChatLib;
 import com.chattriggers.ctjs.triggers.OnTrigger;
+import com.chattriggers.ctjs.utils.console.Console;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -29,7 +31,7 @@ public class Command extends CommandBase {
     }
 
     @Override
-    public String getUsage(ICommandSender sender) {return getCommandName();}
+    public String getUsage(ICommandSender sender) {return getCommandUsage(sender);}
     public String getCommandUsage(ICommandSender sender) {
         return usage;
     }
@@ -37,6 +39,12 @@ public class Command extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {processCommand(sender, args);}
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-        trigger.trigger((Object[]) args);
+        try {
+            trigger.trigger((Object[]) args);
+        } catch (Exception exception) {
+            ChatLib.chat("&cSomething went wrong while running that command");
+            ChatLib.chat("&cCheck the ct console for more information");
+            Console.getConsole().printStackTrace(exception);
+        }
     }
 }

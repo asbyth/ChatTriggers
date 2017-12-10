@@ -1,8 +1,7 @@
-package com.chattriggers.ctjs.utils;
+package com.chattriggers.ctjs.objects;
 
 import com.chattriggers.ctjs.libs.ChatLib;
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
@@ -14,7 +13,7 @@ public class Message {
     @Getter
     private ITextComponent chatMessage;
     private ArrayList<Object> messageParts;
-    @Getter @Setter
+    @Getter
     private int chatLineId;
 
     public Message(Object... messages) {
@@ -27,13 +26,27 @@ public class Message {
     }
 
     /**
+     * Sets the chat line ID. Useful for deleting messages by ID.
+     * @param id the ID of the message
+     * @return the message for method chaining
+     */
+    public Message setChatLineId(int id) {
+        this.chatLineId = id;
+
+        return this;
+    }
+
+    /**
      * Sets a part of the message (defined by the splits made in the constructor)
      * @param part the index of the part to change
      * @param message the new message to replace with
+     * @return the message for method chaining
      */
-    public void setMessagePart(int part, Object message) {
+    public Message setMessagePart(int part, Object message) {
         messageParts.set(part, message);
         parseMessages(messageParts);
+
+        return this;
     }
 
     /**

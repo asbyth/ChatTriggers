@@ -1,24 +1,42 @@
 package com.chattriggers.ctjs.triggers;
 
 import com.chattriggers.ctjs.CTJS;
+import com.chattriggers.ctjs.libs.EventLib;
 import com.chattriggers.ctjs.utils.console.Console;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 
 import javax.script.ScriptException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class OnChatTrigger extends OnTrigger {
-    private String chatCriteria = "";
+    private String chatCriteria;
     private Pattern criteriaPattern;
-    private Parameter parameter;
+    private List<Parameter> parameters;
+    private Boolean triggerIfCanceled;
 
     public OnChatTrigger(String methodName) {
         super(methodName, TriggerType.CHAT);
+
+        this.chatCriteria = "";
+        this.parameters = new ArrayList<>();
+        this.triggerIfCanceled = true;
+    }
+
+    /**
+     * Sets if the chat trigger should run if the chat event has already been canceled.
+     * True by default.
+     * @param bool Boolean to set
+     * @return the trigger for method chaining
+     */
+    public OnChatTrigger triggerIfCanceled(Boolean bool) {
+        this.triggerIfCanceled = bool;
+        return this;
     }
 
     /**
@@ -34,19 +52,53 @@ public class OnChatTrigger extends OnTrigger {
                 .replaceAll("\\$\\{[^*]+?}", "\\\\E(.+)\\\\Q")
                 .replaceAll("\\$\\{\\*?}", "\\\\E(?:.+)\\\\Q");
 
-        criteriaPattern = Pattern.compile(chatCriteria.equals("") ? ".+" : replacedCriteria);
+        this.criteriaPattern = Pattern.compile(chatCriteria.equals("") ? ".+" : replacedCriteria);
 
         return this;
     }
 
     /**
-     * sets the chat parameter for {@link #parameter}.
+     * Sets the chat parameter for {@link Parameter}.
+     * Clears current parameter list.
      * @param parameter the chat parameter to set
      * @return the trigger for method chaining
      */
     public OnChatTrigger setParameter(String parameter) {
-        this.parameter = Parameter.getParameterByName(parameter);
+        this.parameters = Collections.singletonList(Parameter.getParameterByName(parameter));
+        return this;
+    }
 
+    /**
+     * Sets multiple chat parameters for {@link Parameter}.
+     * Clears current parameter list.
+     * @param parameters the chat parameters to set
+     * @return the trigger for method chaining
+     */
+    public OnChatTrigger setParameters(String... parameters) {
+        this.parameters.clear();
+        for (String parameter : parameters)
+            this.parameters.add(Parameter.getParameterByName(parameter));
+        return this;
+    }
+
+    /**
+     * Adds chat parameter for {@link Parameter}.
+     * @param parameter the chat parameter to add
+     * @return the trigger for method chaining
+     */
+    public OnChatTrigger addParameter(String parameter) {
+        this.parameters.add(Parameter.getParameterByName(parameter));
+        return this;
+    }
+
+    /**
+     * Adds multiple chat parameters for {@link Parameter}.
+     * @param parameters the chat parameters to add
+     * @return the trigger for method chaining
+     */
+    public OnChatTrigger addParameters(String... parameters) {
+        for (String parameter : parameters)
+            this.parameters.add(Parameter.getParameterByName(parameter));
         return this;
     }
 
@@ -57,25 +109,25 @@ public class OnChatTrigger extends OnTrigger {
      */
     @Override
     public void trigger(Object... args) {
-        if (!(args[0] instanceof String) || !(args[1] instanceof ClientChatReceivedEvent)) {
+        if (!(args[0] instanceof String) || !(args[1] instanceof ClientChatReceivedEvent))
             throw new IllegalArgumentException("Argument 1 must be a String, Argument 2 must be a ClientChatReceivedEvent");
-        }
+
+        ClientChatReceivedEvent chatEvent = (ClientChatReceivedEvent) args[1];
+        if (!this.triggerIfCanceled && chatEvent.isCanceled()) return;
 
         String chatMessage = (String) args[0];
 
-        if (chatCriteria.contains("&")) {
-            chatMessage = ((ClientChatReceivedEvent) args[1]).getMessage().getFormattedText().replace("\u00a7", "&");
-        }
+        if (chatCriteria.contains("&"))
+            chatMessage = EventLib.getMessage((ClientChatReceivedEvent) args[1]).getFormattedText().replace("\u00a7", "&");
 
         List<Object> variables = new ArrayList<>();
-        if (!chatCriteria.equals("")) {
+        if (!chatCriteria.equals(""))
             variables = matchesChatCriteria(chatMessage.replace("\n", "->newLine<-"));
-        }
 
         if (variables != null) {
             try {
-                variables.add(args[1]);
-                CTJS.getInstance().getInvocableEngine().invokeFunction(methodName, variables.toArray(new Object[variables.size()]));
+                variables.add(chatEvent);
+                CTJS.getInstance().getModuleManager().invokeFunction(methodName, variables.toArray(new Object[variables.size()]));
             } catch (ScriptException | NoSuchMethodException e) {
                 Console.getConsole().printStackTrace(e);
                 TriggerType.CHAT.removeTrigger(this);
@@ -93,20 +145,23 @@ public class OnChatTrigger extends OnTrigger {
     public List<Object> matchesChatCriteria(String chat) {
         Matcher matcher = criteriaPattern.matcher(chat);
 
-        if (parameter == Parameter.CONTAINS) {
-            if (!matcher.find()) return null;
-        } else if (parameter == Parameter.START) {
-            if (!matcher.find() || matcher.start() != 0) return null;
-        } else if (parameter == Parameter.END) {
-            int endMatch = -1;
-
-            while (matcher.find()) {
-                endMatch = matcher.end();
-            }
-
-            if (endMatch != chat.length()) return null;
-        } else if (parameter == null) {
+        if (parameters.isEmpty()) {
             if (!matcher.matches()) return null;
+        } else {
+            for (Parameter parameter : this.parameters) {
+                if (parameter == Parameter.CONTAINS) {
+                    if (!matcher.find()) return null;
+                } else if (parameter == Parameter.START) {
+                    if (!matcher.find() || matcher.start() != 0) return null;
+                } else if (parameter == Parameter.END) {
+                    int endMatch = -1;
+                    while (matcher.find())
+                        endMatch = matcher.end();
+                    if (endMatch != chat.length()) return null;
+                } else if (parameter == null) {
+                    if (!matcher.matches()) return null;
+                }
+            }
         }
 
         ArrayList<Object> variables = new ArrayList<>();
@@ -118,7 +173,14 @@ public class OnChatTrigger extends OnTrigger {
         return variables;
     }
 
-    private enum Parameter {
+    /**
+     * The parameter to match chat criteria to.<br>
+     * Location parameters<br>
+     *     <strong>&emsp;contains</strong><br>
+     *     <strong>&emsp;start</strong><br>
+     *     <strong>&emsp;end</strong><br>
+     */
+     public enum Parameter {
         CONTAINS("<c>", "<contains>", "c", "contains"),
         START("<s>", "<start>", "s", "start"),
         END("<e>", "<end>", "e", "end");
