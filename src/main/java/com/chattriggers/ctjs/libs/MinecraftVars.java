@@ -52,7 +52,7 @@ public class MinecraftVars {
      * @return the world object
      */
     public static WorldClient getWorld() {
-        return mc.world;
+        return getMinecraft().world;
     }
 
     /**
@@ -60,7 +60,7 @@ public class MinecraftVars {
      * @return the player object
      */
     public static EntityPlayerSP getPlayer() {
-        return mc.player;
+        return getMinecraft().player;
     }
 
     /**
@@ -68,7 +68,7 @@ public class MinecraftVars {
      * @return the connection object
      */
     public static NetHandlerPlayClient getConnection() {
-        return mc.getConnection();
+        return getMinecraft().getConnection();
     }
 
     /**
@@ -77,7 +77,7 @@ public class MinecraftVars {
      * @return The username of the user.
      */
     public static String getPlayerName() {
-        return mc.getSession().getUsername();
+        return getMinecraft().getSession().getUsername();
     }
 
     /**
@@ -86,7 +86,7 @@ public class MinecraftVars {
      * @return The UUID of the user.
      */
     public static String getPlayerUUID() {
-        return mc.getSession().getPlayerID();
+        return getMinecraft().getSession().getPlayerID();
     }
 
     /**
@@ -188,7 +188,7 @@ public class MinecraftVars {
      * @return True if the player has the chat open, false otherwise.
      */
     public static boolean isInChat() {
-        return mc.currentScreen instanceof GuiChat;
+        return getMinecraft().currentScreen instanceof GuiChat;
     }
 
     /**
@@ -197,7 +197,7 @@ public class MinecraftVars {
      * @return True if the player has the tab list open, false otherwise.
      */
     public static boolean isInTab() {
-        return mc.gameSettings.keyBindPlayerList.isKeyDown();
+        return getMinecraft().gameSettings.keyBindPlayerList.isKeyDown();
     }
 
     /**
@@ -225,9 +225,9 @@ public class MinecraftVars {
      *          is in a single player world.
      */
     public static String getServerIP() {
-        if (mc.isSingleplayer()) return "localhost";
+        if (getMinecraft().isSingleplayer()) return "localhost";
 
-        return mc.getCurrentServerData() == null ? null : mc.getCurrentServerData().serverIP;
+        return getMinecraft().getCurrentServerData() == null ? null : getMinecraft().getCurrentServerData().serverIP;
     }
 
     /**
@@ -237,9 +237,9 @@ public class MinecraftVars {
      *          is in a single player world.
      */
     public static String getServerName() {
-        if (mc.isSingleplayer()) return "SinglePlayer";
+        if (getMinecraft().isSingleplayer()) return "SinglePlayer";
 
-        return mc.getCurrentServerData() == null ? null : mc.getCurrentServerData().serverName;
+        return getMinecraft().getCurrentServerData() == null ? null : getMinecraft().getCurrentServerData().serverName;
     }
 
     /**
@@ -249,9 +249,9 @@ public class MinecraftVars {
      *          is in a single player world.
      */
     public static String getServerMOTD() {
-        if (mc.isSingleplayer()) return "SinglePlayer";
+        if (getMinecraft().isSingleplayer()) return "SinglePlayer";
 
-        return mc.getCurrentServerData() == null ? null : mc.getCurrentServerData().serverMOTD;
+        return getMinecraft().getCurrentServerData() == null ? null : getMinecraft().getCurrentServerData().serverMOTD;
     }
 
     /**
@@ -293,7 +293,7 @@ public class MinecraftVars {
      * @see <a href="http://legacy.lwjgl.org/javadoc/org/lwjgl/input/Keyboard.html">Keyboard</a>
      */
     public static KeyBind getKeyBindFromKey(int keyCode) {
-        for (KeyBinding keyBinding : Minecraft.getMinecraft().gameSettings.keyBindings) {
+        for (KeyBinding keyBinding : getMinecraft().gameSettings.keyBindings) {
             if (keyBinding.getKeyCode() == keyCode) {
                 return new KeyBind(keyBinding);
             }
@@ -310,7 +310,7 @@ public class MinecraftVars {
      * @see <a href="http://legacy.lwjgl.org/javadoc/org/lwjgl/input/Keyboard.html">Keyboard</a>
      */
     public static KeyBind getKeyBindFromKey(int keyCode, String description) {
-        for (KeyBinding keyBinding : Minecraft.getMinecraft().gameSettings.keyBindings) {
+        for (KeyBinding keyBinding : getMinecraft().gameSettings.keyBindings) {
             if (keyBinding.getKeyCode() == keyCode) {
                 return new KeyBind(keyBinding);
             }
@@ -455,7 +455,7 @@ public class MinecraftVars {
      * @return The player's minecraft version.
      */
     public static String getMinecraftVersion() {
-        return Minecraft.getMinecraft().getVersion();
+        return getMinecraft().getVersion();
     }
 
     /**
