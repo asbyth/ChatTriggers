@@ -67,9 +67,12 @@ public class CTCommand extends CommandBase {
                 case("reload"):
                 case("load"):
                     TriggerType.GAME_UNLOAD.triggerAll();
-                    CTJS.getInstance().getModuleManager().unload();
+                    TriggerType.WORLD_UNLOAD.triggerAll();
                     ChatLib.chat("&cReloading ct.js scripts...");
                     new Thread(() -> {
+                        for (TriggerType type : TriggerType.values())
+                            type.clearTriggers();
+                        CTJS.getInstance().getModuleManager().unload();
                         CTJS.getInstance().getModuleManager().load();
                         ChatLib.chat("&aDone reloading scripts!");
                         TriggerType.WORLD_LOAD.triggerAll();
