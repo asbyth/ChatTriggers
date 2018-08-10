@@ -2,13 +2,12 @@ package com.chattriggers.ctjs.minecraft.wrappers.objects;
 
 import com.chattriggers.ctjs.minecraft.mixins.MixinEntityFX;
 import lombok.Getter;
-import net.minecraft.client.particle.EntityFX;
 
 public class Particle {
     @Getter
-    private EntityFX underlyingEntity;
+    private net.minecraft.client.particle.Particle underlyingEntity;
 
-    public Particle(EntityFX entityFX) {
+    public Particle(net.minecraft.client.particle.Particle entityFX) {
         if (entityFX == null) {
             throw new NullPointerException("EntityFX is null!");
         }
@@ -56,6 +55,6 @@ public class Particle {
     }
 
     public void remove() {
-        this.underlyingEntity.setDead();
+        this.underlyingEntity.setExpired();
     }
 }

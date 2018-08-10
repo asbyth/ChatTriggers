@@ -1,10 +1,10 @@
 package com.chattriggers.ctjs.minecraft.mixins;
 
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(EntityFX.class)
+@Mixin(Particle.class)
 public interface MixinEntityFX {
     @Accessor
     int getParticleMaxAge();

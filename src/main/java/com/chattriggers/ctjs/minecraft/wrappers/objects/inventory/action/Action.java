@@ -6,6 +6,7 @@ import com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.Inventory;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import net.minecraft.inventory.ClickType;
 
 @Accessors(chain = true)
 public abstract class Action {
@@ -21,13 +22,13 @@ public abstract class Action {
 
     public abstract void complete();
 
-    protected void doClick(int button, int mode) {
-        System.out.println("Clicking of type: " + mode + ", button: " + button + ", and slot: " + slot);
+    protected void doClick(int button, ClickType type) {
+        System.out.println("Clicking of type: " + type + ", button: " + button + ", and slot: " + slot);
         Client.getMinecraft().playerController.windowClick(
                 this.windowId,
                 this.slot,
                 button,
-                mode,
+                type,
                 Player.getPlayer()
         );
     }

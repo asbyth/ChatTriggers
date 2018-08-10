@@ -5,7 +5,7 @@ import com.chattriggers.ctjs.minecraft.wrappers.Player;
 import com.chattriggers.ctjs.minecraft.wrappers.World;
 import lombok.Getter;
 import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.ArrayList;
 
@@ -34,7 +34,7 @@ public class Sign extends Block{
      */
     public ArrayList<Message> getLines() {
         ArrayList<Message> lines = new ArrayList<>();
-        for (IChatComponent component : this.sign.signText) {
+        for (ITextComponent component : this.sign.signText) {
             lines.add(new Message(component));
         }
         return lines;
@@ -47,7 +47,7 @@ public class Sign extends Block{
      */
     public ArrayList<String> getFormattedLines() {
         ArrayList<String> lines = new ArrayList<>();
-        for (IChatComponent component : this.sign.signText) {
+        for (ITextComponent component : this.sign.signText) {
             lines.add(component.getFormattedText());
         }
         return lines;
@@ -60,7 +60,7 @@ public class Sign extends Block{
      */
     public ArrayList<String> getUnformattedLines() {
         ArrayList<String> lines = new ArrayList<>();
-        for (IChatComponent component: this.sign.signText) {
+        for (ITextComponent component: this.sign.signText) {
             lines.add(component.getUnformattedText());
         }
         return lines;

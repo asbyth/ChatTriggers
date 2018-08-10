@@ -3,9 +3,11 @@ package com.chattriggers.ctjs.minecraft.wrappers.objects;
 import lombok.Getter;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class Entity {
     
@@ -44,7 +46,7 @@ public class Entity {
      * @return the entity's pitch
      */
     public double getPitch() {
-        return MathHelper.wrapAngleTo180_float(this.entity.rotationPitch);
+        return MathHelper.wrapDegrees(this.entity.rotationPitch);
     }
 
     /**
@@ -54,7 +56,7 @@ public class Entity {
      * @return the entity's yaw
      */
     public double getYaw() {
-        return MathHelper.wrapAngleTo180_float(this.entity.rotationYaw);
+        return MathHelper.wrapDegrees(this.entity.rotationYaw);
     }
 
     /**
@@ -104,9 +106,9 @@ public class Entity {
      * @return the entity being ridden, or null if there isn't one.
      */
     public Entity getRiding() {
-        return this.entity.ridingEntity == null
+        return this.entity.getRidingEntity() == null
                 ? null
-                : new Entity(this.entity.ridingEntity);
+                : new Entity(this.entity.getRidingEntity());
     }
 
     /**
@@ -115,9 +117,21 @@ public class Entity {
      * @return the riding entity, or null if there isn't one.
      */
     public Entity getRider() {
-        return this.entity.riddenByEntity == null
+        return getRiders().isEmpty()
                 ? null
-                : new Entity(this.entity.riddenByEntity);
+                : getRiders().get(0);
+    }
+
+    /**
+     * Gets the entities that are riding this entity.
+     *
+     * @return the riding entities, or an empty list if there aren't any.
+     */
+    public List<Entity> getRiders() {
+        return this.entity.getPassengers()
+                .stream()
+                .map(Entity::new)
+                .collect(Collectors.toList());
     }
 
     /**

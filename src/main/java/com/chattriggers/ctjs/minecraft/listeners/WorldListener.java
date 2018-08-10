@@ -55,26 +55,26 @@ public class WorldListener {
 
     @SubscribeEvent
     public void onSoundPlay(PlaySoundEvent event) {
-        Vector3d position = new Vector3d(event.sound.getXPosF(), event.sound.getYPosF(), event.sound.getZPosF());
+        Vector3d position = new Vector3d(event.getSound().getXPosF(), event.getSound().getYPosF(), event.getSound().getZPosF());
         TriggerType.SOUND_PLAY.triggerAll(
                 event,
                 position,
-                event.name,
-                event.sound.getVolume(),
-                event.sound.getPitch(),
-                event.category == null ? null : event.category.getCategoryName()
+                event.getName(),
+                event.getSound().getVolume(),
+                event.getSound().getPitch(),
+                event.getSound().getCategory() == null ? null : event.getSound().getCategory().getName()
         );
     }
 
     @SubscribeEvent
     public void noteBlockEventPlay(NoteBlockEvent.Play event) {
-        Vector3d position = new Vector3d(event.pos.getX(), event.pos.getY(), event.pos.getZ());
+        Vector3d position = new Vector3d(event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
         TriggerType.NOTE_BLOCK_PLAY.triggerAll(event, position, event.getNote().name(), event.getOctave());
     }
 
     @SubscribeEvent
     public void noteBlockEventChange(NoteBlockEvent.Change event) {
-        Vector3d position = new Vector3d(event.pos.getX(), event.pos.getY(), event.pos.getZ());
+        Vector3d position = new Vector3d(event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
         TriggerType.NOTE_BLOCK_CHANGE.triggerAll(event, position, event.getNote().name(), event.getOctave());
     }
 

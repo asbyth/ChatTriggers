@@ -3,6 +3,7 @@ package com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.action;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import net.minecraft.inventory.ClickType;
 
 @Accessors(chain = true)
 public class KeyAction extends Action {
@@ -21,6 +22,6 @@ public class KeyAction extends Action {
 
     @Override
     public void complete() {
-        doClick(key, 2);
+        doClick(key, ClickType.SWAP);
     }
 }

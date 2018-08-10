@@ -115,7 +115,7 @@ public class ChatLib {
      * Clear chat
      */
     public static void clearChat() {
-        Client.getChatGUI().clearChatMessages();
+        Client.getChatGUI().clearChatMessages(false);
     }
 
     /**
@@ -185,7 +185,7 @@ public class ChatLib {
     public static String getCenteredText(String input) {
         boolean left = true;
         StringBuilder stringBuilder = new StringBuilder(removeFormatting(input));
-        FontRenderer fRenderer = Client.getMinecraft().fontRendererObj;
+        FontRenderer fRenderer = Client.getMinecraft().fontRenderer;
 
         if (fRenderer.getStringWidth(stringBuilder.toString()) > Client.getChatGUI().getChatWidth()) {
             return stringBuilder.toString();

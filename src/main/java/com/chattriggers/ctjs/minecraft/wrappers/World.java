@@ -1,16 +1,20 @@
 package com.chattriggers.ctjs.minecraft.wrappers;
 
 import com.chattriggers.ctjs.minecraft.libs.ChatLib;
-import com.chattriggers.ctjs.minecraft.wrappers.objects.*;
+import com.chattriggers.ctjs.minecraft.wrappers.objects.Chunk;
+import com.chattriggers.ctjs.minecraft.wrappers.objects.Entity;
+import com.chattriggers.ctjs.minecraft.wrappers.objects.Particle;
+import com.chattriggers.ctjs.minecraft.wrappers.objects.PlayerMP;
 import com.chattriggers.ctjs.minecraft.wrappers.objects.block.Block;
 import com.chattriggers.ctjs.utils.console.Console;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import paulscode.sound.SoundSystem;
 
@@ -29,7 +33,7 @@ public class World {
      * @return the world object
      */
     public static WorldClient getWorld() {
-        return Client.getMinecraft().theWorld;
+        return Client.getMinecraft().world;
     }
 
     /**
@@ -41,32 +45,6 @@ public class World {
         return getWorld() != null;
     }
 
-//    public static SoundSystem getSndSystem() {
-//        if (sndSystem == null) {
-//            loadSndSystem();
-//
-//            return sndSystem;
-//        }
-//
-//        if (((MixinSoundSystem) sndSystem).getCommandThread() == null) {
-//            loadSndSystem();
-//        }
-//
-//        return sndSystem;
-//    }
-//
-//    private static void loadSndSystem() {
-//        SoundManager sndManager = ((MixinSoundHandler) Client.getMinecraft().getSoundHandler()).getSndManager();
-//
-//        try {
-//            Field field = sndManager.getClass().getDeclaredField("sndSystem");
-//            field.setAccessible(true);
-//            sndSystem = (SoundSystem) field.get(sndManager);
-//        } catch (NoSuchFieldException | IllegalAccessException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     /**
      * Play a sound at the player location.
      *
@@ -75,7 +53,9 @@ public class World {
      * @param pitch  the pitch of the sound
      */
     public static void playSound(String name, float volume, float pitch) {
-        Player.getPlayer().playSound(name, volume, pitch);
+        SoundEvent sound = SoundEvent.REGISTRY.getObject(new ResourceLocation("minecraft", name));
+
+        Player.getPlayer().playSound(sound, volume, pitch);
     }
 
     /**
@@ -88,7 +68,9 @@ public class World {
      * @param z     the z location
      */
     public static void playRecord(String name, float x, float y, float z) {
-        getWorld().playRecord(new BlockPos(x, y, z), name);
+        SoundEvent sound = SoundEvent.REGISTRY.getObject(new ResourceLocation("minecraft", name));
+
+        getWorld().playRecord(new BlockPos(x, y, z), sound);
     }
 
     /**
@@ -166,7 +148,7 @@ public class World {
      * @return the world type
      */
     public static String getType() {
-        return getWorld().getWorldType().getWorldTypeName();
+        return getWorld().getWorldType().getName();
     }
 
     /**
@@ -367,11 +349,8 @@ public class World {
             try {
                 Method method = ReflectionHelper.findMethod(
                         RenderGlobal.class,
-                        Client.getMinecraft().renderGlobal,
-                        new String[]{
-                                "spawnEntityFX",
-                                "func_174974_b"
-                        },
+                        "spawnEntityFX",
+                        "func_174974_b",
                         int.class,
                         boolean.class,
                         double.class,
@@ -383,7 +362,7 @@ public class World {
                         int[].class
                 );
 
-                EntityFX fx = (EntityFX) method.invoke(Client.getMinecraft().renderGlobal,
+                net.minecraft.client.particle.Particle fx = (net.minecraft.client.particle.Particle) method.invoke(Client.getMinecraft().renderGlobal,
                         particleType.getParticleID(),
                         particleType.getShouldIgnoreRange(),
                         x, y, z, xSpeed, ySpeed, zSpeed, new int[]{}
@@ -397,7 +376,7 @@ public class World {
             return null;
         }
 
-        public static void spawnParticle(EntityFX particle) {
+        public static void spawnParticle(net.minecraft.client.particle.Particle particle) {
             Client.getMinecraft().effectRenderer.addEffect(particle);
         }
     }

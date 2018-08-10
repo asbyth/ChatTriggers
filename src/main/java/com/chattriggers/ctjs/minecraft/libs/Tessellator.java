@@ -2,11 +2,12 @@ package com.chattriggers.ctjs.minecraft.libs;
 
 import com.chattriggers.ctjs.minecraft.libs.renderer.Image;
 import com.chattriggers.ctjs.minecraft.wrappers.Client;
+import com.chattriggers.ctjs.minecraft.wrappers.Player;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
@@ -16,7 +17,7 @@ public class Tessellator {
     private static Tessellator instance;
 
     private net.minecraft.client.renderer.Tessellator tessellator;
-    private WorldRenderer worldRenderer;
+    private BufferBuilder worldRenderer;
     private boolean firstVertex;
     private boolean began;
     private boolean colorized;
@@ -25,7 +26,7 @@ public class Tessellator {
         instance = this;
 
         this.tessellator = net.minecraft.client.renderer.Tessellator.getInstance();
-        this.worldRenderer = this.tessellator.getWorldRenderer();
+        this.worldRenderer = this.tessellator.getBuffer();
         this.firstVertex = true;
         this.began = false;
         this.colorized = false;
@@ -220,11 +221,11 @@ public class Tessellator {
         Minecraft mc = Minecraft.getMinecraft();
 
         RenderManager renderManager = mc.getRenderManager();
-        FontRenderer fontRenderer = mc.fontRendererObj;
+        FontRenderer fontRenderer = mc.fontRenderer;
 
-        float playerX = (float) (mc.thePlayer.lastTickPosX + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX) * partialTicks);
-        float playerY = (float) (mc.thePlayer.lastTickPosY + (mc.thePlayer.posY - mc.thePlayer.lastTickPosY) * partialTicks);
-        float playerZ = (float) (mc.thePlayer.lastTickPosZ + (mc.thePlayer.posZ - mc.thePlayer.lastTickPosZ) * partialTicks);
+        float playerX = (float) (Player.getPlayer().lastTickPosX + (Player.getPlayer().posX - Player.getPlayer().lastTickPosX) * partialTicks);
+        float playerY = (float) (Player.getPlayer().lastTickPosY + (Player.getPlayer().posY - Player.getPlayer().lastTickPosY) * partialTicks);
+        float playerZ = (float) (Player.getPlayer().lastTickPosZ + (Player.getPlayer().posZ - Player.getPlayer().lastTickPosZ) * partialTicks);
 
         float dx = x - playerX;
         float dy = y - playerY;
@@ -248,18 +249,16 @@ public class Tessellator {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        int textWidth = mc.fontRendererObj.getStringWidth(text);
+        int textWidth = mc.fontRenderer.getStringWidth(text);
 
         if (renderBlackBox) {
-            net.minecraft.client.renderer.Tessellator tessellator = net.minecraft.client.renderer.Tessellator.getInstance();
-            WorldRenderer worldrenderer = tessellator.getWorldRenderer();
             int j = textWidth / 2;
             GlStateManager.disableTexture2D();
-            worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-            worldrenderer.pos((double) (-j - 1), (double) (-1), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            worldrenderer.pos((double) (-j - 1), (double) (8), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            worldrenderer.pos((double) (j + 1), (double) (8), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            worldrenderer.pos((double) (j + 1), (double) (-1), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldRenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+            worldRenderer.pos((double) (-j - 1), (double) (-1), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldRenderer.pos((double) (-j - 1), (double) (8), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldRenderer.pos((double) (j + 1), (double) (8), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldRenderer.pos((double) (j + 1), (double) (-1), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
             tessellator.draw();
             GlStateManager.enableTexture2D();
         }

@@ -68,7 +68,7 @@ public class ConfigColor extends ConfigOption {
     }
 
     @Override
-    public void draw(int mouseX, int mouseY) {
+    public void draw(int mouseX, int mouseY, float partialTicks) {
         if (this.hidden) return;
 
         int middle = Renderer.screen.getWidth() / 2;
@@ -82,22 +82,22 @@ public class ConfigColor extends ConfigOption {
         Renderer.rectangle(0xffaa0000, middle - 100 + this.x, this.y + 19, 155, 3)
                 .setOutline(0xff000000, 1)
                 .draw();
-        this.redButton.xPosition = (int) MathLib.map(this.value.getRed(), 0, 255, middle - 100 + this.x, middle + 52 + this.x);
-        this.redButton.drawButton(Client.getMinecraft(), mouseX, mouseY);
+        this.redButton.x = (int) MathLib.map(this.value.getRed(), 0, 255, middle - 100 + this.x, middle + 52 + this.x);
+        this.redButton.drawButton(Client.getMinecraft(), mouseX, mouseY, partialTicks);
 
         // green slider
         Renderer.rectangle(0xff008800, middle - 100 + this.x, this.y + 34, 155, 3)
                 .setOutline(0xff000000, 1)
                 .draw();
-        this.greenButton.xPosition = (int) MathLib.map(this.value.getGreen(), 0, 255, middle - 100 + this.x, middle + 52 + this.x);
-        this.greenButton.drawButton(Client.getMinecraft(), mouseX, mouseY);
+        this.greenButton.x = (int) MathLib.map(this.value.getGreen(), 0, 255, middle - 100 + this.x, middle + 52 + this.x);
+        this.greenButton.drawButton(Client.getMinecraft(), mouseX, mouseY, partialTicks);
 
         // blue slider
         Renderer.rectangle(0xff0000cc, middle - 100 + this.x, this.y + 49, 155, 3)
                 .setOutline(0xff000000, 1)
                 .draw();
-        this.blueButton.xPosition = (int) MathLib.map(this.value.getBlue(), 0, 255, middle - 100 + this.x, middle + 52 + this.x);
-        this.blueButton.drawButton(Client.getMinecraft(), mouseX, mouseY);
+        this.blueButton.x = (int) MathLib.map(this.value.getBlue(), 0, 255, middle - 100 + this.x, middle + 52 + this.x);
+        this.blueButton.drawButton(Client.getMinecraft(), mouseX, mouseY, partialTicks);
 
         // color preview
         Renderer.rectangle(this.value.getRGB(), middle + this.x + 60, this.y + 15, 40, 40)
@@ -106,44 +106,44 @@ public class ConfigColor extends ConfigOption {
 
         handleHeldButtons(mouseX, middle);
 
-        super.draw(mouseX, mouseY);
+        super.draw(mouseX, mouseY, partialTicks);
     }
 
     private void handleHeldButtons(int mouseX, int middle) {
         if (this.redHeld) {
-            this.redButton.xPosition = mouseX - 1;
+            this.redButton.x = mouseX - 1;
             limitHeldButton(this.redButton);
             this.value = new Color(
-                    (int) MathLib.map(this.redButton.xPosition, middle - 100 + this.x, middle + 52 + this.x, 0, 255),
+                    (int) MathLib.map(this.redButton.x, middle - 100 + this.x, middle + 52 + this.x, 0, 255),
                     this.value.getGreen(),
                     this.value.getBlue()
             );
         }
         if (this.greenHeld) {
-            this.greenButton.xPosition = mouseX - 1;
+            this.greenButton.x = mouseX - 1;
             limitHeldButton(this.greenButton);
             this.value = new Color(
                     this.value.getRed(),
-                    (int) MathLib.map(this.greenButton.xPosition, middle - 100 + this.x, middle + 52 + this.x, 0, 255),
+                    (int) MathLib.map(this.greenButton.x, middle - 100 + this.x, middle + 52 + this.x, 0, 255),
                     this.value.getBlue()
             );
         }
         if (this.blueHeld) {
-            this.blueButton.xPosition = mouseX - 1;
+            this.blueButton.x = mouseX - 1;
             limitHeldButton(this.blueButton);
             this.value = new Color(
                     this.value.getRed(),
                     this.value.getGreen(),
-                    (int) MathLib.map(this.blueButton.xPosition, middle - 100 + this.x, middle + 52 + this.x, 0, 255)
+                    (int) MathLib.map(this.blueButton.x, middle - 100 + this.x, middle + 52 + this.x, 0, 255)
             );
         }
     }
 
     private void limitHeldButton(GuiButton button) {
-        if (button.xPosition < Renderer.screen.getWidth() / 2 - 100 + this.x)
-            button.xPosition = Renderer.screen.getWidth() / 2 - 100 + this.x;
-        if (button.xPosition > Renderer.screen.getWidth() / 2 + 52 + this.x)
-            button.xPosition = Renderer.screen.getWidth() / 2 + 52 + this.x;
+        if (button.x < Renderer.screen.getWidth() / 2 - 100 + this.x)
+            button.x = Renderer.screen.getWidth() / 2 - 100 + this.x;
+        if (button.x > Renderer.screen.getWidth() / 2 + 52 + this.x)
+            button.x = Renderer.screen.getWidth() / 2 + 52 + this.x;
     }
 
     @Override
@@ -166,9 +166,9 @@ public class ConfigColor extends ConfigOption {
         if (this.resetButton.mousePressed(Client.getMinecraft(), mouseX, mouseY)) {
             this.value = this.defaultValue;
             int middle = Renderer.screen.getWidth() / 2;
-            this.redButton.xPosition = (int) MathLib.map(this.value.getRed(), 0, 255, middle - 100 + this.x, middle + 52 + this.x);
-            this.greenButton.xPosition = (int) MathLib.map(this.value.getGreen(), 0, 255, middle - 100 + this.x, middle + 52 + this.x);
-            this.blueButton.xPosition = (int) MathLib.map(this.value.getBlue(), 0, 255, middle - 100 + this.x, middle + 52 + this.x);
+            this.redButton.x = (int) MathLib.map(this.value.getRed(), 0, 255, middle - 100 + this.x, middle + 52 + this.x);
+            this.greenButton.x = (int) MathLib.map(this.value.getGreen(), 0, 255, middle - 100 + this.x, middle + 52 + this.x);
+            this.blueButton.x = (int) MathLib.map(this.value.getBlue(), 0, 255, middle - 100 + this.x, middle + 52 + this.x);
             this.resetButton.playPressSound(Client.getMinecraft().getSoundHandler());
         }
     }

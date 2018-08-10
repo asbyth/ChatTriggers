@@ -33,9 +33,9 @@ public abstract class ConfigOption {
                 ""
         );
     }
-    public void draw(int mouseX, int mouseY) {
-        this.resetButton.xPosition = Renderer.screen.getWidth() / 2 - 100 + this.x + 185;
-        this.resetButton.drawButton(Client.getMinecraft(), mouseX, mouseY);
+    public void draw(int mouseX, int mouseY, float partialTicks) {
+        this.resetButton.x = Renderer.screen.getWidth() / 2 - 100 + this.x + 185;
+        this.resetButton.drawButton(Client.getMinecraft(), mouseX, mouseY, partialTicks);
 
         Renderer.text("\u21BA", Renderer.screen.getWidth() / 2 - 100 + this.x + 189, this.y - 4)
                 .setScale(2)

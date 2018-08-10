@@ -3,16 +3,16 @@ package com.chattriggers.ctjs.minecraft.objects.message;
 import com.chattriggers.ctjs.minecraft.libs.ChatLib;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.event.HoverEvent;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 
 @Accessors(chain = true)
 public class TextComponent {
     @Getter
-    private IChatComponent chatComponentText;
+    private ITextComponent chatComponentText;
 
     /**
      * -- GETTER --
@@ -83,20 +83,20 @@ public class TextComponent {
      *
      * @param chatComponent the IChatComponent
      */
-    public TextComponent(IChatComponent chatComponent) {
+    public TextComponent(ITextComponent chatComponent) {
         this.chatComponentText = chatComponent;
         this.text = chatComponentText.getFormattedText();
         this.formatted = true;
 
-        ChatStyle chatStyle = chatComponent.getChatStyle();
-        if (chatStyle.getChatClickEvent() != null) {
-            ClickEvent clickEvent = chatStyle.getChatClickEvent();
+        Style chatStyle = chatComponent.getStyle();
+        if (chatStyle.getClickEvent() != null) {
+            ClickEvent clickEvent = chatStyle.getClickEvent();
             this.clickAction = clickEvent.getAction().getCanonicalName();
             this.clickValue = clickEvent.getValue();
         }
 
-        if (chatStyle.getChatHoverEvent() != null) {
-            HoverEvent hoverEvent = chatStyle.getChatHoverEvent();
+        if (chatStyle.getHoverEvent() != null) {
+            HoverEvent hoverEvent = chatStyle.getHoverEvent();
             this.hoverAction = hoverEvent.getAction().getCanonicalName();
             this.hoverValue = hoverEvent.getValue().getFormattedText();
         }
@@ -228,7 +228,7 @@ public class TextComponent {
     private void reInstance() {
         String text = this.text;
         if (this.formatted) text = ChatLib.addColor(text);
-        this.chatComponentText = new ChatComponentText(text);
+        this.chatComponentText = new TextComponentString(text);
 
         reInstanceClick();
         reInstanceHover();
@@ -241,7 +241,7 @@ public class TextComponent {
         String clickValue = this.clickValue;
         if (this.formatted) clickValue = ChatLib.addColor(clickValue);
 
-        chatComponentText.getChatStyle().setChatClickEvent(new ClickEvent(
+        chatComponentText.getStyle().setClickEvent(new ClickEvent(
                 ClickEvent.Action.getValueByCanonicalName(this.clickAction), clickValue
         ));
     }
@@ -253,8 +253,8 @@ public class TextComponent {
         String hoverValue = this.hoverValue;
         if (this.formatted) hoverValue = ChatLib.addColor(hoverValue);
 
-        chatComponentText.getChatStyle().setChatHoverEvent(new HoverEvent(
-                HoverEvent.Action.getValueByCanonicalName(this.hoverAction), new ChatComponentText(hoverValue)
+        chatComponentText.getStyle().setHoverEvent(new HoverEvent(
+                HoverEvent.Action.getValueByCanonicalName(this.hoverAction), new TextComponentString(hoverValue)
         ));
     }
 

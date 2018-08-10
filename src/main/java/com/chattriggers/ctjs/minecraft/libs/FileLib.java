@@ -7,6 +7,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -31,7 +32,7 @@ public class FileLib {
      */
     public static void write(String fileLocation, String toWrite) {
         try {
-            FileUtils.write(new File(fileLocation), toWrite);
+            FileUtils.write(new File(fileLocation), toWrite, Charset.defaultCharset());
         } catch (IOException exception) {
             Console.getInstance().printStackTrace(exception);
         }
@@ -78,7 +79,7 @@ public class FileLib {
             }
 
             br.close();
-            return FileUtils.readFileToString(file);
+            return FileUtils.readFileToString(file, Charset.defaultCharset());
         } catch (IOException exception) {
             Console.getInstance().printStackTrace(exception);
         }

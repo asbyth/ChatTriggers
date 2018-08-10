@@ -30,7 +30,7 @@ public class Client {
      * @return the connection object
      */
     public static NetHandlerPlayClient getConnection() {
-        return getMinecraft().getNetHandler();
+        return getMinecraft().getConnection();
     }
 
     /**

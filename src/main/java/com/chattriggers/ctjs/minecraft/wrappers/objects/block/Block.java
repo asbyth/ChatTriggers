@@ -5,7 +5,7 @@ import com.chattriggers.ctjs.minecraft.wrappers.World;
 import com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.Item;
 import lombok.Getter;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 public class  Block {
     @Getter
@@ -83,7 +83,7 @@ public class  Block {
      * @return the block's registry name
      */
     public String getRegistryName() {
-        return this.block.getRegistryName();
+        return this.block.getRegistryName().toString();
     }
 
     /**
@@ -113,7 +113,11 @@ public class  Block {
      * @return the block's light value
      */
     public int getLightValue() {
-        return this.block.getLightValue();
+        return this.block.getLightValue(
+                World.getWorld().getBlockState(this.blockPos),
+                World.getWorld(),
+                this.getBlockPos()
+        );
     }
 
     /**
@@ -188,7 +192,9 @@ public class  Block {
      * @return whether the block provides power
      */
     public boolean canProvidePower() {
-        return this.block.canProvidePower();
+        return this.block.canProvidePower(
+                World.getWorld().getBlockState(this.blockPos)
+        );
     }
 
     /**
@@ -235,7 +241,9 @@ public class  Block {
      * @return whether the block is translucent.
      */
     public boolean isTranslucent() {
-        return this.block.isTranslucent();
+        return this.block.isTranslucent(
+                World.getWorld().getBlockState(this.blockPos)
+        );
     }
 
     @Override

@@ -7,8 +7,8 @@ import com.chattriggers.ctjs.minecraft.wrappers.Player;
 import com.chattriggers.ctjs.minecraft.wrappers.World;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import lombok.Getter;
-import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.audio.SoundManager;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import paulscode.sound.SoundSystem;
 

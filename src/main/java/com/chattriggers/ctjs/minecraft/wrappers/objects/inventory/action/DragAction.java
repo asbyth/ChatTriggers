@@ -62,7 +62,7 @@ public class DragAction extends Action {
             System.out.println("Enforcing slot of -999");
         }
 
-        doClick(button, 5);
+        doClick(button, net.minecraft.inventory.ClickType.QUICK_CRAFT);
     }
 
     public enum ClickType {

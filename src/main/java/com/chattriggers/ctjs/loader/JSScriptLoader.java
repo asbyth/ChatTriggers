@@ -19,6 +19,7 @@ import javax.script.ScriptException;
 import java.io.*;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -299,7 +300,7 @@ public class JSScriptLoader extends ScriptLoader {
 
         for (File file : getScriptFiles(dir, ignored)) {
             try {
-                allFiles.put(file.getName(), FileUtils.readLines(file));
+                allFiles.put(file.getName(), FileUtils.readLines(file, Charset.defaultCharset()));
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -1,9 +1,9 @@
 package com.chattriggers.ctjs.minecraft.objects;
 
 import com.chattriggers.ctjs.minecraft.wrappers.World;
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 
-public class ParticleEffect extends EntityFX {
+public class ParticleEffect extends Particle {
     public ParticleEffect(double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
         super(World.getWorld(), x, y, z, xSpeed, ySpeed, zSpeed);
     }
@@ -60,7 +60,7 @@ public class ParticleEffect extends EntityFX {
     }
 
     public ParticleEffect remove() {
-        super.setDead();
+        super.setExpired();
 
         return this;
     }

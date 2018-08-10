@@ -6,10 +6,11 @@ import com.chattriggers.ctjs.minecraft.wrappers.Player;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.minecraft.network.play.server.S02PacketChat;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.network.play.server.SPacketChat;
+import net.minecraft.util.text.ChatType;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.Iterator;
  */
 @Accessors(chain = true)
 public class Message {
-    private IChatComponent chatMessage;
+    private ITextComponent chatMessage;
 
     /**
      * -- GETTER --
@@ -87,7 +88,7 @@ public class Message {
      * @param event the chat event
      */
     public Message(ClientChatReceivedEvent event) {
-        this(event.message);
+        this(event.getMessage());
     }
 
     /**
@@ -95,7 +96,7 @@ public class Message {
      * 
      * @param component the IChatComponent
      */
-    public Message(IChatComponent component) {
+    public Message(ITextComponent component) {
         this.chatLineId = -1;
         this.recursive = false;
         this.formatted = true;
@@ -106,7 +107,7 @@ public class Message {
         if (component.getSiblings().isEmpty()) {
             this.messageParts.add(new TextComponent(component));
         } else {
-            for (IChatComponent sibling : component.getSiblings()) {
+            for (ITextComponent sibling : component.getSiblings()) {
                 this.messageParts.add(new TextComponent(sibling));
             }
         }
@@ -218,9 +219,9 @@ public class Message {
         }
 
         if (this.recursive) {
-            Client.getConnection().handleChat(new S02PacketChat(this.chatMessage, (byte) 0));
+            Client.getConnection().handleChat(new SPacketChat(this.chatMessage, ChatType.CHAT));
         } else {
-            Player.getPlayer().addChatMessage(this.chatMessage);
+            Player.getPlayer().sendMessage(this.chatMessage);
         }
     }
 
@@ -232,7 +233,7 @@ public class Message {
 
         if (!ChatLib.isPlayer("[ACTION BAR]: " + this.chatMessage.getFormattedText())) return;
 
-        Client.getConnection().handleChat(new S02PacketChat(this.chatMessage, (byte) 2));
+        Client.getConnection().handleChat(new SPacketChat(this.chatMessage, ChatType.GAME_INFO));
     }
 
     /**
@@ -244,7 +245,7 @@ public class Message {
         ChatLib.editChat(this, replacements);
     }
 
-    public IChatComponent getChatMessage() {
+    public ITextComponent getChatMessage() {
         if (this.chatMessage == null)
             parseMessages();
 
@@ -253,14 +254,14 @@ public class Message {
 
     // helper method to parse chat component parts
     private void parseMessages() {
-        this.chatMessage = new ChatComponentText("");
+        this.chatMessage = new TextComponentString("");
 
         for (Object message : this.messageParts) {
             if (message instanceof String) {
                 String toAdd = ((String) message);
 
-                ChatComponentText cct = new ChatComponentText(this.formatted ? ChatLib.addColor(toAdd) : toAdd);
-                cct.setChatStyle(new ChatStyle().setParentStyle(null));
+                TextComponentString cct = new TextComponentString(this.formatted ? ChatLib.addColor(toAdd) : toAdd);
+                cct.setStyle(new Style().setParentStyle(null));
 
                 this.chatMessage.appendSibling(cct);
             } else if (message instanceof TextComponent) {

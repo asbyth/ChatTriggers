@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class Book {
@@ -19,7 +19,7 @@ public class Book {
     private NBTTagCompound bookData;
 
     public Book(String bookName) {
-        book = new ItemStack(Items.written_book);
+        book = new ItemStack(Items.WRITTEN_BOOK);
 
         bookData = new NBTTagCompound();
         bookData.setTag("author", new NBTTagString(Client.getMinecraft().getSession().getUsername()));
@@ -38,7 +38,7 @@ public class Book {
     public Book addPage(Message message) {
         NBTTagList pages = (NBTTagList) bookData.getTag("pages");
 
-        pages.appendTag(new NBTTagString(IChatComponent.Serializer.componentToJson(message.getChatMessage())));
+        pages.appendTag(new NBTTagString(ITextComponent.Serializer.componentToJson(message.getChatMessage())));
 
         updateBookScreen(pages);
 
@@ -67,7 +67,7 @@ public class Book {
     public Book setPage(int pageNumber, Message message) {
         NBTTagList pages = (NBTTagList) bookData.getTag("pages");
 
-        pages.set(pageNumber, new NBTTagString(IChatComponent.Serializer.componentToJson(message.getChatMessage())));
+        pages.set(pageNumber, new NBTTagString(ITextComponent.Serializer.componentToJson(message.getChatMessage())));
 
         updateBookScreen(pages);
 

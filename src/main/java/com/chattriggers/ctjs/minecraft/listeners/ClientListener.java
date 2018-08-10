@@ -85,7 +85,7 @@ public class ClientListener {
 
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
-        TriggerType.RENDER_WORLD.triggerAll(event.partialTicks);
+        TriggerType.RENDER_WORLD.triggerAll(event.getPartialTicks());
     }
 
     @SubscribeEvent
@@ -145,32 +145,32 @@ public class ClientListener {
 
     @SubscribeEvent
     public void onBlockHighlight(DrawBlockHighlightEvent event) {
-        if (event.target == null || event.target.getBlockPos() == null) return;
+        if (event.getTarget() == null || event.getTarget().getBlockPos() == null) return;
 
         Vector3d position = new Vector3d(
-                event.target.getBlockPos().getX(),
-                event.target.getBlockPos().getY(),
-                event.target.getBlockPos().getZ()
+                event.getTarget().getBlockPos().getX(),
+                event.getTarget().getBlockPos().getY(),
+                event.getTarget().getBlockPos().getZ()
         );
         TriggerType.BLOCK_HIGHLIGHT.triggerAll(event, position);
     }
 
     @SubscribeEvent
     public void onPickupItem(EntityItemPickupEvent event) {
-        if (event.entityPlayer instanceof EntityPlayerMP) {
-            EntityPlayerMP player = (EntityPlayerMP) event.entityPlayer;
+        if (event.getEntityPlayer() instanceof EntityPlayerMP) {
+            EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
             Vector3d position = new Vector3d(
-                    event.item.posX,
-                    event.item.posY,
-                    event.item.posZ
+                    event.getItem().posX,
+                    event.getItem().posY,
+                    event.getItem().posZ
             );
             Vector3d motion = new Vector3d(
-                    event.item.motionX,
-                    event.item.motionY,
-                    event.item.motionZ
+                    event.getItem().motionX,
+                    event.getItem().motionY,
+                    event.getItem().motionZ
             );
             TriggerType.PICKUP_ITEM.triggerAll(
-                    new Item(event.item.getEntityItem()),
+                    new Item(event.getItem().getItem()),
                     new PlayerMP(player),
                     position,
                     motion
@@ -180,20 +180,20 @@ public class ClientListener {
 
     @SubscribeEvent
     public void onDropItem(ItemTossEvent event) {
-        if (event.player instanceof EntityPlayerMP) {
-            EntityPlayerMP player = (EntityPlayerMP) event.player;
+        if (event.getPlayer() instanceof EntityPlayerMP) {
+            EntityPlayerMP player = (EntityPlayerMP) event.getPlayer();
             Vector3d position = new Vector3d(
-                    event.entityItem.posX,
-                    event.entityItem.posY,
-                    event.entityItem.posZ
+                    event.getEntityItem().posX,
+                    event.getEntityItem().posY,
+                    event.getEntityItem().posZ
             );
             Vector3d motion = new Vector3d(
-                    event.entityItem.motionX,
-                    event.entityItem.motionY,
-                    event.entityItem.motionZ
+                    event.getEntityItem().motionX,
+                    event.getEntityItem().motionY,
+                    event.getEntityItem().motionZ
             );
             TriggerType.DROP_ITEM.triggerAll(
-                    new Item(event.entityItem.getEntityItem()),
+                    new Item(event.getEntityItem().getItem()),
                     new PlayerMP(player),
                     position,
                     motion
@@ -204,8 +204,8 @@ public class ClientListener {
     @SubscribeEvent
     public void onItemTooltip(ItemTooltipEvent e) {
         TriggerType.TOOLTIP.triggerAll(
-                e.toolTip,
-                new Item(e.itemStack)
+                e.getToolTip(),
+                new Item(e.getItemStack())
         );
     }
 }

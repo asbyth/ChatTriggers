@@ -123,7 +123,7 @@ public class Scoreboard {
                 }
             }
 
-            net.minecraft.scoreboard.Score theScore = scoreboard.getValueFromObjective(line, sidebarObjective);
+            net.minecraft.scoreboard.Score theScore = scoreboard.getOrCreateScore(line, sidebarObjective);
 
             theScore.setScorePoints(score);
         } catch (Exception ignored) { }

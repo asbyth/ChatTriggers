@@ -3,8 +3,8 @@ package com.chattriggers.ctjs.minecraft.mixins;
 import com.chattriggers.ctjs.minecraft.objects.message.TextComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ScreenShotHelper;
+import net.minecraft.util.text.ITextComponent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,14 +30,13 @@ public abstract class MixinMinecraft {
             method = "dispatchKeypresses",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/GuiNewChat;printChatMessage(Lnet/minecraft/util/IChatComponent;)V",
-                    shift = At.Shift.BEFORE,
-                    ordinal = 1
+                    target = "Lnet/minecraft/client/gui/GuiNewChat;printChatMessage(Lnet/minecraft/util/text/ITextComponent;)V",
+                    shift = At.Shift.BEFORE
             ),
             cancellable = true
     )
     private void dispatchKeypresses(CallbackInfo ci) {
-        IChatComponent chatComponent = ScreenShotHelper.saveScreenshot(this.mcDataDir, this.displayWidth, this.displayHeight, this.framebufferMc);
+        ITextComponent chatComponent = ScreenShotHelper.saveScreenshot(this.mcDataDir, this.displayWidth, this.displayHeight, this.framebufferMc);
 
         if (chatComponent != null) {
             new TextComponent(chatComponent).chat();

@@ -8,6 +8,7 @@ import lombok.Getter;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 
 public class PlayerMP extends Entity {
@@ -51,13 +52,15 @@ public class PlayerMP extends Entity {
 
     /**
      * Gets the item currently in the player's specified inventory slot.
-     * 0 for main hand, 1-4 for armor.
+     * MAINHAND, OFFHAND, FEET, LEGS, CHEST, HEAD.
      *
      * @param slot the slot to access
      * @return the item in said slot
      */
-    public Item getItemInSlot(int slot) {
-        return new Item(player.getEquipmentInSlot(slot));
+    public Item getItemInSlot(String slot) {
+        return new Item(player.getItemStackFromSlot(
+                EntityEquipmentSlot.valueOf(slot))
+        );
     }
 
     /**
@@ -94,7 +97,7 @@ public class PlayerMP extends Entity {
     }
 
     public NetworkPlayerInfo getPlayerInfo() {
-        return Client.getMinecraft().getNetHandler().getPlayerInfo(this.player.getUniqueID());
+        return Client.getConnection().getPlayerInfo(this.player.getUniqueID());
     }
 
     @Override

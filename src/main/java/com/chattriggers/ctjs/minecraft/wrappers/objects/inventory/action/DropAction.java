@@ -3,6 +3,7 @@ package com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.action;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import net.minecraft.inventory.ClickType;
 
 @Accessors(chain = true)
 public class DropAction extends Action {
@@ -22,7 +23,7 @@ public class DropAction extends Action {
     public void complete() {
         doClick(
                 holdingCtrl ? 1 : 0,
-                4
+                ClickType.THROW
         );
     }
 }

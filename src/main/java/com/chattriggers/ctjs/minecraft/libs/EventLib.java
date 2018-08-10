@@ -1,6 +1,6 @@
 package com.chattriggers.ctjs.minecraft.libs;
 
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -17,7 +17,7 @@ public class EventLib {
      * @return the button clicked (0 for left click, 1 for middle click, 2 for right click, etc.)
      */
     public static int getButton(MouseEvent event) {
-        return event.button;
+        return event.getButton();
     }
 
     /**
@@ -26,8 +26,8 @@ public class EventLib {
      * @param event a MouseEvent
      * @return the state of the button true for pressed, false for unpressed
      */
-    public static Boolean getButtonState(MouseEvent event) {
-        return event.buttonstate;
+    public static boolean getButtonState(MouseEvent event) {
+        return event.isButtonstate();
     }
 
     /**
@@ -37,7 +37,7 @@ public class EventLib {
      * @return the type of the event
      */
     public static RenderGameOverlayEvent.ElementType getType(RenderGameOverlayEvent event) {
-        return event.type;
+        return event.getType();
     }
 
     /**
@@ -47,7 +47,7 @@ public class EventLib {
      * @return the type of the event, 0 for standard chat message, 1 for system message displayed as standard text
      */
     public static int getType(ClientChatReceivedEvent event) {
-        return event.type;
+        return event.getType().getId();
     }
 
     /**
@@ -56,8 +56,8 @@ public class EventLib {
      * @param event a chat event
      * @return the message from the event
      */
-    public static IChatComponent getMessage(ClientChatReceivedEvent event) {
-        return event.message;
+    public static ITextComponent getMessage(ClientChatReceivedEvent event) {
+        return event.getMessage();
     }
 
     /**
@@ -67,7 +67,7 @@ public class EventLib {
      * @return the name of the sound that was played
      */
     public static String getName(PlaySoundEvent event) {
-        return event.name;
+        return event.getName();
     }
 
     /**
@@ -77,7 +77,7 @@ public class EventLib {
      * @return the mod id
      */
     public static String getModId(ConfigChangedEvent.OnConfigChangedEvent event) {
-        return event.modID;
+        return event.getModID();
     }
 
     /**
@@ -96,7 +96,7 @@ public class EventLib {
             if (!cbi.isCancellable()) return;
             cbi.cancel();
         } else if (event instanceof PlaySoundEvent) {
-            ((PlaySoundEvent) event).result = null;
+            ((PlaySoundEvent) event).setResultSound(null);
         } else {
             throw new IllegalArgumentException();
         }

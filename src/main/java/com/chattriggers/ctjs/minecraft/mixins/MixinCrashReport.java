@@ -13,13 +13,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(CrashReport.class)
 public class MixinCrashReport {
     @Final @Shadow
-    private CrashReportCategory theReportCategory;
+    private CrashReportCategory systemDetailsCategory;
 
     @Inject(method = "populateEnvironment", at = @At("HEAD"))
     private void injectCTModules(CallbackInfo ci) {
-        this.theReportCategory.addCrashSectionCallable(
+        this.systemDetailsCategory.addCrashSection(
             "ct.js modules",
-                () -> ModuleManager.getInstance().getModules().toString()
+                ModuleManager.getInstance().getModules().toString()
         );
     }
 }

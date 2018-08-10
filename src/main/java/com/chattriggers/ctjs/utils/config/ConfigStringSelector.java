@@ -68,7 +68,7 @@ public class ConfigStringSelector extends ConfigOption {
     }
 
     @Override
-    public void draw(int mouseX, int mouseY) {
+    public void draw(int mouseX, int mouseY, float partialTicks) {
         if (this.hidden) return;
 
         int middle = Renderer.screen.getWidth() / 2;
@@ -84,12 +84,12 @@ public class ConfigStringSelector extends ConfigOption {
                 this.y + 20
         ).draw();
 
-        this.leftArrowButton.xPosition = middle - 100 + this.x;
-        this.rightArrowButton.xPosition = middle + 70 + this.x;
-        this.leftArrowButton.drawButton(Client.getMinecraft(), mouseX, mouseY);
-        this.rightArrowButton.drawButton(Client.getMinecraft(), mouseX, mouseY);
+        this.leftArrowButton.x = middle - 100 + this.x;
+        this.rightArrowButton.x = middle + 70 + this.x;
+        this.leftArrowButton.drawButton(Client.getMinecraft(), mouseX, mouseY, partialTicks);
+        this.rightArrowButton.drawButton(Client.getMinecraft(), mouseX, mouseY, partialTicks);
 
-        super.draw(mouseX, mouseY);
+        super.draw(mouseX, mouseY, partialTicks);
     }
 
     @Override
