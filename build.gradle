@@ -1,5 +1,3 @@
-
-// For those who want the bleeding edge
 buildscript {
     def f = file("gradle/mcversion.txt")
 
