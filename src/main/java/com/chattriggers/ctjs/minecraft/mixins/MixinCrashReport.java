@@ -19,7 +19,7 @@ public class MixinCrashReport {
     private void injectCTModules(CallbackInfo ci) {
         this.systemDetailsCategory.addCrashSection(
             "ct.js modules",
-                ModuleManager.getInstance().getModules().toString()
+                ModuleManager.getInstance() == null ? "PRE-INIT, NONE LOADED" : ModuleManager.getInstance().getModules().toString()
         );
     }
 }
