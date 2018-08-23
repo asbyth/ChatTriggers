@@ -2,8 +2,10 @@
 // For those who want the bleeding edge
 buildscript {
     def f = file("gradle/mcversion.txt")
-
     project.ext.mcVersion = f.exists() ? f.readLines().first() as int : 10809
+
+    f = file("gradle/hyperium.txt")
+    project.ext.hyperium = f.exists() ? f.readLines().first() as int : 0
 
     repositories {
         jcenter()
@@ -230,6 +232,7 @@ apply from: 'preprocessor.gradle'
 task changeMcVersion() {
     doLast {
         def version
+        def hyperium
 
         if (project.hasProperty("minecraftVersion")) {
             version = project.minecraftVersion
@@ -237,15 +240,29 @@ task changeMcVersion() {
             version = 10809
             println "Defaulting to version 1.8.9..."
         }
+        
+        if (project.hasProperty("hyperium") {
+            hyperium = project.hyperium
+        } else {
+            hyperium = 0
+            println "Defaulting to forge"
+        }
 
+        project.ext.isHyperium  = hyperium
         project.ext.mcVersion = version
         def f = file("gradle/mcversion.txt")
         f.delete()
         f.createNewFile()
         f.write(version.toString())
 
+        f = file("gradle/hyperium.txt')
+        f.delete()
+        f.createNewFile()
+        f.write(hyperium.toString())
+        
         println "MC target version is $version"
-        def vars = [MC: version as int]
+        println "Is Hyperium? $hyperium"
+        def vars = [MC: version as int, HY: hyperium as int]
         project.convertTree(vars, 'src/main/java')
         project.convertTree(vars, 'src/main/resources')
     }
