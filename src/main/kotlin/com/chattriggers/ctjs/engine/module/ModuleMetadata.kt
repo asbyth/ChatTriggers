@@ -11,6 +11,7 @@ data class ModuleMetadata(
         val description: String? = null,
         val requires: ArrayList<String>? = null,
         val ignored: ArrayList<String>? = null,
+        val mainFile: String = "main",
         var fileName: String? = null,
         var isRequired: Boolean = false
 ) {
