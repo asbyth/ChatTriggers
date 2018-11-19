@@ -1,5 +1,6 @@
 package com.chattriggers.ctjs
 
+import com.chattriggers.ctjs.blocks.BlockHandler
 import com.chattriggers.ctjs.commands.CTCommand
 import com.chattriggers.ctjs.engine.ModuleManager
 import com.chattriggers.ctjs.loader.UriScheme
@@ -37,6 +38,8 @@ object CTJS {
 
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {
+        BlockHandler.registerBlocks()
+
         this.configLocation = event.modConfigurationDirectory
         val pictures = File(event.modConfigurationDirectory, "ChatTriggers/images/")
         pictures.mkdirs()
@@ -70,6 +73,7 @@ object CTJS {
             ModuleManager.load(true)
         }
 
+        BlockHandler.registerRenders()
         registerHooks()
     }
 
