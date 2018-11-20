@@ -2,6 +2,7 @@ package com.chattriggers.ctjs.blocks
 
 import com.chattriggers.ctjs.engine.ModuleManager
 import com.chattriggers.ctjs.minecraft.libs.ChatLib
+import com.chattriggers.ctjs.minecraft.libs.FileLib
 import com.chattriggers.ctjs.minecraft.libs.renderer.Renderer
 import com.chattriggers.ctjs.minecraft.objects.gui.GuiHandler
 import com.chattriggers.ctjs.minecraft.wrappers.Client
@@ -79,6 +80,7 @@ class CodeBlockGui(private val tileEntity: TileEntityCodeBlock) : GuiScreen() {
     private var systemTime = Client.getSystemTime()
     private var originalFile: String
     private var isFile: Boolean?
+    private var code = ""
 
     init {
         textField.maxStringLength = 1000
@@ -89,6 +91,10 @@ class CodeBlockGui(private val tileEntity: TileEntityCodeBlock) : GuiScreen() {
             textField.text.isFile() -> true
             textField.text.isFolder() -> null
             else -> false
+        }
+
+        if (isFile == true) {
+            code = FileLib.read(baseFolder + tileEntity.file)!!
         }
     }
 
@@ -163,6 +169,8 @@ class CodeBlockGui(private val tileEntity: TileEntityCodeBlock) : GuiScreen() {
 
         textField.width = Renderer.screen.getWidth() - Renderer.getStringWidth(baseFolder) - 10
         textField.drawTextBox()
+
+        Renderer.drawString(code, 5f, 20f)
 
         GlStateManager.popMatrix()
     }

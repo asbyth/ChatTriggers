@@ -353,11 +353,14 @@ object Renderer {
         if (text.contains("\n")) {
             var newY = y
 
-            ChatLib.addColor(text).split("\n").forEach {
-                fr.drawString(it, x, newY, colorized ?: WHITE, false)
-
-                newY += fr.FONT_HEIGHT
-            }
+            ChatLib.addColor(text)
+                    .replace("\t", "    ")
+                    .replace("\r", "")
+                    .split("\n")
+                    .forEach {
+                        fr.drawString(it, x, newY, colorized ?: WHITE, false)
+                        newY += fr.FONT_HEIGHT
+                    }
 
             return
         }
