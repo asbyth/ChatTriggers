@@ -17,10 +17,14 @@ class TileEntityCodeBlock: TileEntity() {
         val entryList = compound.getTag("code")
         when (entryList) {
             is NBTTagCompound -> {
-                file = entryList.getString("file")
-                triggerType = TriggerType.valueOf(entryList.getString("triggerType"))
-                connectsToRedstone = entryList.getBoolean("connectsToRedstone")
-                solid = entryList.getBoolean("solid")
+                try {
+                    file = entryList.getString("file")
+                    triggerType = TriggerType.valueOf(entryList.getString("triggerType"))
+                    connectsToRedstone = entryList.getBoolean("connectsToRedstone")
+                    solid = entryList.getBoolean("solid")
+                } catch (exception: IllegalArgumentException) {
+                    writeToNBT(this.serializeNBT())
+                }
             }
             else -> ModuleManager.generalConsole.printStackTrace(IllegalArgumentException("NBTBase in code block is not a NBTTagCompound"))
         }

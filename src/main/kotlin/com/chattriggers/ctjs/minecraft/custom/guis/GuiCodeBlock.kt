@@ -4,7 +4,9 @@ import com.chattriggers.ctjs.minecraft.custom.tileEntities.TileEntityCodeBlock
 import com.chattriggers.ctjs.minecraft.libs.ChatLib
 import com.chattriggers.ctjs.minecraft.libs.FileLib
 import com.chattriggers.ctjs.minecraft.libs.renderer.Renderer
+import com.chattriggers.ctjs.minecraft.objects.gui.GuiHandler
 import com.chattriggers.ctjs.minecraft.wrappers.Client
+import net.minecraft.client.gui.GuiButton
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.gui.GuiTextField
 import net.minecraft.client.renderer.GlStateManager
@@ -16,6 +18,7 @@ class GuiCodeBlock(private val tileEntity: TileEntityCodeBlock) : GuiScreen() {
             0, Renderer.getFontRenderer(),
             6 + Renderer.getStringWidth(baseFolder), 4,
             0, 10)
+    private val optionsButton = GuiButton(1, 0, 0, "Options")
 
     private var systemTime = Client.getSystemTime()
     private var originalFile: String
@@ -58,6 +61,12 @@ class GuiCodeBlock(private val tileEntity: TileEntityCodeBlock) : GuiScreen() {
 
     override fun mouseClicked(mouseX: Int, mouseY: Int, button: Int) {
         super.mouseClicked(mouseX, mouseY, button)
+
+        if (optionsButton.mousePressed(Client.getMinecraft(), mouseX, mouseY)) {
+            GuiHandler.openGui(GuiCodeBlockOptions(tileEntity))
+            return
+        }
+
         textField.mouseClicked(mouseX, mouseY, 0)
     }
 
@@ -101,6 +110,11 @@ class GuiCodeBlock(private val tileEntity: TileEntityCodeBlock) : GuiScreen() {
         GlStateManager.pushMatrix()
 
         Renderer.drawRect(0xaa000000.toInt(), 0f, 0f, Renderer.screen.getWidth().toFloat(), Renderer.screen.getHeight().toFloat())
+
+        optionsButton.xPosition = Renderer.screen.getWidth() - optionsButton.width
+        optionsButton.yPosition = Renderer.screen.getHeight() - optionsButton.height
+        optionsButton.drawButton(Client.getMinecraft(), mouseX, mouseY)
+
         when (isFile) {
             true -> Renderer.drawString(ChatLib.addColor("&a$baseFolder"), 5f, 5f)
             null -> Renderer.drawString(ChatLib.addColor("&e$baseFolder"), 5f, 5f)
