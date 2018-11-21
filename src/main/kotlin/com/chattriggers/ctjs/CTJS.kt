@@ -1,9 +1,9 @@
 package com.chattriggers.ctjs
 
-import com.chattriggers.ctjs.blocks.BlockHandler
 import com.chattriggers.ctjs.commands.CTCommand
 import com.chattriggers.ctjs.engine.ModuleManager
 import com.chattriggers.ctjs.loader.UriScheme
+import com.chattriggers.ctjs.minecraft.custom.CustomHandler
 import com.chattriggers.ctjs.minecraft.libs.FileLib
 import com.chattriggers.ctjs.minecraft.objects.Sound
 import com.chattriggers.ctjs.minecraft.wrappers.Player
@@ -38,7 +38,7 @@ object CTJS {
 
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {
-        BlockHandler.registerBlocks()
+        CustomHandler.registerBlocks()
 
         this.configLocation = event.modConfigurationDirectory
         val pictures = File(event.modConfigurationDirectory, "ChatTriggers/images/")
@@ -73,7 +73,7 @@ object CTJS {
             ModuleManager.load(true)
         }
 
-        BlockHandler.registerRenders()
+        CustomHandler.registerRenders()
         registerHooks()
     }
 

@@ -1,76 +1,16 @@
-package com.chattriggers.ctjs.blocks
+package com.chattriggers.ctjs.minecraft.custom.guis
 
-import com.chattriggers.ctjs.engine.ModuleManager
+import com.chattriggers.ctjs.minecraft.custom.tileEntities.TileEntityCodeBlock
 import com.chattriggers.ctjs.minecraft.libs.ChatLib
 import com.chattriggers.ctjs.minecraft.libs.FileLib
 import com.chattriggers.ctjs.minecraft.libs.renderer.Renderer
-import com.chattriggers.ctjs.minecraft.objects.gui.GuiHandler
 import com.chattriggers.ctjs.minecraft.wrappers.Client
-import net.minecraft.block.Block
-import net.minecraft.block.ITileEntityProvider
-import net.minecraft.block.material.Material
-import net.minecraft.block.state.IBlockState
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.gui.GuiTextField
 import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.entity.player.EntityPlayer
-import net.minecraft.nbt.NBTTagCompound
-import net.minecraft.tileentity.TileEntity
-import net.minecraft.util.BlockPos
-import net.minecraft.util.EnumFacing
-import net.minecraft.world.World
 import java.io.File
 
-class BlockCodeBlock(materialIn: Material) : Block(materialIn), ITileEntityProvider {
-    init {
-        unlocalizedName = "code_block"
-    }
-
-    override fun onBlockActivated(worldIn: World, pos: BlockPos?, state: IBlockState?, playerIn: EntityPlayer?, side: EnumFacing?, hitX: Float, hitY: Float, hitZ: Float): Boolean {
-        if (worldIn.isRemote) return true
-
-        val tileEntity = worldIn.getTileEntity(pos)
-        when (tileEntity) {
-            is TileEntityCodeBlock -> GuiHandler.openGui(CodeBlockGui(tileEntity))
-            else -> ModuleManager.generalConsole.printStackTrace(IllegalArgumentException("TileEntity for code block is not TileEntityCodeBlock"))
-        }
-
-        return false
-    }
-
-    override fun createNewTileEntity(worldIn: World?, meta: Int): TileEntity {
-        return TileEntityCodeBlock()
-    }
-}
-
-class TileEntityCodeBlock: TileEntity() {
-    var file = ""
-
-    override fun readFromNBT(compound: NBTTagCompound) {
-        super.readFromNBT(compound)
-
-        val entryList = compound.getTag("code")
-        when (entryList) {
-            is NBTTagCompound -> {
-                file = entryList.getString("file")
-                ModuleManager.generalConsole.out.println("file: $file")
-            }
-            else -> ModuleManager.generalConsole.printStackTrace(IllegalArgumentException("NBTBase in code block is not a NBTTagCompound"))
-        }
-    }
-
-    override fun writeToNBT(compound: NBTTagCompound) {
-        super.writeToNBT(compound)
-
-        val entryCompound = NBTTagCompound()
-        entryCompound.setString("file", file)
-
-        compound.setTag("code", entryCompound)
-        ModuleManager.generalConsole.out.println(compound)
-    }
-}
-
-class CodeBlockGui(private val tileEntity: TileEntityCodeBlock) : GuiScreen() {
+class GuiCodeBlock(private val tileEntity: TileEntityCodeBlock) : GuiScreen() {
     private val baseFolder = "./config/ChatTriggers/CodeBlocks/"
     private val textField = GuiTextField(
             0, Renderer.getFontRenderer(),
