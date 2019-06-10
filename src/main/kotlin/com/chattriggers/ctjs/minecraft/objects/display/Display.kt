@@ -6,56 +6,32 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror
 
 @External
 @NotAbstract
-abstract class Display {
+abstract class Display() {
     private var lines = mutableListOf<DisplayLine>()
 
-    private var renderX = 0f
-    private var renderY = 0f
-    private var shouldRender = true
+    protected var renderX = 0f
+    protected var renderY = 0f
+    protected var shouldRender = true
 
-    private var backgroundColor = 0x50000000
-    private var textColor = 0xffffffff.toInt()
+    protected var backgroundColor = 0x50000000
+    protected var textColor = 0xffffffff.toInt()
 
     private var background = DisplayHandler.Background.NONE
     private var align = DisplayHandler.Align.LEFT
     private var order = DisplayHandler.Order.DOWN
 
-    private var minWidth = 0f
+    protected var minWidth = 0f
     private var width = 0f
     private var height = 0f
 
-    constructor() {
+    init {
         DisplayHandler.registerDisplay(this)
     }
 
-    constructor(config: ScriptObjectMirror?) {
-        this.shouldRender = config.getOption("shouldRender", true).toBoolean()
-        this.renderX = config.getOption("renderX", 0).toFloat()
-        this.renderY = config.getOption("renderY", 0).toFloat()
-
-        this.backgroundColor = config.getOption("backgroundColor", 0x50000000).toInt()
-        this.textColor = config.getOption("textColor", 0xffffffff.toInt()).toInt()
-
-        this.setBackground(config.getOption("background", DisplayHandler.Background.NONE))
-        this.setAlign(config.getOption("align", DisplayHandler.Align.LEFT))
-        this.setOrder(config.getOption("order", DisplayHandler.Order.DOWN))
-
-        this.minWidth = config.getOption("minWidth", 0f).toFloat()
-
-        DisplayHandler.registerDisplay(this)
-    }
-
-    private fun ScriptObjectMirror?.getOption(key: String, default: Any): String {
-        if (this == null) return default.toString()
-        return this.getOrDefault(key, default).toString()
-    }
-
-    fun getBackgroundColor(): Int = this.backgroundColor
     fun setBackgroundColor(backgroundColor: Int) = apply {
         this.backgroundColor = backgroundColor
     }
 
-    fun getTextColor(): Int = this.textColor
     fun setTextColor(textColor: Int) = apply {
         this.textColor = textColor
     }
@@ -128,12 +104,10 @@ abstract class Display {
         this.lines.clear()
     }
 
-    fun getRenderX(): Float = this.renderX
     fun setRenderX(renderX: Float) = apply {
         this.renderX
     }
 
-    fun getRenderY(): Float = this.renderY
     fun setRenderY(renderY: Float) = apply {
         this.renderY = renderY
     }
@@ -143,14 +117,13 @@ abstract class Display {
         this.renderY = renderY
     }
 
-    fun getShouldRender(): Boolean = this.shouldRender
     fun setShouldRender(shouldRender: Boolean) = apply {
         this.shouldRender = shouldRender
     }
 
     fun getWidth(): Float = this.width
     fun getHeight(): Float = this.height
-    fun getMinWidth(): Float = this.minWidth
+
     fun setMinWidth(minWidth: Float) = apply {
         this.minWidth = minWidth
     }

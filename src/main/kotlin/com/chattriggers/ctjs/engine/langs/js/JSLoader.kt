@@ -92,8 +92,13 @@ object JSLoader : ILoader {
     override fun eval(code: String): Any? {
         return scriptEngine.eval(code)
     }
+
     override fun getLanguageName(): List<String> {
         return listOf("js")
+    }
+
+    override fun getObject(name: String): Any? {
+        return scriptEngine.get(name)
     }
 
     override fun trigger(trigger: OnTrigger, method: Any, vararg args: Any?) {

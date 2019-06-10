@@ -75,6 +75,12 @@ interface ILoader {
     fun getLanguageName(): List<String>
 
     /**
+     * Returns an object with the given name in the language's
+     * namespace, if it exists
+     */
+    fun getObject(name: String): Any?
+
+    /**
      * Actually calls the method for this trigger in this loader
      */
     fun trigger(trigger: OnTrigger, method: Any, vararg args: Any?)
