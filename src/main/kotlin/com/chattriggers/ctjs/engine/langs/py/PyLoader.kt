@@ -30,8 +30,6 @@ object PyLoader : ILoader {
         if (!isPythonInstalled()) {
             console.out.println("Python 2.7 is not installed on your system; you will" +
                     "not be able to write scripts in ct.js using Python")
-
-            // TODO: Install Python 2.7 using libs/Python-2.7.tgz?
         }
 
         val props = Properties(System.getProperties())
