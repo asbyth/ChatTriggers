@@ -26,9 +26,9 @@ buildscript {
     dependencies {
         classpath "net.minecraftforge.gradle:ForgeGradle:" + (
                 mcVersion >= 11200 ? '2.3-SNAPSHOT' :
-                mcVersion >= 10904 ? '2.2-SNAPSHOT' :
-                mcVersion >= 10809 ? "2.1-SNAPSHOT" :
-                                     "invalid"
+                        mcVersion >= 10904 ? '2.2-SNAPSHOT' :
+                                mcVersion >= 10809 ? "2.1-SNAPSHOT" :
+                                        "invalid"
         )
         classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
 //        classpath "io.franzbecker:gradle-lombok:1.10"
@@ -43,9 +43,9 @@ apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.dokka'
 
 version = "0.17_pre5-SNAPSHOT-" + (
-    mcVersion.toString().substring(0, 1) + "."
-    + mcVersion.toString().substring(1, 3).replace("0", "") + "."
-    + mcVersion.toString().substring(3, 5).replace("0", "")
+        mcVersion.toString().substring(0, 1) + "."
+                + mcVersion.toString().substring(1, 3).replace("0", "") + "."
+                + mcVersion.toString().substring(3, 5).replace("0", "")
 )
 group = "com.chattriggers.ctjs" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "ctjs"
@@ -122,11 +122,12 @@ dependencies {
     provided "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     provided "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     provided 'org.jsoup:jsoup:1.11.3'
+    provided group: 'org.graalvm', name: 'graal-sdk', version: '1.0.0-rc7'
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
-      
+    
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
     //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env

@@ -4,19 +4,10 @@ import com.chattriggers.ctjs.engine.ILoader
 import com.chattriggers.ctjs.engine.ILoader.Companion.modulesFolder
 import com.chattriggers.ctjs.engine.module.Module
 import com.chattriggers.ctjs.triggers.OnTrigger
-import com.chattriggers.ctjs.triggers.TriggerType
 import com.chattriggers.ctjs.utils.console.Console
 import com.chattriggers.ctjs.utils.kotlin.ModuleLoader
-import jdk.nashorn.api.scripting.NashornScriptEngine
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory
-import jdk.nashorn.api.scripting.ScriptObjectMirror
-import jdk.nashorn.internal.objects.Global
-import net.minecraft.client.Minecraft
+import org.graalvm.polyglot.Context
 import java.io.File
-import java.net.URL
-import java.net.URLClassLoader
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.jvm.isAccessible
 
 @ModuleLoader
 object JSLoader : ILoader {
@@ -24,9 +15,8 @@ object JSLoader : ILoader {
     override val toRemove = mutableListOf<OnTrigger>()
     override val console by lazy { Console(this) }
 
-    private var global: Global? = null
     private val cachedModules = mutableListOf<Module>()
-    private lateinit var scriptEngine: NashornScriptEngine
+    private var scriptEngine = Context.newBuilder().allowHostAccess(true).build()
 
     override fun load(modules: List<Module>) {
         cachedModules.clear()
@@ -39,7 +29,7 @@ object JSLoader : ILoader {
             it.toURI().toURL()
         }
 
-        scriptEngine = instanceScriptEngine(jars)
+        scriptEngine = Context.newBuilder().allowHostAccess(true).build()
 
         val script = saveResource(
                 "/providedLibs.js",
@@ -50,7 +40,7 @@ object JSLoader : ILoader {
         )
 
         try {
-            scriptEngine.eval(script)
+            scriptEngine.eval("js", script)
         } catch (e: Exception) {
             console.printStackTrace(e)
         }
@@ -62,7 +52,7 @@ object JSLoader : ILoader {
         }
 
         try {
-            scriptEngine.eval(combinedScript)
+            scriptEngine.eval("js", combinedScript)
         } catch (e: Exception) {
             console.printStackTrace(e)
         }
@@ -82,7 +72,7 @@ object JSLoader : ILoader {
         }
 
         try {
-            scriptEngine.eval(script)
+            scriptEngine.eval("js", script)
         } catch (e: Exception) {
             console.out.println("Error loading module ${module.name}")
             console.printStackTrace(e)
@@ -90,8 +80,9 @@ object JSLoader : ILoader {
     }
 
     override fun eval(code: String): Any? {
-        return scriptEngine.eval(code)
+        return scriptEngine.eval("js", code)
     }
+
     override fun getLanguageName(): List<String> {
         return listOf("js")
     }
@@ -114,33 +105,10 @@ object JSLoader : ILoader {
     }
 
     private fun callActualMethod(method: Any, vararg args: Any?) {
-        val som: ScriptObjectMirror = if (method is ScriptObjectMirror) {
-            method
-        } else {
-            if (global == null) {
-                val prop = NashornScriptEngine::class.memberProperties.firstOrNull {
-                    it.name == "global"
-                }!!
-
-                prop.isAccessible = true
-                global = prop.get(scriptEngine) as Global
-            }
-
-            val obj = ScriptObjectMirror.wrap(method, global)
-
-            obj as ScriptObjectMirror
-        }
-
-        som.call(som, *args)
+        TODO()
     }
 
     private fun callNamedMethod(method: String, vararg args: Any?) {
-        scriptEngine.invokeFunction(method, *args)
-    }
-
-    private fun instanceScriptEngine(files: List<URL>): NashornScriptEngine {
-        val ucl = URLClassLoader(files.toTypedArray(), Minecraft::class.java.classLoader)
-
-        return NashornScriptEngineFactory().getScriptEngine(ucl) as NashornScriptEngine
+        TODO()
     }
 }
