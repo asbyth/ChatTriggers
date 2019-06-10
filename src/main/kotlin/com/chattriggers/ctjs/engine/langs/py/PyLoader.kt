@@ -125,10 +125,6 @@ object PyLoader : ILoader {
         return listOf("py")
     }
 
-    override fun getObject(name: String): Any? {
-        return interpreter.get(name)
-    }
-
     override fun trigger(trigger: OnTrigger, method: Any, vararg args: Any?) {
         try {
             if (method is String) {
