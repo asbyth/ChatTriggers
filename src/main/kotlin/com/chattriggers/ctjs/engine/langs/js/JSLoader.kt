@@ -26,10 +26,14 @@ object JSLoader : ILoader {
         }.flatten().filter {
             it.name.endsWith(".jar")
         }.map {
-            it.toURI().toURL()
+            it.absolutePath
         }
 
         scriptEngine = Context.newBuilder().allowHostAccess(true).build()
+
+        jars.forEach {
+            scriptEngine.eval("js", "Java.addToClasspath('$it')")
+        }
 
         val script = saveResource(
                 "/providedLibs.js",
@@ -85,10 +89,6 @@ object JSLoader : ILoader {
 
     override fun getLanguageName(): List<String> {
         return listOf("js")
-    }
-
-    override fun getObject(name: String): Any? {
-        return scriptEngine.get(name)
     }
 
     override fun trigger(trigger: OnTrigger, method: Any, vararg args: Any?) {
