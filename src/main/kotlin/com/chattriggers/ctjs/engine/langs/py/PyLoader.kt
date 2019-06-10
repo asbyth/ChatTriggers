@@ -3,6 +3,7 @@ package com.chattriggers.ctjs.engine.langs.py
 import com.chattriggers.ctjs.engine.ILoader
 import com.chattriggers.ctjs.engine.ILoader.Companion.modulesFolder
 import com.chattriggers.ctjs.engine.module.Module
+import com.chattriggers.ctjs.minecraft.libs.FileLib
 import com.chattriggers.ctjs.triggers.OnTrigger
 import com.chattriggers.ctjs.utils.console.Console
 import com.chattriggers.ctjs.utils.kotlin.ModuleLoader
@@ -23,17 +24,13 @@ object PyLoader : ILoader {
 
     private val cachedModules = mutableListOf<Module>()
     private lateinit var interpreter: PythonInterpreter
+    private var pipInstalled = false
 
     override fun load(modules: List<Module>) {
         cachedModules.clear()
 
-        if (!isPythonInstalled()) {
-            console.out.println("Python 2.7 is not installed on your system; you will" +
-                    "not be able to write scripts in ct.js using Python")
-        }
-
         val props = Properties(System.getProperties())
-        PythonInterpreter.initialize(props, null, arrayOf<String>())
+        PythonInterpreter.initialize(props, null, arrayOf())
 
         interpreter = PythonInterpreter()
 
@@ -141,15 +138,5 @@ object PyLoader : ILoader {
 
     override fun getModules(): List<Module> {
         return cachedModules
-    }
-
-    private fun isPythonInstalled(): Boolean {
-        val processBuilder = ProcessBuilder("python", "--version")
-
-        return try {
-            processBuilder.start().waitFor() == 0
-        } catch (e: Exception) {
-            false
-        }
     }
 }
