@@ -15,11 +15,11 @@ import javax.vecmath.Vector2d
 
 @External
 @NotAbstract
-abstract class DisplayLine {
+abstract class DisplayLine(text: String) {
     private lateinit var text: Text
     private var textWidth = 0f
-    private var textColor: Int? = null
-    private var backgroundColor: Int? = null
+    protected var textColor: Int? = null
+    protected var backgroundColor: Int? = null
 
     private var background: DisplayHandler.Background? = null
     private var align: DisplayHandler.Align? = null
@@ -28,28 +28,12 @@ abstract class DisplayLine {
     private var onHovered: OnTrigger? = null
     private var onDragged: OnTrigger? = null
 
-    private var mouseState = HashMap<Int, Boolean>()
+    protected var mouseState = HashMap<Int, Boolean>()
     private var draggedState = HashMap<Int, Vector2d>()
 
-    constructor(text: String) {
+    init {
         setText(text)
         for (i in 0..5) this.mouseState[i] = false
-    }
-
-    constructor(text: String, config: ScriptObjectMirror) {
-        setText(text)
-        for (i in 0..5) this.mouseState[i] = false
-
-        this.textColor = config.getOption("textColor", null)?.toInt()
-        this.backgroundColor = config.getOption("backgroundColor", null)?.toInt()
-
-        this.setAlign(config.getOption("align", null))
-        this.setBackground(config.getOption("background", null))
-    }
-
-    private fun ScriptObjectMirror?.getOption(key: String, default: Any?): String? {
-        if (this == null) return default?.toString()
-        return this.getOrDefault(key, default).toString()
     }
 
     fun getText(): Text = this.text
@@ -58,7 +42,6 @@ abstract class DisplayLine {
         this.textWidth = Renderer.getStringWidth(text) * this.text.getScale()
     }
 
-    fun getTextColor(): Int? = this.textColor
     fun setTextColor(color: Int) = apply {
         this.textColor = color
     }
@@ -90,7 +73,6 @@ abstract class DisplayLine {
         }
     }
 
-    fun getBackgroundColor(): Int? = this.backgroundColor
     fun setBackgroundColor(color: Int) = apply {
         this.backgroundColor = color
     }

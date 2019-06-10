@@ -87,6 +87,10 @@ object JSLoader : ILoader {
         return listOf("js")
     }
 
+    override fun getObject(name: String): Any? {
+        return scriptEngine.get(name)
+    }
+
     override fun trigger(trigger: OnTrigger, method: Any, vararg args: Any?) {
         try {
             if (method is String) {
