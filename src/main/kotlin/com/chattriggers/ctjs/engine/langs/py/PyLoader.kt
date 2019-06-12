@@ -25,7 +25,6 @@ object PyLoader : ILoader {
 
     private val cachedModules = mutableListOf<Module>()
     private lateinit var interpreter: PythonInterpreter
-    private var pipInstalled = false
 
     override fun load(modules: List<Module>) {
         cachedModules.clear()
