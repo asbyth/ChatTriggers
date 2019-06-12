@@ -49,7 +49,7 @@ from com.chattriggers.ctjs.engine.langs.py.PyLoader import INSTANCE as __Console
 Console = __Console.getConsole()
 from com.chattriggers.ctjs.utils.config.Config import INSTANCE as Config
 from com.chattriggers.ctjs.Reference import INSTANCE as ChatTriggers
-
+from com.chattriggers.ctjs.engine.BridgeManager import INSTANCE as Bridge
 
 # Helper methods
 import math

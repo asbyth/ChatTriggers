@@ -1,5 +1,6 @@
 package com.chattriggers.ctjs.engine.langs.py
 
+import com.chattriggers.ctjs.engine.IBridge
 import com.chattriggers.ctjs.engine.ILoader
 import com.chattriggers.ctjs.engine.ILoader.Companion.modulesFolder
 import com.chattriggers.ctjs.engine.module.Module
@@ -138,5 +139,11 @@ object PyLoader : ILoader {
 
     override fun getModules(): List<Module> {
         return cachedModules
+    }
+
+    object PyBridge : IBridge {
+        override fun get(name: String): Any? {
+            return interpreter.get(name)
+        }
     }
 }

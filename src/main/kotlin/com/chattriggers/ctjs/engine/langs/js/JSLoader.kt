@@ -1,5 +1,6 @@
 package com.chattriggers.ctjs.engine.langs.js
 
+import com.chattriggers.ctjs.engine.IBridge
 import com.chattriggers.ctjs.engine.ILoader
 import com.chattriggers.ctjs.engine.ILoader.Companion.modulesFolder
 import com.chattriggers.ctjs.engine.module.Module
@@ -112,6 +113,13 @@ object JSLoader : ILoader {
 
     override fun getModules(): List<Module> {
         return cachedModules
+    }
+
+    object JSBridge : IBridge {
+        override fun get(name: String): Any? {
+            return scriptEngine.get(name)
+        }
+
     }
 
     private fun callActualMethod(method: Any, vararg args: Any?) {
