@@ -7,6 +7,7 @@ import com.chattriggers.ctjs.triggers.TriggerType
 import com.chattriggers.ctjs.utils.config.Config
 import com.chattriggers.ctjs.utils.console.Console
 import java.io.File
+import java.lang.IllegalStateException
 
 object ModuleManager {
     val loaders = mutableListOf<ILoader>()
@@ -33,7 +34,16 @@ object ModuleManager {
         cachedModules = modules
 
         loaders.forEach {
-            it.load(modules)
+            it.preload(modules)
+        }
+
+        modules.forEach { module ->
+            val loader = loaders.firstOrNull {
+                it.getLanguageName().contains(module.metadata.language)
+            } ?: throw IllegalStateException("No loader found for language '${module.metadata.language}' " +
+                    "in module '${module.name}'")
+
+            loader.load(module)
         }
     }
 

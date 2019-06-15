@@ -29,14 +29,14 @@ object JSLoader : ILoader {
     private val cachedModules = mutableListOf<Module>()
     private lateinit var scriptEngine: NashornScriptEngine
 
-    override fun load(modules: List<Module>) {
+    override fun preload(modules: List<Module>) {
         cachedModules.clear()
 
-        val jars = modules.map {
-            it.folder.listFiles().toList()
-        }.flatten().filter {
-            it.name.endsWith(".jar")
+        val jars = modules.filter {
+            it.metadata.language == "js"
         }.map {
+            it.getFilesWithExtension(".jar")
+        }.flatten().map {
             it.toURI().toURL()
         }
 
@@ -55,12 +55,13 @@ object JSLoader : ILoader {
         } catch (e: Exception) {
             console.printStackTrace(e)
         }
+    }
 
-        val combinedScript = modules.map {
-            it.getFilesWithExtension(".js")
-        }.flatten().joinToString(separator = "\n") {
-            it.readText()
-        }
+    override fun load(module: Module) {
+        val combinedScript = module.getFilesWithExtension(".js")
+                .joinToString(separator = "\n") {
+                    it.readText()
+                }
 
         try {
             scriptEngine.eval(combinedScript)
@@ -68,7 +69,7 @@ object JSLoader : ILoader {
             console.printStackTrace(e)
         }
 
-        cachedModules.addAll(modules)
+        cachedModules.add(module)
     }
 
     override fun loadExtra(module: Module) {

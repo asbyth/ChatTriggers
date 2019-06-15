@@ -6,7 +6,7 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror
 
 @External
 @NotAbstract
-abstract class Display() {
+abstract class Display {
     private var lines = mutableListOf<DisplayLine>()
 
     protected var renderX = 0f

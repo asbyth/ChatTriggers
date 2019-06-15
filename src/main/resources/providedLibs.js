@@ -116,7 +116,7 @@ Number.prototype.easeOut = function(to, speed, jump) {
     } else {
         this = to
     }
-}
+};
 
 function setTimeout(func, delay) {
     new Thread(function() {

@@ -9,8 +9,10 @@ import com.chattriggers.ctjs.minecraft.objects.gui.GuiHandler
 import com.chattriggers.ctjs.minecraft.wrappers.World
 import com.chattriggers.ctjs.triggers.TriggerType
 import com.chattriggers.ctjs.utils.config.Config
+import com.chattriggers.ctjs.utils.console.Console
 import net.minecraft.launchwrapper.Launch
 import net.minecraftforge.client.ClientCommandHandler
+import kotlin.concurrent.thread
 
 object Reference {
     const val MODID = "ct.js"
@@ -52,21 +54,26 @@ object Reference {
         unload(false)
 
         ChatLib.chat("&cReloading ct.js scripts...")
-        Thread {
-            (ClientCommandHandler.instance as IClientCommandHandler).removeCTCommands()
 
-            CTJS.loadConfig()
+        thread(start = true) {
+            try {
+                (ClientCommandHandler.instance as IClientCommandHandler).removeCTCommands()
 
-            ModuleManager.load(updateCheck)
+                CTJS.loadConfig()
 
-            ChatLib.chat("&aDone reloading scripts!")
+                ModuleManager.load(updateCheck)
 
-            TriggerType.GAME_LOAD.triggerAll()
-            if (World.isLoaded())
-                TriggerType.WORLD_LOAD.triggerAll()
+                ChatLib.chat("&aDone reloading scripts!")
 
-            this.isLoaded = true
-        }.start()
+                TriggerType.GAME_LOAD.triggerAll()
+                if (World.isLoaded())
+                    TriggerType.WORLD_LOAD.triggerAll()
+
+                this.isLoaded = true
+            } catch (e: Exception) {
+                ModuleManager.generalConsole.printStackTrace(e)
+            }
+        }
     }
 }
 
