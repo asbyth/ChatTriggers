@@ -49,10 +49,11 @@ from com.chattriggers.ctjs.engine.langs.py.PyLoader import INSTANCE as __Console
 Console = __Console.getConsole()
 from com.chattriggers.ctjs.utils.config.Config import INSTANCE as Config
 from com.chattriggers.ctjs.Reference import INSTANCE as ChatTriggers
-
+from com.chattriggers.ctjs.engine.BridgeManager import INSTANCE as Bridge
 
 # Helper methods
 import math
+
 
 def cancel(event):
     try:
@@ -62,8 +63,10 @@ def cancel(event):
             return
         event.setCanceled(True)
 
+
 def register(trigger_type, method_name):
     return TriggerRegister.register(trigger_type, method_name)
+
 
 def easeOut(start, finish, speed, jump):
     if not jump:
@@ -74,9 +77,16 @@ def easeOut(start, finish, speed, jump):
     else:
         return finish
 
+
 def setTimeout(func, delay):
     def tFunc():
         Thread.sleep(delay)
         func()
 
     Thread(tFunc).start()
+
+
+def log(*args):
+    for arg in args:
+        Console.out.printf('%s', str(arg))
+    Console.out.printf('\n')

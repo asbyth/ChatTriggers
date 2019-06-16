@@ -1,5 +1,6 @@
 package com.chattriggers.ctjs.engine.langs.js
 
+import com.chattriggers.ctjs.engine.IBridge
 import com.chattriggers.ctjs.engine.ILoader
 import com.chattriggers.ctjs.engine.ILoader.Companion.modulesFolder
 import com.chattriggers.ctjs.engine.module.Module
@@ -18,14 +19,14 @@ object JSLoader : ILoader {
     private val cachedModules = mutableListOf<Module>()
     private var scriptEngine = Context.newBuilder().allowHostAccess(true).build()
 
-    override fun load(modules: List<Module>) {
+    override fun preload(modules: List<Module>) {
         cachedModules.clear()
 
-        val jars = modules.map {
-            it.folder.listFiles().toList()
-        }.flatten().filter {
-            it.name.endsWith(".jar")
+        val jars = modules.filter {
+            it.metadata.language == "js"
         }.map {
+            it.getFilesWithExtension(".jar")
+        }.flatten().map {
             it.absolutePath
         }
 
@@ -48,12 +49,13 @@ object JSLoader : ILoader {
         } catch (e: Exception) {
             console.printStackTrace(e)
         }
+    }
 
-        val combinedScript = modules.map {
-            it.getFilesWithExtension(".js")
-        }.flatten().joinToString(separator = "\n") {
-            it.readText()
-        }
+    override fun load(module: Module) {
+        val combinedScript = module.getFilesWithExtension(".js")
+                .joinToString(separator = "\n") {
+                    it.readText()
+                }
 
         try {
             scriptEngine.eval("js", combinedScript)
@@ -61,7 +63,7 @@ object JSLoader : ILoader {
             console.printStackTrace(e)
         }
 
-        cachedModules.addAll(modules)
+        cachedModules.add(module)
     }
 
     override fun loadExtra(module: Module) {
