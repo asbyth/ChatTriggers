@@ -1,6 +1,7 @@
 package com.chattriggers.ctjs.engine
 
 import com.chattriggers.ctjs.Reference
+import com.chattriggers.ctjs.Reference.timeout
 import com.chattriggers.ctjs.engine.module.Module
 import com.chattriggers.ctjs.minecraft.libs.FileLib
 import com.chattriggers.ctjs.triggers.TriggerType
@@ -23,7 +24,7 @@ object ModuleManager {
             cachedModules.filter {
                 return@filter it.name == name
             }
-            Reference.load()
+            timeout { Reference.load() }
             return true
         }
         return false

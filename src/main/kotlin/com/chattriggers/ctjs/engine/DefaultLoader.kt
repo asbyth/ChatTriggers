@@ -12,6 +12,7 @@ import com.google.gson.Gson
 import org.apache.commons.io.FileUtils
 import java.io.File
 import java.net.URL
+import kotlin.concurrent.thread
 
 object DefaultLoader {
     fun load(updateCheck: Boolean): List<Module> {
@@ -36,13 +37,13 @@ object DefaultLoader {
 
     fun importModule(name: String, extra: Boolean, isRequired: Boolean = false): List<Module>? {
         if (extra) {
-            Thread {
+            thread {
                 ChatLib.chat("&7Importing $name...")
                 val res = doImport(name)
 
                 if (!res) {
                     ChatLib.chat("&cCan't find module with name $name")
-                    return@Thread
+                    return@thread
                 }
 
                 val moduleFolder = getFoldersInDir(modulesFolder).firstOrNull {
@@ -60,7 +61,7 @@ object DefaultLoader {
                 }
 
                 ChatLib.chat("&aSuccessfully imported $name")
-            }.start()
+            }
         } else {
             val res = doImport(name)
 
