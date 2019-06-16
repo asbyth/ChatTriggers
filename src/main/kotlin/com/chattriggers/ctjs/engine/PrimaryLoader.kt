@@ -25,9 +25,7 @@ object PrimaryLoader {
 
         scriptContext = instanceScriptContext()
 
-        val jars = modules.filter {
-            it.metadata.language == "js"
-        }.map {
+        val jars = modules.map {
             it.getFilesWithExtension(".jar")
         }.flatten().map {
             it.absolutePath
