@@ -66,7 +66,7 @@ DragAction = java.type('com.chattriggers.ctjs.minecraft.wrappers.objects.invento
 KeyAction = java.type('com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.action.KeyAction')
 
 # Misc
-Console = java.type('com.chattriggers.ctjs.engine.langs.py.PyLoader').INSTANCE.getConsole()
+Console = java.type('com.chattriggers.ctjs.engine.PrimaryLoader').INSTANCE.getConsole()
 Config = java.type('com.chattriggers.ctjs.utils.config.Config').INSTANCE
 ChatTriggers = java.type('com.chattriggers.ctjs.Reference').INSTANCE
 

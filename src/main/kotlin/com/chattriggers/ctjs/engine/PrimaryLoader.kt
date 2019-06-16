@@ -17,8 +17,8 @@ import java.net.URL
 import kotlin.concurrent.thread
 
 object PrimaryLoader {
-    var scriptContext: Context = instanceScriptContext()
     var console: Console = Console()
+    var scriptContext: Context = instanceScriptContext()
 
     fun load(modules: List<Module>) {
         scriptContext.close(true)

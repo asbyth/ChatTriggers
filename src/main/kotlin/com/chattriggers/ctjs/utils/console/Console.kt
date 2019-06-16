@@ -98,6 +98,7 @@ class Console {
 
         frame.add(JScrollPane(textArea))
         frame.add(inputField, BorderLayout.SOUTH)
+        frame.add(languageSelector, BorderLayout.EAST)
         frame.pack()
         frame.isVisible = false
         frame.setSize(800, 600)
