@@ -1,5 +1,6 @@
 package com.chattriggers.ctjs.engine
 
+import com.chattriggers.ctjs.engine.langs.py.PyLoader
 import com.chattriggers.ctjs.engine.module.Module
 import com.chattriggers.ctjs.triggers.OnTrigger
 import com.chattriggers.ctjs.triggers.TriggerType
@@ -12,6 +13,7 @@ interface ILoader {
     var triggers: MutableList<OnTrigger>
     val toRemove: MutableList<OnTrigger>
     val console: Console
+    val cachedModules: MutableList<Module>
 
     /**
      * Should configure the loader's script engine, as well as any initial
@@ -28,18 +30,32 @@ interface ILoader {
      * of only this loader's language, in the correct order that they need
      * to be loaded in.
      *
-     * This function is meant to be called after a /ct fetchModules, as opposed
+     * This function is meant to be called after a /ct load, as opposed
      * to [loadExtra], which is meant to be called when importing modules.
      */
-    fun load(module: Module)
+    fun load(module: Module) {
+        loadFiles(module)
+
+        cachedModules.add(module)
+    }
 
     /**
      * Loads a module into the loader. This differs from [load] in that
      * it is meant to be called only when importing modules as it differs
-     * semantically in that it should ignore the fetchModules if the user already
+     * semantically in that it should ignore the load if the user already
      * has the module imported.
      */
-    fun loadExtra(module: Module)
+    fun loadExtra(module: Module) {
+        if (cachedModules.any {
+                it.name == module.name
+            }) return
+
+        cachedModules.add(module)
+
+        loadFiles(module)
+    }
+
+    fun loadFiles(module: Module)
 
     /**
      * Tells the loader that it should activate all triggers

@@ -12,11 +12,10 @@ import java.io.File
 
 @ModuleLoader
 object PyLoader : ILoader {
-    override val toRemove = mutableListOf<OnTrigger>()
     override var triggers = mutableListOf<OnTrigger>()
+    override val toRemove = mutableListOf<OnTrigger>()
     override val console by lazy { Console(this) }
-
-    private val cachedModules = mutableListOf<Module>()
+    override val cachedModules = mutableListOf<Module>()
 
     override fun preload(modules: List<Module>) {
         cachedModules.clear()
@@ -36,23 +35,7 @@ object PyLoader : ILoader {
         }
     }
 
-    override fun load(module: Module) {
-        loadFiles(module)
-
-        cachedModules.add(module)
-    }
-
-    override fun loadExtra(module: Module) {
-        if (cachedModules.any {
-            it.name == module.name
-        }) return
-
-        cachedModules.add(module)
-
-        loadFiles(module)
-    }
-
-    private fun loadFiles(module: Module) = try {
+    override fun loadFiles(module: Module) = try {
         val scriptFiles = module.getFilesWithExtension(".py")
 
         scriptFiles.forEach {

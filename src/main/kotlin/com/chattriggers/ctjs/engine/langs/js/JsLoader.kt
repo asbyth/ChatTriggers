@@ -17,8 +17,7 @@ object JsLoader : ILoader {
     override var triggers = mutableListOf<OnTrigger>()
     override val toRemove = mutableListOf<OnTrigger>()
     override val console by lazy { Console(this) }
-
-    private val cachedModules = mutableListOf<Module>()
+    override val cachedModules = mutableListOf<Module>()
 
     override fun preload(modules: List<Module>) {
         cachedModules.clear()
@@ -34,7 +33,7 @@ object JsLoader : ILoader {
         try {
             PrimaryLoader.scriptContext.eval("js", providedLibsScript)
         } catch (e: Exception) {
-            PyLoader.console.printStackTrace(e)
+            console.printStackTrace(e)
         }
     }
 
@@ -54,7 +53,7 @@ object JsLoader : ILoader {
         loadFiles(module)
     }
 
-    private fun loadFiles(module: Module) = try {
+    override fun loadFiles(module: Module) = try {
         val scriptFiles = module.getFilesWithExtension(".js")
 
         scriptFiles.forEach {

@@ -60,7 +60,7 @@ object CTCommand : CommandBase() {
         }
 
         when (args[0].toLowerCase()) {
-            "fetchModules" -> timeout(asCommand = true) { Reference.load() }
+            "load" -> timeout(asCommand = true) { Reference.load() }
             "reload" -> timeout(asCommand = true) { Reference.reload() }
             "unload" -> Reference.unload()
             "files", "file" -> openFileLocation()
@@ -86,7 +86,7 @@ object CTCommand : CommandBase() {
 
     private fun getUsage()  =
             "&b&m${ChatLib.getChatBreak()}\n" +
-            "&c/ct <fetchModules/reload> &7- &oReloads all of the ct modules.\n" +
+            "&c/ct <load/reload> &7- &oReloads all of the ct modules.\n" +
             "&c/ct import [module] &7- &oImports a module.\n" +
             "&c/ct files &7- &oOpens the ChatTriggers folder.\n" +
             "&c/ct modules &7- &oOpens the modules gui\n" +
