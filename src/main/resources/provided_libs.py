@@ -1,54 +1,74 @@
+import java
+
 # Extra Libs
-from java.util import ArrayList, HashMap
-from java.lang import Thread
-from org.lwjgl.input import Keyboard
-from net.minecraftforge.fml.relauncher import ReflectionHelper
+ArrayList = java.type('java.util.ArrayList')
+HashMap = java.type('java.util.HashMap')
+Thread = java.type('java.lang.Thread')
+Keyboard = java.type('org.lwjgl.input.Keyboard')
+ReflectionHelper = java.type('net.minecraftforge.fml.relauncher.ReflectionHelper')
 
 # Trigger types
-from com.chattriggers.ctjs.triggers \
-    import OnChatTrigger, OnCommandTrigger, OnRegularTrigger, OnRenderTrigger, \
-    OnSoundPlayTrigger, OnStepTrigger, OnTrigger
+OnChatTrigger = java.type('com.chattriggers.ctjs.triggers.OnChatTrigger')
+OnCommandTrigger = java.type('com.chattriggers.ctjs.triggers.OnCommandTrigger')
+OnRegularTrigger = java.type('com.chattriggers.ctjs.triggers.OnRegularTrigger')
+OnRenderTrigger = java.type('com.chattriggers.ctjs.triggers.OnRenderTrigger')
+OnSoundPlayTrigger = java.type('com.chattriggers.ctjs.triggers.OnSoundPlayTrigger')
+OnStepTrigger = java.type('com.chattriggers.ctjs.triggers.OnStepTrigger')
+OnTrigger = java.type('com.chattriggers.ctjs.triggers.OnTrigger')
 
 # Triggers
-from com.chattriggers.ctjs.engine.langs.py.PyRegister import INSTANCE as TriggerRegister
+TriggerRegister = java.type('com.chattriggers.ctjs.engine.langs.py.PyRegister').INSTANCE
 TriggerResult = OnTrigger.TriggerResult
 Priority = OnTrigger.Priority
 
 # Libraries
-from com.chattriggers.ctjs.minecraft.libs \
-    import ChatLib, EventLib, Tessellator, FileLib, MathLib
+ChatLib = java.type('com.chattriggers.ctjs.minecraft.libs.ChatLib')
+EventLib = java.type('com.chattriggers.ctjs.minecraft.libs.EventLib')
+Tessellator = java.type('com.chattriggers.ctjs.minecraft.libs.Tessellator')
+FileLib = java.type('com.chattriggers.ctjs.minecraft.libs.FileLib')
+MathLib = java.type('com.chattriggers.ctjs.minecraft.libs.MathLib')
 
 # Renderer
-from com.chattriggers.ctjs.minecraft.libs.renderer \
-    import Renderer, Shape, Rectangle, Text, Image
+Renderer = java.type('com.chattriggers.ctjs.minecraft.libs.renderer.Renderer')
+Shape = java.type('com.chattriggers.ctjs.minecraft.libs.renderer.Shape')
+Rectangle = java.type('com.chattriggers.ctjs.minecraft.libs.renderer.Rectangle')
+Text = java.type('com.chattriggers.ctjs.minecraft.libs.renderer.Text')
+Image = java.type('com.chattriggers.ctjs.minecraft.libs.renderer.Image')
 
 # Object
-from com.chattriggers.ctjs.engine.langs.py \
-    import PyXMLHttpRequest, PyDisplay, PyDisplayLine, PyGui
-from com.chattriggers.ctjs.minecraft.objects.display \
-    import DisplayHandler
-from com.chattriggers.ctjs.minecraft.objects.message \
-    import Message, TextComponent
-from com.chattriggers.ctjs.minecraft.objects \
-    import Book, KeyBind, Sound
+XMLHttpRequest = java.type('com.chattriggers.ctjs.engine.langs.py.PyXMLHttpRequest')
+Display = java.type('com.chattriggers.ctjs.engine.langs.py.PyDisplay')
+DisplayLine = java.type('com.chattriggers.ctjs.engine.langs.py.PyDisplayLine')
+Gui = java.type('com.chattriggers.ctjs.engine.langs.py.PyGui')
+DisplayHandler = java.type('com.chattriggers.ctjs.minecraft.objects.display.DisplayHandler')
+Message = java.type('com.chattriggers.ctjs.minecraft.objects.message.Message')
+TextComponent = java.type('com.chattriggers.ctjs.minecraft.objects.message.TextComponent')
+Book = java.type('com.chattriggers.ctjs.minecraft.objects.Book')
+KeyBind = java.type('com.chattriggers.ctjs.minecraft.objects.KeyBind')
+Sound = java.type('com.chattriggers.ctjs.minecraft.objects.Sound')
 
 # Wrappers
-from com.chattriggers.ctjs.minecraft.wrappers \
-    import Client, Settings, Player, World, Server, TabList, Scoreboard, CPS
-from com.chattriggers.ctjs.minecraft.wrappers.objects \
-    import Entity
-from com.chattriggers.ctjs.minecraft.wrappers.objects.block \
-    import Block, Sign
-from com.chattriggers.ctjs.minecraft.wrappers.objects.inventory \
-    import Inventory, Item
-from com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.action \
-    import ClickAction, DragAction, KeyAction
+Client = java.type('com.chattriggers.ctjs.minecraft.wrappers.Client')
+Settings = java.type('com.chattriggers.ctjs.minecraft.wrappers.Settings')
+Player = java.type('com.chattriggers.ctjs.minecraft.wrappers.Player')
+World = java.type('com.chattriggers.ctjs.minecraft.wrappers.World')
+Server = java.type('com.chattriggers.ctjs.minecraft.wrappers.Server')
+TabList = java.type('com.chattriggers.ctjs.minecraft.wrappers.TabList')
+Scoreboard = java.type('com.chattriggers.ctjs.minecraft.wrappers.Scoreboard')
+CPS = java.type('com.chattriggers.ctjs.minecraft.wrappers.CPS')
+Entity = java.type('com.chattriggers.ctjs.minecraft.wrappers.objects.Entity')
+Block = java.type('com.chattriggers.ctjs.minecraft.wrappers.objects.block.Block')
+Sign = java.type('com.chattriggers.ctjs.minecraft.wrappers.objects.block.Sign')
+Inventory = java.type('com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.Inventory')
+Item = java.type('com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.Item')
+ClickAction = java.type('com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.action.ClickAction')
+DragAction = java.type('com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.action.DragAction')
+KeyAction = java.type('com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.action.KeyAction')
 
 # Misc
-from com.chattriggers.ctjs.engine.langs.py.PyLoader import INSTANCE as __Console
-Console = __Console.getConsole()
-from com.chattriggers.ctjs.utils.config.Config import INSTANCE as Config
-from com.chattriggers.ctjs.Reference import INSTANCE as ChatTriggers
+Console = java.type('com.chattriggers.ctjs.engine.langs.py.PyLoader').INSTANCE.getConsole()
+Config = java.type('com.chattriggers.ctjs.utils.config.Config').INSTANCE
+ChatTriggers = java.type('com.chattriggers.ctjs.Reference').INSTANCE
 
 # Helper methods
 import math
