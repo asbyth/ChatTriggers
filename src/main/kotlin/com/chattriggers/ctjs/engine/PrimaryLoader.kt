@@ -21,7 +21,11 @@ object PrimaryLoader {
     var scriptContext: Context = instanceScriptContext()
 
     fun load(modules: List<Module>) {
-        scriptContext.close(true)
+        try {
+            scriptContext.close(false)
+        } catch (e: Exception) {
+            println("error closing context. probably ruby!")
+        }
 
         scriptContext = instanceScriptContext()
 
