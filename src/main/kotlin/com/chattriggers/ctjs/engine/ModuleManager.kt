@@ -38,15 +38,7 @@ object ModuleManager {
         PrimaryLoader.load(modules)
 
         loaders.forEach { it.preload() }
-
-        modules.forEach { module ->
-            val loader = loaders.firstOrNull {
-                it.getLanguageName().contains(module.metadata.language)
-            } ?: throw IllegalStateException("No loader found for language '${module.metadata.language}' " +
-                    "in module '${module.name}'")
-
-            loader.load(module)
-        }
+        loaders.forEach { it.load(modules) }
     }
 
     fun load(module: Module) {

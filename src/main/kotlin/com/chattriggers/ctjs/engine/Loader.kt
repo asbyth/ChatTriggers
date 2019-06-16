@@ -49,10 +49,10 @@ class Loader(private val language: Lang) {
      * This function is meant to be called after a /ct load, as opposed
      * to [loadExtra], which is meant to be called when importing modules.
      */
-    fun load(module: Module) {
-        loadFiles(module)
+    fun load(modules: List<Module>) {
+        modules.forEach { loadFiles(it) }
 
-        cachedModules.add(module)
+        cachedModules.addAll(modules)
     }
 
     /**
