@@ -47,7 +47,7 @@ object Reference {
     }
 
     @JvmOverloads
-    fun load(updateCheck: Boolean = false) {
+    fun load(updateCheck: Boolean = false, asCommand: Boolean = false) {
         if (!this.isLoaded) return
         this.isLoaded = false
 
@@ -60,7 +60,7 @@ object Reference {
 
             CTJS.loadConfig()
 
-            ModuleManager.load(updateCheck)
+            ModuleManager.load(updateCheck, asCommand)
 
             ChatLib.chat("&aDone reloading scripts!")
 

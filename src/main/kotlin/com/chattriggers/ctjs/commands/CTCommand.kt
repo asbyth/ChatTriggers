@@ -61,7 +61,7 @@ object CTCommand : CommandBase() {
         }
 
         when (args[0].toLowerCase()) {
-            "load" -> timeout(asCommand = true) { Reference.load() }
+            "load" -> Reference.load(asCommand = true)
             "reload" -> timeout(asCommand = true) { Reference.reload() }
             "unload" -> Reference.unload()
             "files", "file" -> openFileLocation()

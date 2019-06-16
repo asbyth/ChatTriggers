@@ -75,19 +75,11 @@ object CTJS {
 
     @Mod.EventHandler
     fun init(event: FMLInitializationEvent) {
-        GlobalScope.launch {
-            val job = async {
-                return@async ModuleManager.load(true)
-            }
-
-            try {
-                withTimeout(Config.loadTimeout.toLongOrNull() ?: 30000L) {
-                    job.await()
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                PrimaryLoader.console.printStackTrace(e)
-            }
+        try {
+            ModuleManager.load(true)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            PrimaryLoader.console.printStackTrace(e)
         }
 
         registerHooks()
