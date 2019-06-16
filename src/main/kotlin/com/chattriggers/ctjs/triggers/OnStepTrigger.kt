@@ -1,12 +1,13 @@
 package com.chattriggers.ctjs.triggers
 
-import com.chattriggers.ctjs.engine.ILoader
+import com.chattriggers.ctjs.engine.Lang
+import com.chattriggers.ctjs.engine.Loader
 import com.chattriggers.ctjs.minecraft.wrappers.Client
 import com.chattriggers.ctjs.utils.kotlin.External
 import org.graalvm.polyglot.Value
 
 @External
-class OnStepTrigger(method: Value, loader: ILoader) : OnTrigger(method, TriggerType.STEP, loader) {
+class OnStepTrigger(method: Value, lang: Lang) : OnTrigger(method, TriggerType.STEP, lang) {
     private var fps: Long = 60L
     private var delay: Long? = null
     private var systemTime: Long = Client.getSystemTime()

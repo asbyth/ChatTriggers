@@ -1,6 +1,7 @@
 package com.chattriggers.ctjs.triggers
 
-import com.chattriggers.ctjs.engine.ILoader
+import com.chattriggers.ctjs.engine.Lang
+import com.chattriggers.ctjs.engine.Loader
 import com.chattriggers.ctjs.minecraft.libs.EventLib
 import com.chattriggers.ctjs.utils.kotlin.External
 import io.sentry.Sentry
@@ -13,7 +14,7 @@ import java.util.*
 import java.util.regex.Pattern
 
 @External
-class OnChatTrigger(method: Value, type: TriggerType, loader: ILoader) : OnTrigger(method, type, loader) {
+class OnChatTrigger(method: Value, type: TriggerType, lang: Lang) : OnTrigger(method, type, lang) {
     private var chatCriteria: String = ""
     private var criteriaPattern: Pattern? = null
     private var parameters = mutableListOf<Parameter?>()

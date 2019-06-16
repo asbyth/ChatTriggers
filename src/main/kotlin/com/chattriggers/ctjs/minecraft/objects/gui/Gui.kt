@@ -1,6 +1,7 @@
 package com.chattriggers.ctjs.minecraft.objects.gui
 
-import com.chattriggers.ctjs.engine.ILoader
+import com.chattriggers.ctjs.engine.Lang
+import com.chattriggers.ctjs.engine.Loader
 import com.chattriggers.ctjs.minecraft.wrappers.Client
 import com.chattriggers.ctjs.minecraft.wrappers.Player
 import com.chattriggers.ctjs.triggers.OnRegularTrigger
@@ -15,7 +16,7 @@ import org.lwjgl.input.Mouse
 
 @External
 @NotAbstract
-abstract class Gui : GuiScreen() {
+class Gui(val lang: Lang) : GuiScreen() {
     private var onDraw: OnRegularTrigger? = null
     private var onClick: OnRegularTrigger? = null
     private var onKeyTyped: OnRegularTrigger? = null
@@ -54,7 +55,7 @@ abstract class Gui : GuiScreen() {
      * @return the trigger
      */
     fun registerDraw(method: Value): OnRegularTrigger? {
-        onDraw = OnRegularTrigger(method, TriggerType.OTHER, getLoader())
+        onDraw = OnRegularTrigger(method, TriggerType.OTHER, lang)
         return onDraw
     }
 
@@ -70,7 +71,7 @@ abstract class Gui : GuiScreen() {
      * @return the trigger
      */
     fun registerClicked(method: Value): OnRegularTrigger? {
-        onClick = OnRegularTrigger(method, TriggerType.OTHER, getLoader())
+        onClick = OnRegularTrigger(method, TriggerType.OTHER, lang)
         return onClick
     }
 
@@ -85,7 +86,7 @@ abstract class Gui : GuiScreen() {
      * @return the trigger
      */
     fun registerKeyTyped(method: Value): OnRegularTrigger? {
-        onKeyTyped = OnRegularTrigger(method, TriggerType.OTHER, getLoader())
+        onKeyTyped = OnRegularTrigger(method, TriggerType.OTHER, lang)
         return onKeyTyped
     }
 
@@ -102,7 +103,7 @@ abstract class Gui : GuiScreen() {
      * @return the trigger
      */
     fun registerMouseDragged(method: Value): OnRegularTrigger? {
-        onMouseDragged = OnRegularTrigger(method, TriggerType.OTHER, getLoader())
+        onMouseDragged = OnRegularTrigger(method, TriggerType.OTHER, lang)
         return onMouseDragged
     }
 
@@ -118,7 +119,7 @@ abstract class Gui : GuiScreen() {
      * @return the trigger
      */
     fun registerMouseReleased(method: Value): OnRegularTrigger? {
-        onMouseReleased = OnRegularTrigger(method, TriggerType.OTHER, getLoader())
+        onMouseReleased = OnRegularTrigger(method, TriggerType.OTHER, lang)
         return onMouseReleased
     }
 
@@ -132,7 +133,7 @@ abstract class Gui : GuiScreen() {
      * @return the trigger
      */
     fun registerActionPerformed(method: Value): OnRegularTrigger? {
-        onActionPerformed = OnRegularTrigger(method, TriggerType.OTHER, getLoader())
+        onActionPerformed = OnRegularTrigger(method, TriggerType.OTHER, lang)
         return onActionPerformed
     }
 
@@ -244,6 +245,4 @@ abstract class Gui : GuiScreen() {
             it.id == buttonId
         }?.visible = visible
     }
-
-    internal abstract fun getLoader(): ILoader
 }

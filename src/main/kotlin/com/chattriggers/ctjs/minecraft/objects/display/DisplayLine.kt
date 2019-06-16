@@ -1,6 +1,7 @@
 package com.chattriggers.ctjs.minecraft.objects.display
 
-import com.chattriggers.ctjs.engine.ILoader
+import com.chattriggers.ctjs.engine.Lang
+import com.chattriggers.ctjs.engine.Loader
 import com.chattriggers.ctjs.minecraft.libs.renderer.Renderer
 import com.chattriggers.ctjs.minecraft.libs.renderer.Text
 import com.chattriggers.ctjs.minecraft.wrappers.Client
@@ -9,14 +10,13 @@ import com.chattriggers.ctjs.triggers.OnTrigger
 import com.chattriggers.ctjs.triggers.TriggerType
 import com.chattriggers.ctjs.utils.kotlin.External
 import com.chattriggers.ctjs.utils.kotlin.NotAbstract
-import jdk.nashorn.api.scripting.ScriptObjectMirror
 import org.graalvm.polyglot.Value
 import org.lwjgl.input.Mouse
 import javax.vecmath.Vector2d
 
 @External
 @NotAbstract
-abstract class DisplayLine(text: String) {
+class DisplayLine(val lang: Lang, text: String) {
     private lateinit var text: Text
     private var textWidth = 0f
     private var textColor: Int? = null
@@ -37,7 +37,7 @@ abstract class DisplayLine(text: String) {
         for (i in 0..5) this.mouseState[i] = false
     }
 
-    constructor(text: String, config: Value) : this(text) {
+    constructor(lang: Lang, text: String, config: Value) : this(lang, text) {
         if (!config.hasMembers()) return
 
         this.textColor = config.getMember("text_color")?.asInt()
@@ -98,15 +98,15 @@ abstract class DisplayLine(text: String) {
     }
 
     fun registerClicked(method: Value) = run {
-        this.onClicked = OnRegularTrigger(method, TriggerType.OTHER, getLoader())
+        this.onClicked = OnRegularTrigger(method, TriggerType.OTHER, lang)
         this.onClicked
     }
     fun registerHovered(method: Value) = run {
-        this.onHovered = OnRegularTrigger(method, TriggerType.OTHER, getLoader())
+        this.onHovered = OnRegularTrigger(method, TriggerType.OTHER, lang)
         this.onHovered
     }
     fun registerDragged(method: Value) = run {
-        this.onDragged = OnRegularTrigger(method, TriggerType.OTHER, getLoader())
+        this.onDragged = OnRegularTrigger(method, TriggerType.OTHER, lang)
         this.onDragged
     }
 
@@ -255,8 +255,6 @@ abstract class DisplayLine(text: String) {
 
         handleInput(xOff - 1, y - 1, (this.textWidth + 2).toFloat(), 10 * this.text.getScale())
     }
-
-    internal abstract fun getLoader(): ILoader
 
     override fun toString() =
             "DisplayLine{" +

@@ -1,16 +1,17 @@
 package com.chattriggers.ctjs.triggers
 
-import com.chattriggers.ctjs.engine.ILoader
+import com.chattriggers.ctjs.engine.Lang
+import com.chattriggers.ctjs.engine.Loader
 import com.chattriggers.ctjs.utils.kotlin.External
 import org.graalvm.polyglot.Value
 
 @External
-class OnSoundPlayTrigger(method: Value, loader: ILoader) : OnTrigger(method, TriggerType.SOUND_PLAY, loader) {
-    var soundNameCriteria = ""
+class OnSoundPlayTrigger(method: Value, lang: Lang) : OnTrigger(method, TriggerType.SOUND_PLAY, lang) {
+    private var soundNameCriteria = ""
 
     /**
      * Sets the sound name criteria.<br></br>
-     * Short hand for [OnSoundPlayTrigger.setSoundNameCriteria].
+     * Short hand for [OnSoundPlayTrigger.setCriteria].
      *
      * @param soundNameCriteria the sound name
      * @return the trigger for method chaining

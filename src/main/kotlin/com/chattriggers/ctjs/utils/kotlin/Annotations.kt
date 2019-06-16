@@ -1,7 +1,5 @@
 package com.chattriggers.ctjs.utils.kotlin
 
-import com.chattriggers.ctjs.engine.ILoader
-import com.chattriggers.ctjs.engine.ModuleManager
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.Loader
 import net.minecraftforge.fml.common.LoaderException
@@ -16,10 +14,6 @@ import kotlin.reflect.full.companionObjectInstance
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
 annotation class KotlinListener
-
-@Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.CLASS)
-annotation class ModuleLoader
 
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
@@ -38,7 +32,6 @@ object AnnotationHandler {
         val modAnnotations = asm.getAnnotationsFor(mod) ?: return
 
         val listeners = modAnnotations.get(KotlinListener::class.java.name)
-        val loaders = modAnnotations.get(ModuleLoader::class.java.name)
 
         val classLoader = Loader.instance().modClassLoader
 
@@ -54,20 +47,6 @@ object AnnotationHandler {
                     LOGGER.debug("Registered @KotlinListener object instance {}", listener.className)
                 }
 
-            } catch (e: Throwable) {
-                LOGGER.error("An error occurred trying to loadExtra an @KotlinListener object {} for modid {}", mod.modId, e)
-                throw LoaderException(e)
-            }
-        }
-
-        for (loader in loaders) {
-            try {
-                val loaderClass = Class.forName(loader.className, false, classLoader) ?: continue
-                val kotlinClass = loaderClass.kotlin
-                val objectInstance = kotlinClass.objectInstance ?: kotlinClass.companionObjectInstance ?: continue
-                val loaderInstance: ILoader = objectInstance as? ILoader ?: continue
-
-                ModuleManager.loaders.add(loaderInstance)
             } catch (e: Throwable) {
                 LOGGER.error("An error occurred trying to loadExtra an @KotlinListener object {} for modid {}", mod.modId, e)
                 throw LoaderException(e)

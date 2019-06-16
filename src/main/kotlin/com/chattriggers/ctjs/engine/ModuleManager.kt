@@ -6,13 +6,16 @@ import com.chattriggers.ctjs.engine.module.Module
 import com.chattriggers.ctjs.minecraft.libs.FileLib
 import com.chattriggers.ctjs.triggers.TriggerType
 import com.chattriggers.ctjs.utils.config.Config
-import com.chattriggers.ctjs.utils.console.Console
 import java.io.File
 import java.lang.IllegalStateException
 
 object ModuleManager {
-    val loaders = mutableListOf<ILoader>()
+    val loaders = Lang.values().map { Loader(it) }
     var cachedModules = listOf<Module>()
+
+    fun getLoader(lang: Lang): Loader {
+        return loaders.first { it.getLanguageName() == lang.langName }
+    }
 
     fun importModule(moduleName: String) {
         PrimaryLoader.importModule(moduleName, true)
@@ -34,9 +37,7 @@ object ModuleManager {
         cachedModules = modules
         PrimaryLoader.load(modules)
 
-        loaders.forEach {
-            it.preload(modules)
-        }
+        loaders.forEach { it.preload() }
 
         modules.forEach { module ->
             val loader = loaders.firstOrNull {

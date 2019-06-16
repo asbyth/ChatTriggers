@@ -1,6 +1,7 @@
 package com.chattriggers.ctjs.minecraft.libs
 
-import com.chattriggers.ctjs.engine.ILoader
+import com.chattriggers.ctjs.engine.Lang
+import com.chattriggers.ctjs.engine.Loader
 import com.chattriggers.ctjs.engine.PrimaryLoader
 import com.chattriggers.ctjs.triggers.OnRegularTrigger
 import com.chattriggers.ctjs.triggers.OnTrigger
@@ -18,7 +19,7 @@ import java.util.*
 
 @External
 @NotAbstract
-abstract class XMLHttpRequest {
+class XMLHttpRequest(val lang: Lang) {
     private val USER_AGENT = "Mozilla/5.0"
 
     private var conn: HttpURLConnection? = null
@@ -59,7 +60,7 @@ abstract class XMLHttpRequest {
      * @param method the method to be called back on completion of the request
      */
     fun setCallbackMethod(method: Value) {
-        this.methodCallback = OnRegularTrigger(method, TriggerType.OTHER, getLoader())
+        this.methodCallback = OnRegularTrigger(method, TriggerType.OTHER, lang)
     }
 
     /**
@@ -165,6 +166,4 @@ abstract class XMLHttpRequest {
         }
 
     }
-
-    internal abstract fun getLoader(): ILoader
 }

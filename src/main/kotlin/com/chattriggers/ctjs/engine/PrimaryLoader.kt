@@ -1,8 +1,8 @@
 package com.chattriggers.ctjs.engine
 
 import com.chattriggers.ctjs.CTJS
-import com.chattriggers.ctjs.engine.ILoader.Companion.getFoldersInDir
-import com.chattriggers.ctjs.engine.ILoader.Companion.modulesFolder
+import com.chattriggers.ctjs.engine.Loader.Companion.getFoldersInDir
+import com.chattriggers.ctjs.engine.Loader.Companion.modulesFolder
 import com.chattriggers.ctjs.engine.module.Module
 import com.chattriggers.ctjs.engine.module.ModuleMetadata
 import com.chattriggers.ctjs.minecraft.libs.ChatLib

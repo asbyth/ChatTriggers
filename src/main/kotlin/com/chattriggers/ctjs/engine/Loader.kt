@@ -1,19 +1,19 @@
 package com.chattriggers.ctjs.engine
 
-import com.chattriggers.ctjs.engine.langs.py.PyLoader
+import com.chattriggers.ctjs.engine.PrimaryLoader.console
 import com.chattriggers.ctjs.engine.module.Module
 import com.chattriggers.ctjs.triggers.OnTrigger
 import com.chattriggers.ctjs.triggers.TriggerType
 import com.chattriggers.ctjs.utils.config.Config
-import com.chattriggers.ctjs.utils.console.Console
 import org.apache.commons.io.FileUtils
+import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
 import java.io.File
 
-interface ILoader {
-    var triggers: MutableList<OnTrigger>
-    val toRemove: MutableList<OnTrigger>
-    val cachedModules: MutableList<Module>
+class Loader(private val language: Lang) {
+    var triggers: MutableList<OnTrigger> = mutableListOf()
+    private val toRemove: MutableList<OnTrigger> = mutableListOf()
+    private val cachedModules: MutableList<Module> = mutableListOf()
 
     /**
      * Should configure the loader's script engine, as well as any initial
@@ -23,7 +23,23 @@ interface ILoader {
      * Note that this function is given every user module, not just the ones
      * that match this loader's language.
      */
-    fun preload(modules: List<Module>)
+    fun preload() {
+        cachedModules.clear()
+
+        val providedLibsScript = saveResource(
+                "/${language.providedLibsName}",
+                File(modulesFolder.parentFile,
+                        "chattriggers-provided-libs.${language.extension}"
+                ),
+                true
+        )
+
+        try {
+            PrimaryLoader.scriptContext.eval(language.graalName, providedLibsScript)
+        } catch (e: Exception) {
+            console.printStackTrace(e)
+        }
+    }
 
     /**
      * Loads a module into the loader. This function is called with modules
@@ -55,7 +71,18 @@ interface ILoader {
         loadFiles(module)
     }
 
-    fun loadFiles(module: Module)
+    private fun loadFiles(module: Module) = try {
+        val scriptFiles = module.getFilesWithExtension(".${language.extension}")
+
+        scriptFiles.forEach {
+            val source = Source.newBuilder(language.graalName, it).build()
+
+            PrimaryLoader.scriptContext.eval(source)
+        }
+    } catch (e: Exception) {
+        console.out.println("Error loading module ${module.name}")
+        console.printStackTrace(e)
+    }
 
     /**
      * Tells the loader that it should activate all triggers
@@ -78,7 +105,7 @@ interface ILoader {
     /**
      * Gets the result from evaluating a certain line of code in this loader
      */
-    fun eval(code: String): Any?
+    fun eval(code: String): Value = PrimaryLoader.scriptContext.eval(language.graalName, code)
 
     /**
      * Adds a trigger to this loader to be activated during the game
@@ -102,12 +129,19 @@ interface ILoader {
     /**
      * Returns the names of this specific loader's implemented languages
      */
-    fun getLanguageName(): List<String>
+    fun getLanguageName(): String = language.langName
 
     /**
      * Actually calls the method for this trigger in this loader
      */
-    fun trigger(trigger: OnTrigger, method: Value, vararg args: Any?)
+    fun trigger(trigger: OnTrigger, method: Value, vararg args: Any?) {
+        try {
+            TODO()
+        } catch (e: Exception) {
+            console.printStackTrace(e)
+            removeTrigger(trigger)
+        }
+    }
 
     /**
      * Removes a trigger from the current pool
@@ -117,17 +151,12 @@ interface ILoader {
     }
 
     /**
-     * Gets a list of all currently loaded modules
-     */
-    fun getModules(): List<Module>
-
-    /**
      * Save a resource to the OS's filesystem from inside the jar
      * @param resourceName name of the file inside the jar
      * @param outputFile file to save to
      * @param replace whether or not to replace the file being saved to
      */
-    fun saveResource(resourceName: String?, outputFile: File, replace: Boolean): String {
+    private fun saveResource(resourceName: String?, outputFile: File, replace: Boolean): String {
         if (resourceName == null || resourceName == "") {
             throw IllegalArgumentException("ResourcePath cannot be null or empty")
         }

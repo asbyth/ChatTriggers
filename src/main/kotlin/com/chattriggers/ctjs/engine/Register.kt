@@ -5,7 +5,8 @@ import com.chattriggers.ctjs.triggers.*
 import org.graalvm.polyglot.Value
 import kotlin.reflect.full.memberFunctions
 
-interface IRegister {
+@Suppress("unused")
+class Register(val lang: Lang) {
     /**
      * Helper method register a trigger. <br/>
      * Called by taking the original name of the method, i.e. `registerChat`,
@@ -44,7 +45,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerChat(method: Value): OnChatTrigger {
-        return OnChatTrigger(method, TriggerType.CHAT, getImplementationLoader())
+        return OnChatTrigger(method, TriggerType.CHAT, lang)
     }
 
     /**
@@ -64,7 +65,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerActionBar(method: Value): OnChatTrigger {
-        return OnChatTrigger(method, TriggerType.ACTION_BAR, getImplementationLoader())
+        return OnChatTrigger(method, TriggerType.ACTION_BAR, lang)
     }
 
     /**
@@ -78,7 +79,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerWorldLoad(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.WORLD_LOAD, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.WORLD_LOAD, lang)
     }
 
     /**
@@ -92,7 +93,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerWorldUnload(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.WORLD_UNLOAD, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.WORLD_UNLOAD, lang)
     }
 
     /**
@@ -111,7 +112,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerClicked(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.CLICKED, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.CLICKED, lang)
     }
 
     /**
@@ -131,7 +132,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerDragged(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.DRAGGED, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.DRAGGED, lang)
     }
 
     /**
@@ -146,14 +147,14 @@ interface IRegister {
      * the sound event's pitch<br></br>
      * the sound event's category's name<br></br>
      * Available modifications:<br></br>
-     * [OnSoundPlayTrigger.setSoundNameCriteria] Sets the sound name criteria<br></br>
+     * [OnSoundPlayTrigger.setCriteria] Sets the sound name criteria<br></br>
      * [OnTrigger.setPriority] Sets the priority
      *
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
     fun registerSoundPlay(method: Value): OnSoundPlayTrigger {
-        return OnSoundPlayTrigger(method, getImplementationLoader())
+        return OnSoundPlayTrigger(method, lang)
     }
 
     /**
@@ -172,7 +173,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerNoteBlockPlay(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.NOTE_BLOCK_PLAY, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.NOTE_BLOCK_PLAY, lang)
     }
 
     /**
@@ -191,7 +192,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerNoteBlockChange(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.NOTE_BLOCK_CHANGE, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.NOTE_BLOCK_CHANGE, lang)
     }
 
     /**
@@ -207,7 +208,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerTick(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.TICK, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.TICK, lang)
     }
 
     /**
@@ -225,7 +226,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerStep(method: Value): OnStepTrigger {
-        return OnStepTrigger(method, getImplementationLoader())
+        return OnStepTrigger(method, lang)
     }
 
     /**
@@ -239,7 +240,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerRenderWorld(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.RENDER_WORLD, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.RENDER_WORLD, lang)
     }
 
     /**
@@ -253,7 +254,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerRenderOverlay(method: Value): OnRenderTrigger {
-        return OnRenderTrigger(method, TriggerType.RENDER_OVERLAY, getImplementationLoader())
+        return OnRenderTrigger(method, TriggerType.RENDER_OVERLAY, lang)
     }
 
     /**
@@ -270,7 +271,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerRenderPlayerList(method: Value): OnRenderTrigger {
-        return OnRenderTrigger(method, TriggerType.RENDER_PLAYER_LIST, getImplementationLoader())
+        return OnRenderTrigger(method, TriggerType.RENDER_PLAYER_LIST, lang)
     }
 
     /**
@@ -287,7 +288,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerRenderCrosshair(method: Value): OnRenderTrigger {
-        return OnRenderTrigger(method, TriggerType.RENDER_CROSSHAIR, getImplementationLoader())
+        return OnRenderTrigger(method, TriggerType.RENDER_CROSSHAIR, lang)
     }
 
     /**
@@ -304,7 +305,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerRenderDebug(method: Value): OnRenderTrigger {
-        return OnRenderTrigger(method, TriggerType.RENDER_DEBUG, getImplementationLoader())
+        return OnRenderTrigger(method, TriggerType.RENDER_DEBUG, lang)
     }
 
     /**
@@ -321,7 +322,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerRenderBossHealth(method: Value): OnRenderTrigger {
-        return OnRenderTrigger(method, TriggerType.RENDER_BOSS_HEALTH, getImplementationLoader())
+        return OnRenderTrigger(method, TriggerType.RENDER_BOSS_HEALTH, lang)
     }
 
     /**
@@ -338,7 +339,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerRenderHealth(method: Value): OnRenderTrigger {
-        return OnRenderTrigger(method, TriggerType.RENDER_HEALTH, getImplementationLoader())
+        return OnRenderTrigger(method, TriggerType.RENDER_HEALTH, lang)
     }
 
     /**
@@ -355,7 +356,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerRenderFood(method: Value): OnRenderTrigger {
-        return OnRenderTrigger(method, TriggerType.RENDER_FOOD, getImplementationLoader())
+        return OnRenderTrigger(method, TriggerType.RENDER_FOOD, lang)
     }
 
     /**
@@ -372,7 +373,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerRenderMountHealth(method: Value): OnRenderTrigger {
-        return OnRenderTrigger(method, TriggerType.RENDER_MOUNT_HEALTH, getImplementationLoader())
+        return OnRenderTrigger(method, TriggerType.RENDER_MOUNT_HEALTH, lang)
     }
 
     /**
@@ -389,7 +390,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerRenderExperience(method: Value): OnRenderTrigger {
-        return OnRenderTrigger(method, TriggerType.RENDER_EXPERIENCE, getImplementationLoader())
+        return OnRenderTrigger(method, TriggerType.RENDER_EXPERIENCE, lang)
     }
 
     /**
@@ -406,7 +407,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerRenderHotbar(method: Value): OnRenderTrigger {
-        return OnRenderTrigger(method, TriggerType.RENDER_HOTBAR, getImplementationLoader())
+        return OnRenderTrigger(method, TriggerType.RENDER_HOTBAR, lang)
     }
 
     /**
@@ -423,7 +424,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerRenderAir(method: Value): OnRenderTrigger {
-        return OnRenderTrigger(method, TriggerType.RENDER_AIR, getImplementationLoader())
+        return OnRenderTrigger(method, TriggerType.RENDER_AIR, lang)
     }
 
     /**
@@ -440,7 +441,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerDrawBlockHighlight(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.BLOCK_HIGHLIGHT, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.BLOCK_HIGHLIGHT, lang)
     }
 
     /**
@@ -455,7 +456,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerGameLoad(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.GAME_LOAD, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.GAME_LOAD, lang)
     }
 
     /**
@@ -470,7 +471,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerGameUnload(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.GAME_UNLOAD, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.GAME_UNLOAD, lang)
     }
 
     /**
@@ -487,7 +488,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerCommand(method: Value): OnCommandTrigger {
-        return OnCommandTrigger(method, getImplementationLoader())
+        return OnCommandTrigger(method, lang)
     }
 
     /**
@@ -503,7 +504,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerGuiOpened(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.GUI_OPENED, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.GUI_OPENED, lang)
     }
 
     /**
@@ -521,7 +522,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerPlayerJoined(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.PLAYER_JOIN, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.PLAYER_JOIN, lang)
     }
 
     /**
@@ -539,7 +540,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerPlayerLeft(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.PLAYER_LEAVE, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.PLAYER_LEAVE, lang)
     }
 
     /**
@@ -558,7 +559,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerPickupItem(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.PICKUP_ITEM, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.PICKUP_ITEM, lang)
     }
 
     /**
@@ -577,7 +578,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerDropItem(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.DROP_ITEM, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.DROP_ITEM, lang)
     }
 
     /**
@@ -594,7 +595,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerScreenshotTaken(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.SCREENSHOT_TAKEN, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.SCREENSHOT_TAKEN, lang)
     }
 
     /**
@@ -611,7 +612,7 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerMessageSent(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.MESSAGE_SENT, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.MESSAGE_SENT, lang)
     }
 
     /**
@@ -628,8 +629,6 @@ interface IRegister {
      * @return the trigger for additional modification
      */
     fun registerItemTooltip(method: Value): OnRegularTrigger {
-        return OnRegularTrigger(method, TriggerType.TOOLTIP, getImplementationLoader())
+        return OnRegularTrigger(method, TriggerType.TOOLTIP, lang)
     }
-
-    fun getImplementationLoader(): ILoader
 }

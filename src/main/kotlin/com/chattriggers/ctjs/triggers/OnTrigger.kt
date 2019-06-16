@@ -1,12 +1,14 @@
 package com.chattriggers.ctjs.triggers
 
-import com.chattriggers.ctjs.engine.ILoader
+import com.chattriggers.ctjs.engine.Lang
+import com.chattriggers.ctjs.engine.Loader
+import com.chattriggers.ctjs.engine.ModuleManager
 import com.chattriggers.ctjs.utils.kotlin.External
 import jdk.nashorn.internal.objects.Global
 import org.graalvm.polyglot.Value
 
 @External
-abstract class OnTrigger protected constructor(var method: Value, var type: TriggerType, protected var loader: ILoader) {
+abstract class OnTrigger protected constructor(var method: Value, var type: TriggerType, protected var lang: Lang) {
     var priority: Priority
         private set
     private var global: Global?
@@ -35,7 +37,7 @@ abstract class OnTrigger protected constructor(var method: Value, var type: Trig
      * @return the trigger for method chaining
      */
     fun register() = apply {
-        this.loader.addTrigger(this)
+        ModuleManager.getLoader(lang).addTrigger(this)
     }
 
     /**
@@ -43,11 +45,11 @@ abstract class OnTrigger protected constructor(var method: Value, var type: Trig
      * @return the trigger for method chaining
      */
     fun unregister() = apply {
-        this.loader.removeTrigger(this)
+        ModuleManager.getLoader(lang).removeTrigger(this)
     }
 
     protected fun callMethod(vararg args: Any?) {
-        this.loader.trigger(this, this.method, *args)
+        ModuleManager.getLoader(lang).trigger(this, this.method, *args)
     }
 
     abstract fun trigger(vararg args: Any?)
