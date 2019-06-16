@@ -2,13 +2,6 @@
    Java
 */
 
-// Function to help with language-dependent classes
-const Lang = Java.type('com.chattriggers.ctjs.engine.Lang').JS;
-
-const extendWithLang = (clazz) => Java.extend(clazz, {
-    lang: Lang
-});
-
 // Extra libs
 const ArrayList = Java.type('java.util.ArrayList');
 const HashMap = Java.type('java.util.HashMap');
@@ -17,7 +10,7 @@ const Keyboard = Java.type('org.lwjgl.input.Keyboard');
 const ReflectionHelper = Java.type('net.minecraftforge.fml.relauncher.ReflectionHelper');
 
 // Triggers
-const TriggerRegister = extendWithLang(Java.type('com.chattriggers.ctjs.engine.Register'));
+const TriggerRegister = Java.type('com.chattriggers.ctjs.engine.JsRegister').INSTANCE;
 const TriggerResult = Java.type('com.chattriggers.ctjs.triggers.OnTrigger.TriggerResult');
 const Priority = Java.type('com.chattriggers.ctjs.triggers.OnTrigger.Priority');
 
@@ -45,11 +38,11 @@ const Text = Java.type('com.chattriggers.ctjs.minecraft.libs.renderer.Text');
 const Image = Java.type('com.chattriggers.ctjs.minecraft.libs.renderer.Image');
 
 // Objects
-const XMLHttpRequest = extendWithLang(Java.type('com.chattriggers.ctjs.minecraft.libs.XMLHttpRequest'));
+const XMLHttpRequest = Java.type('com.chattriggers.ctjs.engine.JsXMLHttpRequest');
 const DisplayHandler = Java.type('com.chattriggers.ctjs.minecraft.objects.display.DisplayHandler');
-const Display = extendWithLang(Java.type('com.chattriggers.ctjs.minecraft.objects.display.Display'));
-const DisplayLine = extendWithLang(Java.type('com.chattriggers.ctjs.minecraft.objects.display.DisplayLine'));
-const Gui = extendWithLang(Java.type('com.chattriggers.ctjs.minecraft.objects.gui.Gui'));
+const Display = Java.type('com.chattriggers.ctjs.engine.JsDisplay');
+const DisplayLine = Java.type('com.chattriggers.ctjs.engine.JsDisplayLine');
+const Gui = Java.type('com.chattriggers.ctjs.engine.JsGui');
 const Message = Java.type('com.chattriggers.ctjs.minecraft.objects.message.Message');
 const TextComponent = Java.type('com.chattriggers.ctjs.minecraft.objects.message.TextComponent');
 const Book = Java.type('com.chattriggers.ctjs.minecraft.objects.Book');
@@ -83,21 +76,20 @@ const ChatTriggers = Java.type('com.chattriggers.ctjs.Reference').INSTANCE;
 
 
 // Helper methods
-function cancel(event) {
+const cancel = (event) => {
     try {
         EventLib.cancel(event);
     } catch(err) {
         if (!event.isCancelable()) return;
         event.setCanceled(true);
     }
-}
+};
 
-function register(triggerType, methodName) {
-    return TriggerRegister.register(triggerType, methodName);
-}
+const register = (triggerType, methodName) =>
+    TriggerRegister.register(triggerType, methodName);
 
 // animation
-function easeOut(start, finish, speed, jump) {
+const easeOut = (start, finish, speed, jump) => {
     if (!jump) jump = 1;
 
     if (Math.floor(Math.abs(finish - start) / jump) > 0) {
@@ -105,9 +97,9 @@ function easeOut(start, finish, speed, jump) {
     } else {
         return finish;
     }
-}
+};
 
-Number.prototype.easeOut = function(to, speed, jump) {
+Number.prototype.easeOut = (to, speed, jump) => {
     if (!jump) jump = 1;
 
     if (Math.floor(Math.abs(to - this) / jump) > 0) {
@@ -117,9 +109,9 @@ Number.prototype.easeOut = function(to, speed, jump) {
     }
 };
 
-function setTimeout(func, delay) {
-    new Thread(function() {
+const setTimeout = (func, delay) => {
+    new Thread(() => {
         Thread.sleep(delay);
         func();
     }).start();
-}
+};

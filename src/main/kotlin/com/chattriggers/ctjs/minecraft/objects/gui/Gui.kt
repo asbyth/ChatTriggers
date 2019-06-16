@@ -16,7 +16,7 @@ import org.lwjgl.input.Mouse
 
 @External
 @NotAbstract
-open class Gui : GuiScreen() {
+abstract class Gui(val lang: Lang) : GuiScreen() {
     private var onDraw: OnRegularTrigger? = null
     private var onClick: OnRegularTrigger? = null
     private var onKeyTyped: OnRegularTrigger? = null
@@ -28,8 +28,6 @@ open class Gui : GuiScreen() {
     private var mouseY = 0
 
     var doesPauseGame = false
-
-    lateinit var lang: Lang
 
     fun open() {
         GuiHandler.openGui(this)

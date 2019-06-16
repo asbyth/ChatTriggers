@@ -1,15 +1,5 @@
 import java
 
-# Function to help with language-dependent classes
-Lang = java.type("com.chattriggers.ctjs.engine.Lang").PY
-
-def extend_with_lang(clazz):
-    def ret_func(*args):
-        inst = clazz(*args)
-        inst.lang = Lang
-        return inst
-    return ret_func
-
 # Extra Libs
 ArrayList = java.type('java.util.ArrayList')
 HashMap = java.type('java.util.HashMap')
@@ -27,7 +17,7 @@ OnStepTrigger = java.type('com.chattriggers.ctjs.triggers.OnStepTrigger')
 OnTrigger = java.type('com.chattriggers.ctjs.triggers.OnTrigger')
 
 # Triggers
-TriggerRegister = extend_with_lang(java.type('com.chattriggers.ctjs.engine.Register'))
+TriggerRegister = java.type('com.chattriggers.ctjs.engine.PyRegister').INSTANCE
 TriggerResult = OnTrigger.TriggerResult
 Priority = OnTrigger.Priority
 
@@ -46,11 +36,11 @@ Text = java.type('com.chattriggers.ctjs.minecraft.libs.renderer.Text')
 Image = java.type('com.chattriggers.ctjs.minecraft.libs.renderer.Image')
 
 # Object
-XMLHttpRequest = extend_with_lang(java.type('com.chattriggers.ctjs.minecraft.libs.XMLHttpRequest'))
+XMLHttpRequest = java.type('com.chattriggers.ctjs.engine.PyXMLHttpRequest')
 DisplayHandler = java.type('com.chattriggers.ctjs.minecraft.objects.display.DisplayHandler')
-Display = extend_with_lang(java.type('com.chattriggers.ctjs.minecraft.objects.display.Display'))
-DisplayLine = extend_with_lang(java.type('com.chattriggers.ctjs.minecraft.objects.display.DisplayLine'))
-Gui = extend_with_lang(java.type('com.chattriggers.ctjs.minecraft.objects.gui.Gui'))
+Display = java.type('com.chattriggers.ctjs.engine.PyDisplay')
+DisplayLine = java.type('com.chattriggers.ctjs.engine.PyDisplayLine')
+Gui = java.type('com.chattriggers.ctjs.engine.PyGui')
 Message = java.type('com.chattriggers.ctjs.minecraft.objects.message.Message')
 TextComponent = java.type('com.chattriggers.ctjs.minecraft.objects.message.TextComponent')
 Book = java.type('com.chattriggers.ctjs.minecraft.objects.Book')

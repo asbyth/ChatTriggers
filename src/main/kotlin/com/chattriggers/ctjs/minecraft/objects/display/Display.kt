@@ -1,14 +1,13 @@
 package com.chattriggers.ctjs.minecraft.objects.display
 
-import com.chattriggers.ctjs.engine.Lang
+import com.chattriggers.ctjs.engine.*
 import com.chattriggers.ctjs.utils.kotlin.External
 import com.chattriggers.ctjs.utils.kotlin.NotAbstract
-import jdk.nashorn.api.scripting.ScriptObjectMirror
 import org.graalvm.polyglot.Value
 
 @External
 @NotAbstract
-open class Display() {
+abstract class Display(val lang: Lang) {
     private var lines = mutableListOf<DisplayLine>()
 
     protected var renderX = 0f
@@ -26,13 +25,11 @@ open class Display() {
     private var width = 0f
     private var height = 0f
 
-    lateinit var lang: Lang
-
     init {
         DisplayHandler.registerDisplay(this)
     }
 
-    constructor(config: Value) : this() {
+    constructor(lang: Lang, config: Value) : this(lang) {
         if (!config.hasMembers()) return
 
         this.shouldRender = config.getMember("shouldRender")?.asBoolean() ?: true
@@ -195,7 +192,12 @@ open class Display() {
         }
     }
 
-    fun createDisplayLine(text: String): DisplayLine = DisplayLine(text)
+    fun createDisplayLine(text: String): DisplayLine = when (lang) {
+        Lang.JS -> JsDisplayLine(text)
+        Lang.PY -> PyDisplayLine(text)
+        Lang.RB -> RbDisplayLine(text)
+        Lang.R -> RDisplayLine(text)
+    }
 
     override fun toString() =
             "Display{" +

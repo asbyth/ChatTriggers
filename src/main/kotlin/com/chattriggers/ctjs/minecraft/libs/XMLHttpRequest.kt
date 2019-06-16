@@ -19,7 +19,7 @@ import java.util.*
 
 @External
 @NotAbstract
-open class XMLHttpRequest {
+abstract class XMLHttpRequest(val lang: Lang) {
     private val USER_AGENT = "Mozilla/5.0"
 
     private var conn: HttpURLConnection? = null
@@ -31,8 +31,6 @@ open class XMLHttpRequest {
     var statusText: String? = null
     var responseText: String? = null
     var extras = HashMap<String, Any>()
-
-    lateinit var lang: Lang
 
     fun open(method: String, urlStr: String, async: Boolean) {
         try {
