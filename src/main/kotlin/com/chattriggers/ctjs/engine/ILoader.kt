@@ -28,7 +28,7 @@ interface ILoader {
      * of only this loader's language, in the correct order that they need
      * to be loaded in.
      *
-     * This function is meant to be called after a /ct load, as opposed
+     * This function is meant to be called after a /ct fetchModules, as opposed
      * to [loadExtra], which is meant to be called when importing modules.
      */
     fun load(module: Module)
@@ -36,7 +36,7 @@ interface ILoader {
     /**
      * Loads a module into the loader. This differs from [load] in that
      * it is meant to be called only when importing modules as it differs
-     * semantically in that it should ignore the load if the user already
+     * semantically in that it should ignore the fetchModules if the user already
      * has the module imported.
      */
     fun loadExtra(module: Module)

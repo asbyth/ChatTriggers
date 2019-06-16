@@ -16,7 +16,7 @@ object ModuleManager {
     var cachedModules = listOf<Module>()
 
     fun importModule(moduleName: String) {
-        DefaultLoader.importModule(moduleName, true)
+        PrimaryLoader.importModule(moduleName, true)
     }
 
     fun deleteModule(name: String): Boolean {
@@ -31,8 +31,9 @@ object ModuleManager {
     }
 
     fun load(updateCheck: Boolean) {
-        val modules = DefaultLoader.load(updateCheck)
+        val modules = PrimaryLoader.fetchModules(updateCheck)
         cachedModules = modules
+        PrimaryLoader.load(modules)
 
         loaders.forEach {
             it.preload(modules)

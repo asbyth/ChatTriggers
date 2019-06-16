@@ -1,42 +1,29 @@
 package com.chattriggers.ctjs.engine.langs.js
 
-import com.chattriggers.ctjs.engine.IBridge
 import com.chattriggers.ctjs.engine.ILoader
 import com.chattriggers.ctjs.engine.ILoader.Companion.modulesFolder
+import com.chattriggers.ctjs.engine.PrimaryLoader
+import com.chattriggers.ctjs.engine.langs.py.PyLoader
 import com.chattriggers.ctjs.engine.module.Module
 import com.chattriggers.ctjs.triggers.OnTrigger
 import com.chattriggers.ctjs.utils.console.Console
 import com.chattriggers.ctjs.utils.kotlin.ModuleLoader
 import org.graalvm.polyglot.Context
+import org.graalvm.polyglot.Source
 import java.io.File
 
 @ModuleLoader
-object JSLoader : ILoader {
+object JsLoader : ILoader {
     override var triggers = mutableListOf<OnTrigger>()
     override val toRemove = mutableListOf<OnTrigger>()
     override val console by lazy { Console(this) }
 
     private val cachedModules = mutableListOf<Module>()
-    private var scriptEngine = Context.newBuilder().allowHostAccess(true).build()
 
     override fun preload(modules: List<Module>) {
         cachedModules.clear()
 
-        val jars = modules.filter {
-            it.metadata.language == "js"
-        }.map {
-            it.getFilesWithExtension(".jar")
-        }.flatten().map {
-            it.absolutePath
-        }
-
-        scriptEngine = Context.newBuilder().allowHostAccess(true).build()
-
-        jars.forEach {
-            scriptEngine.eval("js", "Java.addToClasspath('$it')")
-        }
-
-        val script = saveResource(
+        val providedLibsScript = saveResource(
                 "/providedLibs.js",
                 File(modulesFolder.parentFile,
                         "chattriggers-provided-libs.js"
@@ -45,23 +32,14 @@ object JSLoader : ILoader {
         )
 
         try {
-            scriptEngine.eval("js", script)
+            PrimaryLoader.scriptContext.eval("js", providedLibsScript)
         } catch (e: Exception) {
-            console.printStackTrace(e)
+            PyLoader.console.printStackTrace(e)
         }
     }
 
     override fun load(module: Module) {
-        val combinedScript = module.getFilesWithExtension(".js")
-                .joinToString(separator = "\n") {
-                    it.readText()
-                }
-
-        try {
-            scriptEngine.eval("js", combinedScript)
-        } catch (e: Exception) {
-            console.printStackTrace(e)
-        }
+        loadFiles(module)
 
         cachedModules.add(module)
     }
@@ -73,20 +51,24 @@ object JSLoader : ILoader {
 
         cachedModules.add(module)
 
-        val script = module.getFilesWithExtension(".js").joinToString(separator = "\n") {
-            it.readText()
-        }
+        loadFiles(module)
+    }
 
-        try {
-            scriptEngine.eval("js", script)
-        } catch (e: Exception) {
-            console.out.println("Error loading module ${module.name}")
-            console.printStackTrace(e)
+    private fun loadFiles(module: Module) = try {
+        val scriptFiles = module.getFilesWithExtension(".js")
+
+        scriptFiles.forEach {
+            val source = Source.newBuilder("js", it).build()
+
+            PrimaryLoader.scriptContext.eval(source)
         }
+    } catch (e: Exception) {
+        PyLoader.console.out.println("Error loading module ${module.name}")
+        PyLoader.console.printStackTrace(e)
     }
 
     override fun eval(code: String): Any? {
-        return scriptEngine.eval("js", code)
+        return PrimaryLoader.scriptContext.eval("js", code)
     }
 
     override fun getLanguageName(): List<String> {
@@ -95,11 +77,7 @@ object JSLoader : ILoader {
 
     override fun trigger(trigger: OnTrigger, method: Any, vararg args: Any?) {
         try {
-            if (method is String) {
-                callNamedMethod(method, *args)
-            } else {
-                callActualMethod(method, *args)
-            }
+            TODO()
         } catch (e: Exception) {
             console.printStackTrace(e)
             removeTrigger(trigger)
@@ -108,13 +86,5 @@ object JSLoader : ILoader {
 
     override fun getModules(): List<Module> {
         return cachedModules
-    }
-
-    private fun callActualMethod(method: Any, vararg args: Any?) {
-        TODO()
-    }
-
-    private fun callNamedMethod(method: String, vararg args: Any?) {
-        TODO()
     }
 }

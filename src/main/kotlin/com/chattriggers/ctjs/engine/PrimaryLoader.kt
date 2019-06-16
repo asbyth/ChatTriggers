@@ -10,12 +10,33 @@ import com.chattriggers.ctjs.minecraft.libs.FileLib
 import com.chattriggers.ctjs.print
 import com.google.gson.Gson
 import org.apache.commons.io.FileUtils
+import org.graalvm.polyglot.Context
 import java.io.File
 import java.net.URL
 import kotlin.concurrent.thread
 
-object DefaultLoader {
-    fun load(updateCheck: Boolean): List<Module> {
+object PrimaryLoader {
+    var scriptContext: Context = instanceScriptContext()
+
+    fun load(modules: List<Module>) {
+        scriptContext.close(true)
+
+        scriptContext = instanceScriptContext()
+
+        val jars = modules.filter {
+            it.metadata.language == "js"
+        }.map {
+            it.getFilesWithExtension(".jar")
+        }.flatten().map {
+            it.absolutePath
+        }
+
+        jars.forEach {
+            TODO()
+        }
+    }
+
+    fun fetchModules(updateCheck: Boolean): List<Module> {
         loadAssets()
 
         val toDownload = File(modulesFolder, ".to_download.txt")
@@ -127,13 +148,15 @@ object DefaultLoader {
 
                     val newMetadataFile = File(dir, "updateMeta.json")
 
-                    val connection = URL("https://www.chattriggers.com/downloads/metadata/${metadata.fileName}").openConnection()
+                    val connection =
+                        URL("https://www.chattriggers.com/downloads/metadata/${metadata.fileName}").openConnection()
                     connection.setRequestProperty("User-Agent", "Mozilla/5.0")
                     FileUtils.copyInputStreamToFile(connection.getInputStream(), newMetadataFile)
 
                     val currVersion = metadata.version
 
-                    val newMetadata = Gson().fromJson<ModuleMetadata>(newMetadataFile.readText(), ModuleMetadata::class.java)
+                    val newMetadata =
+                        Gson().fromJson<ModuleMetadata>(newMetadataFile.readText(), ModuleMetadata::class.java)
                     val newVersion = newMetadata.version
                     val name = metadata.fileName
 
@@ -151,18 +174,20 @@ object DefaultLoader {
             }
 
             modules.addAll(
-                    getRequiredModules(metadata, updateCheck)
+                getRequiredModules(metadata, updateCheck)
             )
         } catch (exception: Exception) {
             "Error loading module from $dir".print()
             exception.print()
         }
 
-        modules.add(Module(
+        modules.add(
+            Module(
                 dir.name,
                 metadata,
                 dir
-        ))
+            )
+        )
 
         return modules
     }
@@ -210,7 +235,7 @@ object DefaultLoader {
                 }
 
                 modules.addAll(
-                        newModules
+                    newModules
                 )
             } else {
                 val newModules = importModule(it.name, false, isRequired = true)
@@ -223,4 +248,9 @@ object DefaultLoader {
 
         return modules
     }
+
+    private fun instanceScriptContext() = Context
+        .newBuilder()
+        .allowAllAccess(true)
+        .build()
 }

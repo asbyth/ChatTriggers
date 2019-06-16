@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11
 
 @External
 object DisplayHandler {
-    private var displays = mutableListOf<Display>()
+    private var displays = mutableSetOf<Display>()
 
     init {
         MinecraftForge.EVENT_BUS.register(this)
