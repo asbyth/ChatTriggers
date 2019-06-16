@@ -2,6 +2,7 @@ package com.chattriggers.ctjs.engine
 
 import com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.Item
 import com.chattriggers.ctjs.triggers.*
+import org.graalvm.polyglot.Value
 import kotlin.reflect.full.memberFunctions
 
 interface IRegister {
@@ -14,7 +15,7 @@ interface IRegister {
      * @param method the name of the method or the actual method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun register(triggerType: String, method: Any): OnTrigger {
+    fun register(triggerType: String, method: Value): OnTrigger {
         val capitalizedName = triggerType.substring(0, 1).toUpperCase() + triggerType.substring(1)
 
         val func = this::class.memberFunctions.firstOrNull {
@@ -42,7 +43,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerChat(method: Any): OnChatTrigger {
+    fun registerChat(method: Value): OnChatTrigger {
         return OnChatTrigger(method, TriggerType.CHAT, getImplementationLoader())
     }
 
@@ -62,7 +63,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerActionBar(method: Any): OnChatTrigger {
+    fun registerActionBar(method: Value): OnChatTrigger {
         return OnChatTrigger(method, TriggerType.ACTION_BAR, getImplementationLoader())
     }
 
@@ -76,7 +77,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerWorldLoad(method: Any): OnRegularTrigger {
+    fun registerWorldLoad(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.WORLD_LOAD, getImplementationLoader())
     }
 
@@ -90,7 +91,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerWorldUnload(method: Any): OnRegularTrigger {
+    fun registerWorldUnload(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.WORLD_UNLOAD, getImplementationLoader())
     }
 
@@ -109,7 +110,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerClicked(method: Any): OnRegularTrigger {
+    fun registerClicked(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.CLICKED, getImplementationLoader())
     }
 
@@ -129,7 +130,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerDragged(method: Any): OnRegularTrigger {
+    fun registerDragged(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.DRAGGED, getImplementationLoader())
     }
 
@@ -151,7 +152,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerSoundPlay(method: Any): OnSoundPlayTrigger {
+    fun registerSoundPlay(method: Value): OnSoundPlayTrigger {
         return OnSoundPlayTrigger(method, getImplementationLoader())
     }
 
@@ -170,7 +171,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerNoteBlockPlay(method: Any): OnRegularTrigger {
+    fun registerNoteBlockPlay(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.NOTE_BLOCK_PLAY, getImplementationLoader())
     }
 
@@ -189,7 +190,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerNoteBlockChange(method: Any): OnRegularTrigger {
+    fun registerNoteBlockChange(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.NOTE_BLOCK_CHANGE, getImplementationLoader())
     }
 
@@ -205,7 +206,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerTick(method: Any): OnRegularTrigger {
+    fun registerTick(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.TICK, getImplementationLoader())
     }
 
@@ -223,7 +224,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerStep(method: Any): OnStepTrigger {
+    fun registerStep(method: Value): OnStepTrigger {
         return OnStepTrigger(method, getImplementationLoader())
     }
 
@@ -237,7 +238,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerRenderWorld(method: Any): OnRegularTrigger {
+    fun registerRenderWorld(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.RENDER_WORLD, getImplementationLoader())
     }
 
@@ -251,7 +252,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerRenderOverlay(method: Any): OnRenderTrigger {
+    fun registerRenderOverlay(method: Value): OnRenderTrigger {
         return OnRenderTrigger(method, TriggerType.RENDER_OVERLAY, getImplementationLoader())
     }
 
@@ -268,7 +269,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerRenderPlayerList(method: Any): OnRenderTrigger {
+    fun registerRenderPlayerList(method: Value): OnRenderTrigger {
         return OnRenderTrigger(method, TriggerType.RENDER_PLAYER_LIST, getImplementationLoader())
     }
 
@@ -285,7 +286,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerRenderCrosshair(method: Any): OnRenderTrigger {
+    fun registerRenderCrosshair(method: Value): OnRenderTrigger {
         return OnRenderTrigger(method, TriggerType.RENDER_CROSSHAIR, getImplementationLoader())
     }
 
@@ -302,7 +303,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerRenderDebug(method: Any): OnRenderTrigger {
+    fun registerRenderDebug(method: Value): OnRenderTrigger {
         return OnRenderTrigger(method, TriggerType.RENDER_DEBUG, getImplementationLoader())
     }
 
@@ -319,7 +320,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerRenderBossHealth(method: Any): OnRenderTrigger {
+    fun registerRenderBossHealth(method: Value): OnRenderTrigger {
         return OnRenderTrigger(method, TriggerType.RENDER_BOSS_HEALTH, getImplementationLoader())
     }
 
@@ -336,7 +337,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerRenderHealth(method: Any): OnRenderTrigger {
+    fun registerRenderHealth(method: Value): OnRenderTrigger {
         return OnRenderTrigger(method, TriggerType.RENDER_HEALTH, getImplementationLoader())
     }
 
@@ -353,7 +354,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerRenderFood(method: Any): OnRenderTrigger {
+    fun registerRenderFood(method: Value): OnRenderTrigger {
         return OnRenderTrigger(method, TriggerType.RENDER_FOOD, getImplementationLoader())
     }
 
@@ -370,7 +371,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerRenderMountHealth(method: Any): OnRenderTrigger {
+    fun registerRenderMountHealth(method: Value): OnRenderTrigger {
         return OnRenderTrigger(method, TriggerType.RENDER_MOUNT_HEALTH, getImplementationLoader())
     }
 
@@ -387,7 +388,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerRenderExperience(method: Any): OnRenderTrigger {
+    fun registerRenderExperience(method: Value): OnRenderTrigger {
         return OnRenderTrigger(method, TriggerType.RENDER_EXPERIENCE, getImplementationLoader())
     }
 
@@ -404,7 +405,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerRenderHotbar(method: Any): OnRenderTrigger {
+    fun registerRenderHotbar(method: Value): OnRenderTrigger {
         return OnRenderTrigger(method, TriggerType.RENDER_HOTBAR, getImplementationLoader())
     }
 
@@ -421,7 +422,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerRenderAir(method: Any): OnRenderTrigger {
+    fun registerRenderAir(method: Value): OnRenderTrigger {
         return OnRenderTrigger(method, TriggerType.RENDER_AIR, getImplementationLoader())
     }
 
@@ -438,7 +439,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerDrawBlockHighlight(method: Any): OnRegularTrigger {
+    fun registerDrawBlockHighlight(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.BLOCK_HIGHLIGHT, getImplementationLoader())
     }
 
@@ -453,7 +454,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerGameLoad(method: Any): OnRegularTrigger {
+    fun registerGameLoad(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.GAME_LOAD, getImplementationLoader())
     }
 
@@ -468,7 +469,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerGameUnload(method: Any): OnRegularTrigger {
+    fun registerGameUnload(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.GAME_UNLOAD, getImplementationLoader())
     }
 
@@ -485,7 +486,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerCommand(method: Any): OnCommandTrigger {
+    fun registerCommand(method: Value): OnCommandTrigger {
         return OnCommandTrigger(method, getImplementationLoader())
     }
 
@@ -501,7 +502,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerGuiOpened(method: Any): OnRegularTrigger {
+    fun registerGuiOpened(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.GUI_OPENED, getImplementationLoader())
     }
 
@@ -519,7 +520,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerPlayerJoined(method: Any): OnRegularTrigger {
+    fun registerPlayerJoined(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.PLAYER_JOIN, getImplementationLoader())
     }
 
@@ -537,7 +538,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerPlayerLeft(method: Any): OnRegularTrigger {
+    fun registerPlayerLeft(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.PLAYER_LEAVE, getImplementationLoader())
     }
 
@@ -556,7 +557,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerPickupItem(method: Any): OnRegularTrigger {
+    fun registerPickupItem(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.PICKUP_ITEM, getImplementationLoader())
     }
 
@@ -575,7 +576,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerDropItem(method: Any): OnRegularTrigger {
+    fun registerDropItem(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.DROP_ITEM, getImplementationLoader())
     }
 
@@ -592,7 +593,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerScreenshotTaken(method: Any): OnRegularTrigger {
+    fun registerScreenshotTaken(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.SCREENSHOT_TAKEN, getImplementationLoader())
     }
 
@@ -609,7 +610,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerMessageSent(method: Any): OnRegularTrigger {
+    fun registerMessageSent(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.MESSAGE_SENT, getImplementationLoader())
     }
 
@@ -626,7 +627,7 @@ interface IRegister {
      * @param method the name of the method to callback when the event is fired
      * @return the trigger for additional modification
      */
-    fun registerItemTooltip(method: Any): OnRegularTrigger {
+    fun registerItemTooltip(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.TOOLTIP, getImplementationLoader())
     }
 

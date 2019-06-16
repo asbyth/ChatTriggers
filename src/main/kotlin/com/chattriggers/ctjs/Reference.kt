@@ -2,6 +2,7 @@ package com.chattriggers.ctjs
 
 import com.chattriggers.ctjs.commands.CommandHandler
 import com.chattriggers.ctjs.engine.ModuleManager
+import com.chattriggers.ctjs.engine.PrimaryLoader
 import com.chattriggers.ctjs.minecraft.imixins.IClientCommandHandler
 import com.chattriggers.ctjs.minecraft.libs.ChatLib
 import com.chattriggers.ctjs.minecraft.objects.display.DisplayHandler
@@ -37,7 +38,7 @@ object Reference {
         ModuleManager.unload()
 
         if (Config.clearConsoleOnLoad)
-            ModuleManager.loaders.forEach { it.console.clearConsole() }
+            PrimaryLoader.console.clearConsole()
 
         if (asCommand) {
             ChatLib.chat("&7Unloaded all of ChatTriggers")
@@ -69,7 +70,7 @@ object Reference {
 
             this.isLoaded = true
         } catch (e: Exception) {
-            ModuleManager.generalConsole.printStackTrace(e)
+            PrimaryLoader.console.printStackTrace(e)
         }
     }
 
@@ -86,7 +87,7 @@ object Reference {
                     job.await()
                 }
             } catch (e: TimeoutCancellationException) {
-                ModuleManager.generalConsole.printStackTrace(e)
+                PrimaryLoader.console.printStackTrace(e)
                 e.printStackTrace()
 
                 isLoaded = true
@@ -102,7 +103,7 @@ object Reference {
 
 fun Exception.print() {
     try {
-        ModuleManager.generalConsole.printStackTrace(this)
+        PrimaryLoader.console.printStackTrace(this)
     } catch (exception: Exception) {
         this.printStackTrace()
     }
@@ -110,7 +111,7 @@ fun Exception.print() {
 
 fun String.print() {
     try {
-        ModuleManager.generalConsole.out.println(this)
+        PrimaryLoader.console.out.println(this)
     } catch (exception: Exception) {
         System.out.println(this)
     }

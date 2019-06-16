@@ -5,9 +5,10 @@ import com.chattriggers.ctjs.commands.CommandHandler
 import com.chattriggers.ctjs.engine.ILoader
 import com.chattriggers.ctjs.utils.kotlin.External
 import net.minecraftforge.client.ClientCommandHandler
+import org.graalvm.polyglot.Value
 
 @External
-class OnCommandTrigger(method: Any, loader: ILoader) : OnTrigger(method, TriggerType.COMMAND, loader) {
+class OnCommandTrigger(method: Value, loader: ILoader) : OnTrigger(method, TriggerType.COMMAND, loader) {
     private var commandName: String? = null
     private var command: Command? = null
 

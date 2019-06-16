@@ -3,6 +3,7 @@ package com.chattriggers.ctjs.commands
 import com.chattriggers.ctjs.Reference
 import com.chattriggers.ctjs.Reference.timeout
 import com.chattriggers.ctjs.engine.ModuleManager
+import com.chattriggers.ctjs.engine.PrimaryLoader
 import com.chattriggers.ctjs.engine.module.ModulesGui
 import com.chattriggers.ctjs.minecraft.libs.ChatLib
 import com.chattriggers.ctjs.minecraft.listeners.ChatListener
@@ -72,8 +73,7 @@ object CTCommand : CommandBase() {
                 else ChatLib.chat((if (ModuleManager.deleteModule(args[1])) "&aDeleted " else "&cFailed to delete ") + args[1])
             "modules" -> GuiHandler.openGui(ModulesGui)
             "console" ->
-                if (args.size == 1) ModuleManager.generalConsole.showConsole()
-                else ModuleManager.getConsole(args[1]).showConsole()
+                PrimaryLoader.console.showConsole()
             "config", "settings", "setting" ->
                 GuiHandler.openGui(GuiConfig())
             "sim", "simulate" ->

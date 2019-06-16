@@ -5,16 +5,16 @@ import java.io.OutputStream
 import java.io.PrintStream
 import javax.swing.JTextArea
 
-class TextAreaOutputStream(private val textArea: JTextArea, lang: String) : OutputStream() {
+class TextAreaOutputStream(private val textArea: JTextArea) : OutputStream() {
     private val buffer = StringBuilder(128)
 
     init {
-        val file = File("./logs/ctjs-$lang.log")
+        val file = File("./logs/ctjs-console.log")
         file.delete()
         file.createNewFile()
     }
 
-    private val logger = File("./logs/ctjs-$lang.log").bufferedWriter()
+    private val logger = File("./logs/ctjs-console.log").bufferedWriter()
 
     val printStream = PrintStream(this)
 

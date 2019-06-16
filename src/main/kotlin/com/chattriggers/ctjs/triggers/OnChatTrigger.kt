@@ -7,12 +7,13 @@ import io.sentry.Sentry
 import io.sentry.event.Breadcrumb
 import io.sentry.event.BreadcrumbBuilder
 import net.minecraftforge.client.event.ClientChatReceivedEvent
+import org.graalvm.polyglot.Value
 
 import java.util.*
 import java.util.regex.Pattern
 
 @External
-class OnChatTrigger(method: Any, type: TriggerType, loader: ILoader) : OnTrigger(method, type, loader) {
+class OnChatTrigger(method: Value, type: TriggerType, loader: ILoader) : OnTrigger(method, type, loader) {
     private var chatCriteria: String = ""
     private var criteriaPattern: Pattern? = null
     private var parameters = mutableListOf<Parameter?>()

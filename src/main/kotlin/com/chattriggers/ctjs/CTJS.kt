@@ -2,6 +2,7 @@ package com.chattriggers.ctjs
 
 import com.chattriggers.ctjs.commands.CTCommand
 import com.chattriggers.ctjs.engine.ModuleManager
+import com.chattriggers.ctjs.engine.PrimaryLoader
 import com.chattriggers.ctjs.loader.UriScheme
 import com.chattriggers.ctjs.minecraft.libs.FileLib
 import com.chattriggers.ctjs.minecraft.objects.Sound
@@ -54,8 +55,12 @@ object CTJS {
             AnnotationHandler.subscribeAutomatic(it, event.asmData)
         }
 
-        UriScheme.installUriScheme()
-        UriScheme.createSocketListener()
+        try {
+            UriScheme.installUriScheme()
+            UriScheme.createSocketListener()
+        } catch (e: Exception) {
+            println("URI Scheme not installed. Probably not on Windows!")
+        }
 
         Sentry.init(Reference.SENTRYDSN)
 
@@ -81,7 +86,7 @@ object CTJS {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                ModuleManager.generalConsole.printStackTrace(e)
+                PrimaryLoader.console.printStackTrace(e)
             }
         }
 

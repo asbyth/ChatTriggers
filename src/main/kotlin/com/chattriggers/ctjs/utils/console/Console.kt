@@ -1,6 +1,6 @@
 package com.chattriggers.ctjs.utils.console
 
-import com.chattriggers.ctjs.engine.ILoader
+import com.chattriggers.ctjs.engine.PrimaryLoader
 import com.chattriggers.ctjs.triggers.OnTrigger
 import com.chattriggers.ctjs.utils.config.Config
 import io.sentry.Sentry
@@ -12,9 +12,10 @@ import java.awt.event.WindowEvent
 import java.io.PrintStream
 import javax.swing.*
 
-class Console(val loader: ILoader?) {
-    private val frame: JFrame = JFrame("ct.js ${loader?.getLanguageName() ?: "Default"} Console")
+class Console {
+    private val frame: JFrame = JFrame("ct.js Console")
     private val taos: TextAreaOutputStream
+    private val languageSelector: JComboBox<String>
     private val components = mutableListOf<Component>()
     private val history = mutableListOf<String>()
     private var historyOffset = 0
@@ -25,17 +26,20 @@ class Console(val loader: ILoader?) {
         this.frame.defaultCloseOperation = JFrame.HIDE_ON_CLOSE
 
         val textArea = JTextArea()
-        this.taos = TextAreaOutputStream(textArea, loader?.getLanguageName()?.firstOrNull() ?: "default")
+        this.taos = TextAreaOutputStream(textArea)
+        this.languageSelector = JComboBox(arrayOf("js", "python", "R", "ruby"))
         textArea.isEditable = false
         textArea.font = Font("DejaVu Sans Mono", Font.PLAIN, 15)
         val inputField = JTextField(1)
         inputField.isFocusable = true
+
 
         inputField.margin = Insets(5, 5, 5, 5)
         textArea.margin = Insets(5, 5, 5, 5)
 
         components.add(textArea)
         components.add(inputField)
+        components.add(languageSelector)
 
         out = taos.printStream
 
@@ -55,7 +59,7 @@ class Console(val loader: ILoader?) {
                         historyOffset = 0
 
                         try {
-                            toPrint = loader?.eval(command)
+                            toPrint = PrimaryLoader.scriptContext.eval(languageSelector.selectedItem as String, command)
                         } catch (error: ThreadQuickExitException) { } catch (e: Exception) {
                             printStackTrace(e)
                             toPrint = "> $command"

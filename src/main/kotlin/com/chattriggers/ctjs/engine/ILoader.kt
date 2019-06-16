@@ -7,12 +7,12 @@ import com.chattriggers.ctjs.triggers.TriggerType
 import com.chattriggers.ctjs.utils.config.Config
 import com.chattriggers.ctjs.utils.console.Console
 import org.apache.commons.io.FileUtils
+import org.graalvm.polyglot.Value
 import java.io.File
 
 interface ILoader {
     var triggers: MutableList<OnTrigger>
     val toRemove: MutableList<OnTrigger>
-    val console: Console
     val cachedModules: MutableList<Module>
 
     /**
@@ -107,7 +107,7 @@ interface ILoader {
     /**
      * Actually calls the method for this trigger in this loader
      */
-    fun trigger(trigger: OnTrigger, method: Any, vararg args: Any?)
+    fun trigger(trigger: OnTrigger, method: Value, vararg args: Any?)
 
     /**
      * Removes a trigger from the current pool

@@ -3,9 +3,10 @@ package com.chattriggers.ctjs.triggers
 import com.chattriggers.ctjs.engine.ILoader
 import com.chattriggers.ctjs.utils.kotlin.External
 import jdk.nashorn.internal.objects.Global
+import org.graalvm.polyglot.Value
 
 @External
-abstract class OnTrigger protected constructor(var method: Any, var type: TriggerType, protected var loader: ILoader) {
+abstract class OnTrigger protected constructor(var method: Value, var type: TriggerType, protected var loader: ILoader) {
     var priority: Priority
         private set
     private var global: Global?

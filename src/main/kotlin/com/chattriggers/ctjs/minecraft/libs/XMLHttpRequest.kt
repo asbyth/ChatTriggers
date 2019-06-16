@@ -1,11 +1,13 @@
 package com.chattriggers.ctjs.minecraft.libs
 
 import com.chattriggers.ctjs.engine.ILoader
+import com.chattriggers.ctjs.engine.PrimaryLoader
 import com.chattriggers.ctjs.triggers.OnRegularTrigger
 import com.chattriggers.ctjs.triggers.OnTrigger
 import com.chattriggers.ctjs.triggers.TriggerType
 import com.chattriggers.ctjs.utils.kotlin.External
 import com.chattriggers.ctjs.utils.kotlin.NotAbstract
+import org.graalvm.polyglot.Value
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
@@ -41,7 +43,7 @@ abstract class XMLHttpRequest {
             this.conn = url.openConnection() as HttpURLConnection
             this.conn?.requestMethod = method
         } catch (e: Exception) {
-            getLoader().console.printStackTrace(e)
+            PrimaryLoader.console.printStackTrace(e)
         }
     }
 
@@ -56,7 +58,7 @@ abstract class XMLHttpRequest {
      *
      * @param method the method to be called back on completion of the request
      */
-    fun setCallbackMethod(method: Any) {
+    fun setCallbackMethod(method: Value) {
         this.methodCallback = OnRegularTrigger(method, TriggerType.OTHER, getLoader())
     }
 
@@ -75,7 +77,7 @@ abstract class XMLHttpRequest {
                 sendPost(*parameters)
             }
         } catch (e: Exception) {
-            getLoader().console.printStackTrace(e)
+            PrimaryLoader.console.printStackTrace(e)
         }
     }
 
@@ -92,7 +94,7 @@ abstract class XMLHttpRequest {
                 sendGet()
             }
         } catch (e: Exception) {
-            getLoader().console.printStackTrace(e)
+            PrimaryLoader.console.printStackTrace(e)
         }
     }
 
@@ -134,7 +136,7 @@ abstract class XMLHttpRequest {
 
             sendGet()
         } catch (e: Exception) {
-            getLoader().console.printStackTrace(e)
+            PrimaryLoader.console.printStackTrace(e)
         }
     }
 
@@ -159,7 +161,7 @@ abstract class XMLHttpRequest {
 
             this.methodCallback.trigger(this)
         } catch (e: Exception) {
-            getLoader().console.printStackTrace(e)
+            PrimaryLoader.console.printStackTrace(e)
         }
 
     }

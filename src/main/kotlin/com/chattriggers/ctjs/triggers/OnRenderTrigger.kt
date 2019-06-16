@@ -3,9 +3,10 @@ package com.chattriggers.ctjs.triggers
 import com.chattriggers.ctjs.engine.ILoader
 import com.chattriggers.ctjs.utils.kotlin.External
 import net.minecraftforge.client.event.RenderGameOverlayEvent
+import org.graalvm.polyglot.Value
 
 @External
-class OnRenderTrigger(method: Any, triggerType: TriggerType, loader: ILoader) : OnTrigger(method, triggerType, loader) {
+class OnRenderTrigger(method: Value, triggerType: TriggerType, loader: ILoader) : OnTrigger(method, triggerType, loader) {
     private var triggerIfCanceled: Boolean = true
 
     /**

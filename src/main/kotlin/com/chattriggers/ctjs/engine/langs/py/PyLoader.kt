@@ -3,18 +3,19 @@ package com.chattriggers.ctjs.engine.langs.py
 import com.chattriggers.ctjs.engine.ILoader
 import com.chattriggers.ctjs.engine.ILoader.Companion.modulesFolder
 import com.chattriggers.ctjs.engine.PrimaryLoader
+import com.chattriggers.ctjs.engine.PrimaryLoader.console
 import com.chattriggers.ctjs.engine.module.Module
 import com.chattriggers.ctjs.triggers.OnTrigger
 import com.chattriggers.ctjs.utils.console.Console
 import com.chattriggers.ctjs.utils.kotlin.ModuleLoader
 import org.graalvm.polyglot.Source
+import org.graalvm.polyglot.Value
 import java.io.File
 
 @ModuleLoader
 object PyLoader : ILoader {
     override var triggers = mutableListOf<OnTrigger>()
     override val toRemove = mutableListOf<OnTrigger>()
-    override val console by lazy { Console(this) }
     override val cachedModules = mutableListOf<Module>()
 
     override fun preload(modules: List<Module>) {
@@ -56,7 +57,7 @@ object PyLoader : ILoader {
         return listOf("py")
     }
 
-    override fun trigger(trigger: OnTrigger, method: Any, vararg args: Any?) {
+    override fun trigger(trigger: OnTrigger, method: Value, vararg args: Any?) {
         try {
             TODO()
         } catch (e: Exception) {

@@ -8,6 +8,7 @@ import com.chattriggers.ctjs.engine.module.ModuleMetadata
 import com.chattriggers.ctjs.minecraft.libs.ChatLib
 import com.chattriggers.ctjs.minecraft.libs.FileLib
 import com.chattriggers.ctjs.print
+import com.chattriggers.ctjs.utils.console.Console
 import com.google.gson.Gson
 import org.apache.commons.io.FileUtils
 import org.graalvm.polyglot.Context
@@ -17,6 +18,7 @@ import kotlin.concurrent.thread
 
 object PrimaryLoader {
     var scriptContext: Context = instanceScriptContext()
+    var console: Console = Console()
 
     fun load(modules: List<Module>) {
         scriptContext.close(true)
@@ -252,5 +254,6 @@ object PrimaryLoader {
     private fun instanceScriptContext() = Context
         .newBuilder()
         .allowAllAccess(true)
+        .out(console.out)
         .build()
 }

@@ -12,7 +12,6 @@ import java.lang.IllegalStateException
 
 object ModuleManager {
     val loaders = mutableListOf<ILoader>()
-    val generalConsole = Console(null)
     var cachedModules = listOf<Module>()
 
     fun importModule(moduleName: String) {
@@ -70,11 +69,5 @@ object ModuleManager {
         loaders.forEach {
             it.exec(type, *arguments)
         }
-    }
-
-    fun getConsole(language: String): Console {
-        return loaders.firstOrNull {
-            it.getLanguageName().contains(language)
-        }?.console ?: generalConsole
     }
 }
