@@ -12,7 +12,8 @@ data class ModuleMetadata(
         val requires: ArrayList<String>? = null,
         val ignored: ArrayList<String>? = null,
         var fileName: String? = null,
-        var isRequired: Boolean = false
+        var isRequired: Boolean = false,
+        var language: String = "js"
 ) {
     val isDefault: Boolean
         get() = name == null

@@ -9,6 +9,7 @@ import com.chattriggers.ctjs.minecraft.objects.gui.GuiHandler
 import com.chattriggers.ctjs.minecraft.wrappers.World
 import com.chattriggers.ctjs.triggers.TriggerType
 import com.chattriggers.ctjs.utils.config.Config
+import kotlinx.coroutines.*
 import net.minecraft.launchwrapper.Launch
 import net.minecraftforge.client.ClientCommandHandler
 
@@ -24,7 +25,7 @@ object Reference {
 
     private var isLoaded = true
 
-    fun reload() = load(true)
+    fun reload() = timeout { load(true) }
 
     fun unload(asCommand: Boolean = true) {
         TriggerType.WORLD_UNLOAD.triggerAll()
@@ -52,7 +53,8 @@ object Reference {
         unload(false)
 
         ChatLib.chat("&cReloading ct.js scripts...")
-        Thread {
+
+        try {
             (ClientCommandHandler.instance as IClientCommandHandler).removeCTCommands()
 
             CTJS.loadConfig()
@@ -66,7 +68,35 @@ object Reference {
                 TriggerType.WORLD_LOAD.triggerAll()
 
             this.isLoaded = true
-        }.start()
+        } catch (e: Exception) {
+            ModuleManager.generalConsole.printStackTrace(e)
+        }
+    }
+
+    // Helper function for loading modules with a timeout
+    fun timeout(asCommand: Boolean = false,
+                millis: Long = Config.loadTimeout.toLongOrNull() ?: 30000,
+                catch: (Exception) -> Unit = {},
+                block: () -> Unit) {
+        GlobalScope.launch {
+            val job = async { return@async block() }
+
+            try {
+                withTimeout(millis) {
+                    job.await()
+                }
+            } catch (e: TimeoutCancellationException) {
+                ModuleManager.generalConsole.printStackTrace(e)
+                e.printStackTrace()
+
+                isLoaded = true
+
+                if (asCommand) {
+                    val seconds = Math.floor(millis / 1000.0)
+                    ChatLib.chat("&cLoading exceeded $seconds seconds and was stopped.")
+                }
+            }
+        }
     }
 }
 

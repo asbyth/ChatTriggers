@@ -1,6 +1,7 @@
 package com.chattriggers.ctjs.commands
 
 import com.chattriggers.ctjs.Reference
+import com.chattriggers.ctjs.Reference.timeout
 import com.chattriggers.ctjs.engine.ModuleManager
 import com.chattriggers.ctjs.engine.module.ModulesGui
 import com.chattriggers.ctjs.minecraft.libs.ChatLib
@@ -52,14 +53,15 @@ object CTCommand : CommandBase() {
     //#endif
 
     private fun run(args: Array<String>) {
+
         if (args.isEmpty()) {
             ChatLib.chat(getUsage())
             return
         }
 
         when (args[0].toLowerCase()) {
-            "load" -> Reference.load()
-            "reload" -> Reference.reload()
+            "load" -> timeout(asCommand = true) { Reference.load() }
+            "reload" -> timeout(asCommand = true) { Reference.reload() }
             "unload" -> Reference.unload()
             "files", "file" -> openFileLocation()
             "import" ->

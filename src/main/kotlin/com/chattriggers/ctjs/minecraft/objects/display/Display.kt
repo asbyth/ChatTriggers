@@ -3,6 +3,7 @@ package com.chattriggers.ctjs.minecraft.objects.display
 import com.chattriggers.ctjs.utils.kotlin.External
 import com.chattriggers.ctjs.utils.kotlin.NotAbstract
 import jdk.nashorn.api.scripting.ScriptObjectMirror
+import org.graalvm.polyglot.Value
 
 @External
 @NotAbstract
@@ -26,6 +27,37 @@ abstract class Display() {
 
     init {
         DisplayHandler.registerDisplay(this)
+    }
+
+    constructor(config: Value) : this() {
+        if (!config.hasMembers()) return
+
+        this.shouldRender = config.getMember("shouldRender")?.asBoolean() ?: true
+        this.renderX = config.getMember("renderX")?.asFloat() ?: 0f
+        this.renderY = config.getMember("renderY")?.asFloat() ?: 0f
+
+        this.backgroundColor = config.getMember("backgroundColor")?.asInt() ?: 0x50000000
+        this.textColor = config.getMember("textColor")?.asInt() ?: 0xffffffff.toInt()
+
+        run {
+            val background = config.getMember("background") ?: return@run this.setBackground(DisplayHandler.Background.NONE)
+
+            this.setBackground(if (background.isString) background.asString() else background.asHostObject())
+        }
+
+        run {
+            val align = config.getMember("align") ?: return@run this.setBackground(DisplayHandler.Align.LEFT)
+
+            this.setAlign(if (align.isString) align.asString() else align.asHostObject())
+        }
+
+        run {
+            val order = config.getMember("order") ?: return@run this.setBackground(DisplayHandler.Order.DOWN)
+
+            this.setOrder(if (order.isString) order.asString() else order.asHostObject())
+        }
+
+        this.minWidth = config.getMember("minWidth")?.asFloat() ?: 0f
     }
 
     fun setBackgroundColor(backgroundColor: Int) = apply {

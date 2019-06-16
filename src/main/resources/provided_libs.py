@@ -73,6 +73,7 @@ ChatTriggers = java.type('com.chattriggers.ctjs.Reference').INSTANCE
 # Helper methods
 import math
 
+
 def cancel(event):
     try:
         EventLib.cancel(event)
@@ -81,8 +82,10 @@ def cancel(event):
             return
         event.setCanceled(True)
 
+
 def register(trigger_type, method_name):
     return TriggerRegister.register(trigger_type, method_name)
+
 
 def easeOut(start, finish, speed, jump):
     if not jump:
@@ -93,9 +96,16 @@ def easeOut(start, finish, speed, jump):
     else:
         return finish
 
+
 def setTimeout(func, delay):
     def tFunc():
         Thread.sleep(delay)
         func()
 
     Thread(tFunc).start()
+
+
+def log(*args):
+    for arg in args:
+        Console.out.printf('%s', str(arg))
+    Console.out.printf('\n')

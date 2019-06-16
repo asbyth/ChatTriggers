@@ -70,9 +70,10 @@ var OnStepTrigger = Java.type("com.chattriggers.ctjs.triggers.OnStepTrigger");
 var OnTrigger = Java.type("com.chattriggers.ctjs.triggers.OnTrigger");
 
 // Misc
-var Console = Java.type("com.chattriggers.ctjs.engine.langs.js.JSLoader").INSTANCE.getConsole();
+var Console = Java.type("com.chattriggers.ctjs.engine.langs.js.JsLoader").INSTANCE.getConsole();
 var Config = Java.type("com.chattriggers.ctjs.utils.config.Config").INSTANCE;
 var ChatTriggers = Java.type("com.chattriggers.ctjs.Reference").INSTANCE;
+var Bridge = Java.type("com.chattriggers.ctjs.engine.BridgeManager").INSTANCE;
 
 
 // Helper methods
@@ -108,7 +109,7 @@ Number.prototype.easeOut = function(to, speed, jump) {
     } else {
         this = to
     }
-}
+};
 
 function setTimeout(func, delay) {
     new Thread(function() {

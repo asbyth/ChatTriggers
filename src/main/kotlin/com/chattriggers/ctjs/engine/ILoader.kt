@@ -1,5 +1,6 @@
 package com.chattriggers.ctjs.engine
 
+import com.chattriggers.ctjs.engine.langs.py.PyLoader
 import com.chattriggers.ctjs.engine.module.Module
 import com.chattriggers.ctjs.triggers.OnTrigger
 import com.chattriggers.ctjs.triggers.TriggerType
@@ -12,20 +13,49 @@ interface ILoader {
     var triggers: MutableList<OnTrigger>
     val toRemove: MutableList<OnTrigger>
     val console: Console
+    val cachedModules: MutableList<Module>
 
     /**
-     * Loads a list of modules into the loader. This is meant to be called on
-     * a full load, which is different from [loadExtra], as this method
-     * should clear old modules.
+     * Should configure the loader's script engine, as well as any initial
+     * processing or loading that needs to operate on all modules, such as
+     * jar loading.
+     *
+     * Note that this function is given every user module, not just the ones
+     * that match this loader's language.
      */
-    fun load(modules: List<Module>)
+    fun preload(modules: List<Module>)
 
     /**
-     * Loads a single Module into the loader. This differs from [load] in that
+     * Loads a module into the loader. This function is called with modules
+     * of only this loader's language, in the correct order that they need
+     * to be loaded in.
+     *
+     * This function is meant to be called after a /ct load, as opposed
+     * to [loadExtra], which is meant to be called when importing modules.
+     */
+    fun load(module: Module) {
+        loadFiles(module)
+
+        cachedModules.add(module)
+    }
+
+    /**
+     * Loads a module into the loader. This differs from [load] in that
      * it is meant to be called only when importing modules as it differs
-     * semantically in that it shouldn't clear out old modules.
+     * semantically in that it should ignore the load if the user already
+     * has the module imported.
      */
-    fun loadExtra(module: Module)
+    fun loadExtra(module: Module) {
+        if (cachedModules.any {
+                it.name == module.name
+            }) return
+
+        cachedModules.add(module)
+
+        loadFiles(module)
+    }
+
+    fun loadFiles(module: Module)
 
     /**
      * Tells the loader that it should activate all triggers

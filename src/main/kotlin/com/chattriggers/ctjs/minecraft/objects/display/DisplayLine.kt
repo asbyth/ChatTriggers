@@ -10,6 +10,7 @@ import com.chattriggers.ctjs.triggers.TriggerType
 import com.chattriggers.ctjs.utils.kotlin.External
 import com.chattriggers.ctjs.utils.kotlin.NotAbstract
 import jdk.nashorn.api.scripting.ScriptObjectMirror
+import org.graalvm.polyglot.Value
 import org.lwjgl.input.Mouse
 import javax.vecmath.Vector2d
 
@@ -18,8 +19,8 @@ import javax.vecmath.Vector2d
 abstract class DisplayLine(text: String) {
     private lateinit var text: Text
     private var textWidth = 0f
-    protected var textColor: Int? = null
-    protected var backgroundColor: Int? = null
+    private var textColor: Int? = null
+    private var backgroundColor: Int? = null
 
     private var background: DisplayHandler.Background? = null
     private var align: DisplayHandler.Align? = null
@@ -28,7 +29,7 @@ abstract class DisplayLine(text: String) {
     private var onHovered: OnTrigger? = null
     private var onDragged: OnTrigger? = null
 
-    protected var mouseState = HashMap<Int, Boolean>()
+    private var mouseState = HashMap<Int, Boolean>()
     private var draggedState = HashMap<Int, Vector2d>()
 
     init {
@@ -36,9 +37,28 @@ abstract class DisplayLine(text: String) {
         for (i in 0..5) this.mouseState[i] = false
     }
 
+    constructor(text: String, config: Value) : this(text) {
+        if (!config.hasMembers()) return
+
+        this.textColor = config.getMember("text_color")?.asInt()
+        this.backgroundColor = config.getMember("background_color")?.asInt()
+
+        run {
+            val align = config.getMember("align") ?: return@run
+
+            this.setAlign(if (align.isString) align.asString() else align.asHostObject())
+        }
+
+        run {
+            val background = config.getMember("background") ?: return@run
+
+            this.setBackground(if (background.isString) background.asString() else background.asHostObject())
+        }
+    }
+
     fun getText(): Text = this.text
     fun setText(text: String) = apply {
-        this.text = Renderer.text(text)
+        this.text = Text(text)
         this.textWidth = Renderer.getStringWidth(text) * this.text.getScale()
     }
 

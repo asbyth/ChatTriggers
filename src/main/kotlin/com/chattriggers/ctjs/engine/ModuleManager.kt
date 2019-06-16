@@ -1,12 +1,14 @@
 package com.chattriggers.ctjs.engine
 
 import com.chattriggers.ctjs.Reference
+import com.chattriggers.ctjs.Reference.timeout
 import com.chattriggers.ctjs.engine.module.Module
 import com.chattriggers.ctjs.minecraft.libs.FileLib
 import com.chattriggers.ctjs.triggers.TriggerType
 import com.chattriggers.ctjs.utils.config.Config
 import com.chattriggers.ctjs.utils.console.Console
 import java.io.File
+import java.lang.IllegalStateException
 
 object ModuleManager {
     val loaders = mutableListOf<ILoader>()
@@ -14,7 +16,7 @@ object ModuleManager {
     var cachedModules = listOf<Module>()
 
     fun importModule(moduleName: String) {
-        DefaultLoader.importModule(moduleName, true)
+        PrimaryLoader.importModule(moduleName, true)
     }
 
     fun deleteModule(name: String): Boolean {
@@ -22,18 +24,28 @@ object ModuleManager {
             cachedModules.filter {
                 return@filter it.name == name
             }
-            Reference.load()
+            timeout { Reference.load() }
             return true
         }
         return false
     }
 
     fun load(updateCheck: Boolean) {
-        val modules = DefaultLoader.load(updateCheck)
+        val modules = PrimaryLoader.fetchModules(updateCheck)
         cachedModules = modules
+        PrimaryLoader.load(modules)
 
         loaders.forEach {
-            it.load(modules)
+            it.preload(modules)
+        }
+
+        modules.forEach { module ->
+            val loader = loaders.firstOrNull {
+                it.getLanguageName().contains(module.metadata.language)
+            } ?: throw IllegalStateException("No loader found for language '${module.metadata.language}' " +
+                    "in module '${module.name}'")
+
+            loader.load(module)
         }
     }
 
