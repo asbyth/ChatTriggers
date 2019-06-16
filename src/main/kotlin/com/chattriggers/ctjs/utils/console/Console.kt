@@ -11,6 +11,8 @@ import java.awt.event.KeyListener
 import java.awt.event.WindowEvent
 import java.io.PrintStream
 import javax.swing.*
+import javax.swing.plaf.metal.MetalLookAndFeel
+import javax.swing.plaf.metal.OceanTheme
 
 class Console {
     private val frame: JFrame = JFrame("ct.js Console")
@@ -25,6 +27,7 @@ class Console {
     init {
         this.frame.defaultCloseOperation = JFrame.HIDE_ON_CLOSE
 
+        val jpanel = JPanel(BorderLayout())
         val textArea = JTextArea()
         this.taos = TextAreaOutputStream(textArea)
         this.languageSelector = JComboBox(arrayOf("js", "python", "R", "ruby"))
@@ -32,7 +35,7 @@ class Console {
         textArea.font = Font("DejaVu Sans Mono", Font.PLAIN, 15)
         val inputField = JTextField(1)
         inputField.isFocusable = true
-
+        inputField.caretColor = Color.WHITE
 
         inputField.margin = Insets(5, 5, 5, 5)
         textArea.margin = Insets(5, 5, 5, 5)
@@ -50,22 +53,18 @@ class Console {
 
             override fun keyReleased(e: KeyEvent) {
                 when (e.keyCode) {
-                    KeyEvent.VK_ENTER -> {
-                        var toPrint: Any? = null
-
-                        val command = inputField.text
+                    KeyEvent.VK_ENTER -> {val command = inputField.text
                         inputField.text = ""
                         history.add(command)
                         historyOffset = 0
 
+                        taos.println("${languageSelector.selectedItem}> $command")
+
                         try {
-                            toPrint = PrimaryLoader.scriptContext.eval(languageSelector.selectedItem as String, command)
+                            taos.println(PrimaryLoader.scriptContext.eval(languageSelector.selectedItem as String, command))
                         } catch (error: ThreadQuickExitException) { } catch (e: Exception) {
                             printStackTrace(e)
-                            toPrint = "> $command"
                         }
-
-                        taos.println(toPrint ?: command)
                     }
 
                     KeyEvent.VK_UP -> {
@@ -97,8 +96,9 @@ class Console {
         })
 
         frame.add(JScrollPane(textArea))
-        frame.add(inputField, BorderLayout.SOUTH)
-        frame.add(languageSelector, BorderLayout.EAST)
+        jpanel.add(inputField)
+        jpanel.add(languageSelector, BorderLayout.EAST)
+        frame.add(jpanel, BorderLayout.SOUTH)
         frame.pack()
         frame.isVisible = false
         frame.setSize(800, 600)
