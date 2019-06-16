@@ -16,7 +16,7 @@ import javax.vecmath.Vector2d
 
 @External
 @NotAbstract
-class DisplayLine(val lang: Lang, text: String) {
+open class DisplayLine(text: String) {
     private lateinit var text: Text
     private var textWidth = 0f
     private var textColor: Int? = null
@@ -32,12 +32,14 @@ class DisplayLine(val lang: Lang, text: String) {
     private var mouseState = HashMap<Int, Boolean>()
     private var draggedState = HashMap<Int, Vector2d>()
 
+    lateinit var lang: Lang
+
     init {
         setText(text)
         for (i in 0..5) this.mouseState[i] = false
     }
 
-    constructor(lang: Lang, text: String, config: Value) : this(lang, text) {
+    constructor(text: String, config: Value) : this(text) {
         if (!config.hasMembers()) return
 
         this.textColor = config.getMember("text_color")?.asInt()

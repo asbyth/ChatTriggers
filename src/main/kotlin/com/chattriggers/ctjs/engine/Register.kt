@@ -6,7 +6,9 @@ import org.graalvm.polyglot.Value
 import kotlin.reflect.full.memberFunctions
 
 @Suppress("unused")
-class Register(val lang: Lang) {
+open class Register {
+    lateinit var lang: Lang
+
     /**
      * Helper method register a trigger. <br/>
      * Called by taking the original name of the method, i.e. `registerChat`,
