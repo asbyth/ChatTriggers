@@ -60,8 +60,8 @@ object CTCommand : CommandBase() {
         }
 
         when (args[0].toLowerCase()) {
-            "load" -> Reference.loadCT(asCommand = true)
-            "reload" -> Reference.reloadCT()
+            "load" -> PrimaryLoader.newScriptThread { Reference.loadCT(asCommand = true) }
+            "reload" -> PrimaryLoader.newScriptThread { Reference.reloadCT() }
             "unload" -> Reference.unloadCT()
             "files", "file" -> openFileLocation()
             "import" ->

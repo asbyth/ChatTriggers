@@ -103,11 +103,6 @@ class Loader(private val language: Lang) {
     }
 
     /**
-     * Gets the result from evaluating a certain line of code in this loader
-     */
-    fun eval(code: String): Value = PrimaryLoader.scriptContext.eval(language.graalName, code)
-
-    /**
      * Adds a trigger to this loader to be activated during the game
      */
     fun addTrigger(trigger: OnTrigger) {
