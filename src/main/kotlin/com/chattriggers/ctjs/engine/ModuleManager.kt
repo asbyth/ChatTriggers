@@ -1,13 +1,12 @@
 package com.chattriggers.ctjs.engine
 
 import com.chattriggers.ctjs.Reference
-import com.chattriggers.ctjs.Reference.timeout
 import com.chattriggers.ctjs.engine.module.Module
 import com.chattriggers.ctjs.minecraft.libs.FileLib
 import com.chattriggers.ctjs.triggers.TriggerType
 import com.chattriggers.ctjs.utils.config.Config
 import java.io.File
-import java.lang.IllegalStateException
+import kotlin.concurrent.thread
 
 object ModuleManager {
     val loaders = Lang.values().map { Loader(it) }
@@ -26,18 +25,18 @@ object ModuleManager {
             cachedModules.filter {
                 return@filter it.name == name
             }
-            timeout { Reference.load() }
+            Reference.load()
             return true
         }
         return false
     }
 
     fun load(updateCheck: Boolean, asCommand: Boolean = false) {
-        val modules = PrimaryLoader.fetchModules(updateCheck)
-        cachedModules = modules
-        PrimaryLoader.load(modules)
+        thread {
+            val modules = PrimaryLoader.fetchModules(updateCheck)
+            cachedModules = modules
+            PrimaryLoader.load(modules)
 
-        timeout(asCommand = asCommand) {
             loaders.forEach { it.preload() }
             loaders.forEach { it.load(modules) }
         }

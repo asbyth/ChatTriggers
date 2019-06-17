@@ -1,7 +1,6 @@
 package com.chattriggers.ctjs.commands
 
 import com.chattriggers.ctjs.Reference
-import com.chattriggers.ctjs.Reference.timeout
 import com.chattriggers.ctjs.engine.ModuleManager
 import com.chattriggers.ctjs.engine.PrimaryLoader
 import com.chattriggers.ctjs.engine.module.ModulesGui
@@ -62,7 +61,7 @@ object CTCommand : CommandBase() {
 
         when (args[0].toLowerCase()) {
             "load" -> Reference.load(asCommand = true)
-            "reload" -> timeout(asCommand = true) { Reference.reload() }
+            "reload" -> Reference.reload()
             "unload" -> Reference.unload()
             "files", "file" -> openFileLocation()
             "import" ->

@@ -26,7 +26,7 @@ object Reference {
 
     private var isLoaded = true
 
-    fun reload() = timeout { load(true) }
+    fun reload() = load(true)
 
     fun unload(asCommand: Boolean = true) {
         TriggerType.WORLD_UNLOAD.triggerAll()
@@ -71,32 +71,6 @@ object Reference {
             this.isLoaded = true
         } catch (e: Exception) {
             PrimaryLoader.console.printStackTrace(e)
-        }
-    }
-
-    // Helper function for loading modules with a timeout
-    fun timeout(asCommand: Boolean = false,
-                millis: Long = Config.loadTimeout.toLongOrNull() ?: 30000,
-                catch: (Exception) -> Unit = {},
-                block: () -> Unit) {
-        GlobalScope.launch {
-            val job = async { return@async block() }
-
-            try {
-                withTimeout(millis) {
-                    job.await()
-                }
-            } catch (e: TimeoutCancellationException) {
-                PrimaryLoader.console.printStackTrace(e)
-                e.printStackTrace()
-
-                isLoaded = true
-
-                if (asCommand) {
-                    val seconds = Math.floor(millis / 1000.0)
-                    ChatLib.chat("&cLoading exceeded $seconds seconds and was stopped.")
-                }
-            }
         }
     }
 }
