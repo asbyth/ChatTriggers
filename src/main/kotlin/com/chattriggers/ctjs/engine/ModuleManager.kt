@@ -25,24 +25,24 @@ object ModuleManager {
             cachedModules.filter {
                 return@filter it.name == name
             }
-            Reference.load()
+            Reference.loadCT()
             return true
         }
         return false
     }
 
-    fun load(updateCheck: Boolean, asCommand: Boolean = false) {
+    fun loadModules(updateCheck: Boolean, asCommand: Boolean = false) {
         thread {
             val modules = PrimaryLoader.fetchModules(updateCheck)
             cachedModules = modules
-            PrimaryLoader.load(modules)
+            PrimaryLoader.initialize(modules)
 
             loaders.forEach { it.preload() }
             loaders.forEach { it.load(modules) }
         }
     }
 
-    fun load(module: Module) {
+    fun loadModule(module: Module) {
         val list = mutableListOf<Module>()
         list.addAll(cachedModules)
         list.add(module)
@@ -53,7 +53,7 @@ object ModuleManager {
         }
     }
 
-    fun unload() {
+    fun unloadTriggers() {
         loaders.forEach {
             it.clearTriggers()
         }

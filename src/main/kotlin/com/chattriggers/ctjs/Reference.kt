@@ -10,7 +10,6 @@ import com.chattriggers.ctjs.minecraft.objects.gui.GuiHandler
 import com.chattriggers.ctjs.minecraft.wrappers.World
 import com.chattriggers.ctjs.triggers.TriggerType
 import com.chattriggers.ctjs.utils.config.Config
-import kotlinx.coroutines.*
 import net.minecraft.launchwrapper.Launch
 import net.minecraftforge.client.ClientCommandHandler
 
@@ -26,16 +25,16 @@ object Reference {
 
     private var isLoaded = true
 
-    fun reload() = load(true)
+    fun reloadCT() = loadCT(true)
 
-    fun unload(asCommand: Boolean = true) {
+    fun unloadCT(asCommand: Boolean = true) {
         TriggerType.WORLD_UNLOAD.triggerAll()
         TriggerType.GAME_UNLOAD.triggerAll()
 
         DisplayHandler.clearDisplays()
         GuiHandler.clearGuis()
         CommandHandler.getCommandList().clear()
-        ModuleManager.unload()
+        ModuleManager.unloadTriggers()
 
         if (Config.clearConsoleOnLoad)
             PrimaryLoader.console.clearConsole()
@@ -47,11 +46,11 @@ object Reference {
     }
 
     @JvmOverloads
-    fun load(updateCheck: Boolean = false, asCommand: Boolean = false) {
+    fun loadCT(updateCheck: Boolean = false, asCommand: Boolean = false) {
         if (!this.isLoaded) return
         this.isLoaded = false
 
-        unload(false)
+        unloadCT(false)
 
         ChatLib.chat("&cReloading ct.js scripts...")
 
@@ -60,7 +59,7 @@ object Reference {
 
             CTJS.loadConfig()
 
-            ModuleManager.load(updateCheck, asCommand)
+            ModuleManager.loadModules(updateCheck, asCommand)
 
             ChatLib.chat("&aDone reloading scripts!")
 

@@ -20,7 +20,7 @@ object PrimaryLoader {
     var console: Console = Console()
     var scriptContext: Context = instanceScriptContext()
 
-    fun load(modules: List<Module>) {
+    fun initialize(modules: List<Module>) {
         try {
             scriptContext.close(false)
         } catch (e: Exception) {
@@ -78,7 +78,7 @@ object PrimaryLoader {
                 val modules = getModule(moduleFolder, false)
 
                 modules.forEach {
-                    ModuleManager.load(it)
+                    ModuleManager.loadModule(it)
 
                     if (isRequired) {
                         it.metadata.isRequired = true

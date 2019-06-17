@@ -13,10 +13,6 @@ import com.chattriggers.ctjs.utils.kotlin.AnnotationHandler
 import com.google.gson.JsonParser
 import io.sentry.Sentry
 import io.sentry.event.UserBuilder
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
 import net.minecraftforge.client.ClientCommandHandler
 import net.minecraftforge.fml.common.Loader
 import net.minecraftforge.fml.common.Mod
@@ -76,7 +72,7 @@ object CTJS {
     @Mod.EventHandler
     fun init(event: FMLInitializationEvent) {
         try {
-            ModuleManager.load(true)
+            ModuleManager.loadModules(true)
         } catch (e: Exception) {
             e.printStackTrace()
             PrimaryLoader.console.printStackTrace(e)
