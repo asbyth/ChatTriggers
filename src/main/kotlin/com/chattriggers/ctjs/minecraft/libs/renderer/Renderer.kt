@@ -79,6 +79,11 @@ object Renderer {
     }
 
     @JvmStatic @JvmOverloads
+    fun color(red: Double, green: Double, blue: Double, alpha: Double = 255.0): Int {
+        return color(red.toInt(), green.toInt(), blue.toInt(), alpha.toInt())
+    }
+
+    @JvmStatic @JvmOverloads
     fun color(red: Int, green: Int, blue: Int, alpha: Int = 255): Int {
         return (MathLib.clamp(alpha, 0, 255) * 0x1000000
                 + MathLib.clamp(red, 0, 255) * 0x10000

@@ -7,9 +7,9 @@ import com.chattriggers.ctjs.minecraft.wrappers.Player
 import com.chattriggers.ctjs.minecraft.wrappers.World
 import com.chattriggers.ctjs.utils.kotlin.External
 import com.chattriggers.ctjs.utils.kotlin.SoundCategory
-import jdk.nashorn.api.scripting.ScriptObjectMirror
 import net.minecraft.client.audio.SoundManager
 import net.minecraftforge.fml.relauncher.ReflectionHelper
+import org.graalvm.polyglot.Value
 import paulscode.sound.SoundSystem
 
 import java.io.File
@@ -45,9 +45,9 @@ import java.net.MalformedURLException
  * @param config the JavaScript config object
  */
 @External
-class Sound(private val config: ScriptObjectMirror) {
+class Sound(private val config: Value) {
     private var sndSystem: SoundSystem? = null
-    private val source: String = config["source"] as String
+    private val source: String = config.getMember("source").asString()
     var isListening = false
 
     init {
@@ -96,18 +96,16 @@ class Sound(private val config: ScriptObjectMirror) {
 
     @Throws(MalformedURLException::class)
     private fun bootstrap() {
-        val configMap = config as? Map<String, *> ?: return
-
-        val source = config["source"]?.toString()
-        val priority = configMap.getOrDefault("priority", false) as Boolean
-        val loop = configMap.getOrDefault("loop", false) as Boolean
-        val stream = configMap.getOrDefault("stream", false) as Boolean
+        val source = config.getMember("source").asString()
+        val priority = config.getMember("priority").let { if (it.isBoolean) it.asBoolean() else false }
+        val loop = config.getMember("loop").let { if (it.isBoolean) it.asBoolean() else false }
+        val stream = config.getMember("stream").let { if (it.isBoolean) it.asBoolean() else false }
 
         val url = File("${CTJS.assetsDir.absolutePath}\\$source").toURI().toURL()
-        val x = (configMap.getOrDefault("x", Player.getX()) as Double).toFloat()
-        val y = (configMap.getOrDefault("y", Player.getY()) as Double).toFloat()
-        val z = (configMap.getOrDefault("z", Player.getZ()) as Double).toFloat()
-        val attModel = configMap.getOrDefault("attenuation", 1) as Int
+        val x = config.getMember("x").let { if (it.isNumber) it.asDouble() else Player.getX() }
+        val y = config.getMember("y").let { if (it.isNumber) it.asDouble() else Player.getX() }
+        val z = config.getMember("z").let { if (it.isNumber) it.asDouble() else Player.getX() }
+        val attModel = config.getMember("attenuation").let { if (it.isNumber) it.asInt() else 1 }
         val distOrRoll = 16
 
         if (stream) {
@@ -117,9 +115,9 @@ class Sound(private val config: ScriptObjectMirror) {
                 url,
                 source,
                 loop,
-                x,
-                y,
-                z,
+                x.toFloat(),
+                y.toFloat(),
+                z.toFloat(),
                 attModel,
                 distOrRoll.toFloat()
             )
@@ -130,24 +128,24 @@ class Sound(private val config: ScriptObjectMirror) {
                 url,
                 source,
                 loop,
-                x,
-                y,
-                z,
+                x.toFloat(),
+                y.toFloat(),
+                z.toFloat(),
                 attModel,
                 distOrRoll.toFloat()
             )
         }
 
         if (config.hasMember("volume")) {
-            setVolume(config["volume"] as Double)
+            setVolume(config.getMember("volume").asDouble())
         }
 
         if (config.hasMember("pitch")) {
-            setPitch(config["pitch"] as Double)
+            setPitch(config.getMember("pitch").asDouble())
         }
 
         if (config.hasMember("category")) {
-            setCategory(config["category"] as String)
+            setCategory(config.getMember("volume").asString())
         }
     }
 

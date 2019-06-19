@@ -1,6 +1,5 @@
 package com.chattriggers.ctjs.minecraft.libs
 
-import com.chattriggers.ctjs.engine.ModuleManager
 import com.chattriggers.ctjs.minecraft.libs.renderer.Renderer
 import com.chattriggers.ctjs.minecraft.listeners.ChatListener
 import com.chattriggers.ctjs.minecraft.mixins.MixinGuiNewChat
@@ -11,10 +10,9 @@ import com.chattriggers.ctjs.minecraft.wrappers.Player
 import com.chattriggers.ctjs.print
 import com.chattriggers.ctjs.utils.kotlin.External
 import com.chattriggers.ctjs.utils.kotlin.times
-import jdk.nashorn.api.scripting.ScriptObjectMirror
 import net.minecraft.client.gui.ChatLine
 import net.minecraftforge.client.event.ClientChatReceivedEvent
-import java.util.regex.Pattern
+import org.graalvm.polyglot.Value
 
 @External
 object ChatLib {
@@ -194,17 +192,9 @@ object ChatLib {
      * @param replacements the new message(s) to be put in replace of the old one
      */
     @JvmStatic
-    fun editChat(regexp: ScriptObjectMirror, vararg replacements: Message) {
-        val global = regexp["global"] as Boolean
-        val ignoreCase = regexp["ignoreCase"] as Boolean
-        val multiline = regexp["multiline"] as Boolean
-
-        val flags = (if (ignoreCase) Pattern.CASE_INSENSITIVE else 0) or if (multiline) Pattern.MULTILINE else 0
-        val pattern = Pattern.compile(regexp["source"] as String, flags)
-
+    fun editChat(regexp: Value, vararg replacements: Message) {
         editChat({
-                    val matcher = pattern.matcher(it.getChatMessage().unformattedText)
-                    if (global) matcher.find() else matcher.matches()
+                    regexp.getMember("test").execute(it.getChatMessage().unformattedText).asBoolean()
                 },
                 *replacements
         )

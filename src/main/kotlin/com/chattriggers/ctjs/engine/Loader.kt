@@ -136,7 +136,7 @@ class Loader(private val language: Lang) {
      */
     fun trigger(trigger: OnTrigger, method: Value, vararg args: Any?) {
         try {
-            method.execute(*args)
+            method.executeVoid(*args)
         } catch (e: Exception) {
             console.printStackTrace(e)
             removeTrigger(trigger)
