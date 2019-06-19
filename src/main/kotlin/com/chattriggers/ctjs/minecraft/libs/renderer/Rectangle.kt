@@ -5,7 +5,7 @@ import javax.vecmath.Vector2d
 
 @External
 class Rectangle(
-        private var color: Int,
+        private var color: Long,
         private var x: Double,
         private var y: Double,
         private var width: Double,
@@ -14,8 +14,8 @@ class Rectangle(
     private var shadow = Shadow(this)
     private var outline = Outline(this)
 
-    fun getColor(): Int = this.color
-    fun setColor(color: Int) = apply { this.color = color }
+    fun getColor(): Long = this.color
+    fun setColor(color: Long) = apply { this.color = color }
 
     fun getX(): Double = this.x
     fun setX(x: Double) = apply { this.x = x }
@@ -42,10 +42,10 @@ class Rectangle(
     fun setShadowOffsetX(x: Double) = apply { this.shadow.offset.x = x }
     fun setShadowOffsetY(y: Double) = apply { this.shadow.offset.y = y }
 
-    fun getShadowColor(): Int = this.shadow.color
-    fun setShadowColor(color: Int) = apply { this.shadow.color = color }
+    fun getShadowColor(): Long = this.shadow.color
+    fun setShadowColor(color: Long) = apply { this.shadow.color = color }
 
-    fun setShadow(color: Int, x: Double, y: Double) = apply {
+    fun setShadow(color: Long, x: Double, y: Double) = apply {
         setShadow(true)
         setShadowColor(color)
         setShadowOffset(x, y)
@@ -54,13 +54,13 @@ class Rectangle(
     fun getOutline(): Boolean = this.outline.on
     fun setOutline(outline: Boolean) = apply { this.outline.on = outline }
 
-    fun getOutlineColor(): Int = this.outline.color
-    fun setOutlineColor(color: Int) = apply { this.outline.color = color }
+    fun getOutlineColor(): Long = this.outline.color
+    fun setOutlineColor(color: Long) = apply { this.outline.color = color }
 
     fun getThickness(): Double = this.outline.thickness
     fun setThickness(thickness: Double) = apply { this.outline.thickness = thickness }
 
-    fun setOutline(color: Int, thickness: Double) = apply {
+    fun setOutline(color: Long, thickness: Double) = apply {
         setOutline(true)
         setOutlineColor(color)
         setThickness(thickness)
@@ -75,7 +75,7 @@ class Rectangle(
     private class Shadow(
             val rect: Rectangle,
             var on: Boolean = false,
-            var color: Int = 0x50000000,
+            var color: Long = 0x50000000,
             var offset: Vector2d = Vector2d(5.0, 5.0)) {
         fun draw() {
             if (!this.on) return
@@ -97,7 +97,7 @@ class Rectangle(
     private class Outline(
             val rect: Rectangle,
             var on: Boolean = false,
-            var color: Int = 0xff000000.toInt(),
+            var color: Long = 0xff000000,
             var thickness: Double = 5.0) {
         fun draw() {
             if (!this.on) return

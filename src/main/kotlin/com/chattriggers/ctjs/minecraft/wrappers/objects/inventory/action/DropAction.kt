@@ -7,7 +7,7 @@ import com.chattriggers.ctjs.utils.kotlin.External
 //#endif
 
 @External
-class DropAction(slot: Int, windowId: Int) : Action(slot, windowId) {
+class DropAction(slot: Long, windowId: Long) : Action(slot, windowId) {
     private var holdingCtrl = false
 
     fun getHoldingCtrl(): Boolean = holdingCtrl

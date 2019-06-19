@@ -28,6 +28,7 @@ object ChatLib {
             is String -> Message(text).chat()
             is Message -> text.chat()
             is TextComponent -> text.chat()
+            else -> Message(text.toString()).chat()
         }
     }
 
@@ -93,9 +94,9 @@ object ChatLib {
      * @param chatLineIDs the id(s) to be cleared
      */
     @JvmStatic
-    fun clearChat(vararg chatLineIDs: Int) {
+    fun clearChat(vararg chatLineIDs: Long) {
         for (chatLineID in chatLineIDs)
-            Client.getChatGUI()?.deleteChatLine(chatLineID)
+            Client.getChatGUI()?.deleteChatLine(chatLineID.toInt())
     }
 
     /**
@@ -239,7 +240,7 @@ object ChatLib {
      * @param replacements the new message(s) to be put in place of the old one
      */
     @JvmStatic
-    fun editChat(chatLineId: Int, vararg replacements: Message) {
+    fun editChat(chatLineId: Long, vararg replacements: Message) {
         editChat(
                 {
                     message -> message.getChatLineId() == chatLineId
@@ -275,7 +276,7 @@ object ChatLib {
             val chatLine = chatLineIterator.next()
 
             val result = toReplace(
-                    Message(chatLine.chatComponent).setChatLineId(chatLine.chatLineID)
+                    Message(chatLine.chatComponent).setChatLineId(chatLine.chatLineID.toLong())
             )
 
             if (!result) {
@@ -285,9 +286,9 @@ object ChatLib {
             chatLineIterator.remove()
 
             replacements.map {
-                val lineId = if (it.getChatLineId() == -1) 0 else it.getChatLineId()
+                val lineId = if (it.getChatLineId() == -1L) 0L else it.getChatLineId()
 
-                ChatLine(chatLine.updatedCounter, it.getChatMessage(), lineId)
+                ChatLine(chatLine.updatedCounter, it.getChatMessage(), lineId.toInt())
             }.forEach {
                 chatLineIterator.add(it)
             }

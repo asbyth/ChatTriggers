@@ -69,7 +69,6 @@ const KeyAction = Java.type('com.chattriggers.ctjs.minecraft.wrappers.objects.in
 
 
 // Misc
-const Console = Java.type('com.chattriggers.ctjs.engine.PrimaryLoader').INSTANCE.getConsole();
 const Config = Java.type('com.chattriggers.ctjs.utils.config.Config').INSTANCE;
 const ChatTriggers = Java.type('com.chattriggers.ctjs.Reference').INSTANCE;
 

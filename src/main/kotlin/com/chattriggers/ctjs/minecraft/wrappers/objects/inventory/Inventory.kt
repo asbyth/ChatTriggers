@@ -30,7 +30,7 @@ class Inventory {
      *
      * @return the size of the Inventory
      */
-    fun getSize(): Int = inventory?.sizeInventory ?: container!!.inventoryItemStacks.size
+    fun getSize(): Long = inventory?.sizeInventory?.toLong() ?: container!!.inventoryItemStacks.size.toLong()
 
     /**
      * Gets the item in any slot, starting from 0.
@@ -38,10 +38,10 @@ class Inventory {
      * @param slot the slot index
      * @return the Item in that slot
      */
-    fun getStackInSlot(slot: Int): Item {
+    fun getStackInSlot(slot: Long): Item {
         return if (this.inventory == null)
-            Item(container!!.getSlot(slot).stack)
-        else Item(inventory.getStackInSlot(slot))
+            Item(container!!.getSlot(slot.toInt()).stack)
+        else Item(inventory.getStackInSlot(slot.toInt()))
     }
 
     /**
@@ -50,7 +50,7 @@ class Inventory {
      *
      * @return the window id
      */
-    fun getWindowId(): Int = container?.windowId ?: -1
+    fun getWindowId(): Long = container?.windowId?.toLong() ?: -1L
 
     fun doAction(action: Action) {
         action.complete()
@@ -63,9 +63,9 @@ class Inventory {
      * @param item the item for checking
      * @return whether or not it can be shift clicked in
      */
-    fun isItemValidForSlot(slot: Int, item: Item): Boolean  {
+    fun isItemValidForSlot(slot: Long, item: Item): Boolean  {
         return inventory == null
-                || inventory.isItemValidForSlot(slot, item.itemStack)
+                || inventory.isItemValidForSlot(slot.toInt(), item.itemStack)
     }
 
     /**
@@ -108,7 +108,7 @@ class Inventory {
      * @param shift whether shift is being held
      * @return this inventory for method chaining
      */
-    fun click(slot: Int, shift: Boolean) = apply {
+    fun click(slot: Long, shift: Boolean) = apply {
         ClickAction(slot, getWindowId())
             .setClickString("LEFT")
             .setHoldingShift(shift)
@@ -122,7 +122,7 @@ class Inventory {
      * @param ctrl whether control should be held (drops whole stack)
      * @return this inventory for method chaining
      */
-    fun drop(slot: Int, ctrl: Boolean) = apply {
+    fun drop(slot: Long, ctrl: Boolean) = apply {
         DropAction(slot, getWindowId())
             .setHoldingCtrl(ctrl)
             .complete()
@@ -135,7 +135,7 @@ class Inventory {
      * @param slots all of the slots to drag onto
      * @return this inventory for method chaining
      */
-    fun drag(type: String, vararg slots: Int) = apply {
+    fun drag(type: String, vararg slots: Long) = apply {
         DragAction(-999, getWindowId()).run {
             setStage(DragAction.Stage.BEGIN)
                 .setClickType(DragAction.ClickType.valueOf(type.toUpperCase()))

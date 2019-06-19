@@ -9,13 +9,13 @@ import net.minecraft.client.renderer.GlStateManager
 class Text(private var string: String, private var x: Double = 0.0, private var y: Double = 0.0) {
     private var lines = mutableListOf<String>()
 
-    private var color = 0xffffffff.toInt()
+    private var color = 0xffffffff
     private var formatted = true
     private var shadow = false
     private var align = DisplayHandler.Align.LEFT
 
-    private var width = 0
-    private var maxLines = 0
+    private var width = 0L
+    private var maxLines = 0L
     private var scale = 1.0
 
     init {
@@ -26,8 +26,8 @@ class Text(private var string: String, private var x: Double = 0.0, private var 
     fun getString(): String = this.string
     fun setString(string: String) = apply { this.string = string }
 
-    fun getColor(): Int = this.color
-    fun setColor(color: Int) = apply { this.color = Renderer.fixAlpha(color) }
+    fun getColor(): Long = this.color
+    fun setColor(color: Long) = apply { this.color = Renderer.fixAlpha(color) }
 
     fun getFormatted(): Boolean = this.formatted
     fun setFormatted(formatted: Boolean) = apply {
@@ -53,22 +53,22 @@ class Text(private var string: String, private var x: Double = 0.0, private var 
     fun getY(): Double = this.y
     fun setY(y: Double) = apply { this.y = y }
 
-    fun getWidth(): Int = this.width
-    fun setWidth(width: Int) = apply {
+    fun getWidth(): Long = this.width
+    fun setWidth(width: Long) = apply {
         this.width = width
-        this.lines = Renderer.getFontRenderer().listFormattedStringToWidth(this.string, this.width)
+        this.lines = Renderer.getFontRenderer().listFormattedStringToWidth(this.string, this.width.toInt())
     }
 
     fun getLines(): List<String> = this.lines
 
-    fun getMaxLines(): Int = this.maxLines
-    fun setMaxLines(maxLines: Int) = apply { this.maxLines = maxLines }
+    fun getMaxLines(): Long = this.maxLines
+    fun setMaxLines(maxLines: Long) = apply { this.maxLines = maxLines }
 
     fun getScale(): Double = this.scale
     fun setScale(scale: Double) = apply { this.scale = scale }
 
     fun getMaxWidth(): Int {
-        return if (this.width == 0) {
+        return if (this.width == 0L) {
             Renderer.getStringWidth(this.string)
         } else {
             var maxWidth = 0
@@ -81,13 +81,13 @@ class Text(private var string: String, private var x: Double = 0.0, private var 
     }
 
     fun getHeight(): Double {
-        return if (this.width == 0)
+        return if (this.width == 0L)
             this.scale * 9
             else this.lines.size * this.scale * 9
     }
 
     fun exceedsMaxLines(): Boolean {
-        return this.width != 0 && this.lines.size > this.maxLines
+        return this.width != 0L && this.lines.size > this.maxLines
     }
 
     @JvmOverloads
@@ -99,16 +99,24 @@ class Text(private var string: String, private var x: Double = 0.0, private var 
             var yHolder = y ?: this.y
             this.lines.forEach {
                 Renderer.getFontRenderer().drawString(
-                        it, getXAlign(it, x ?: this.x).toFloat(), (yHolder / this.scale).toFloat(), this.color, this.shadow
+                        it,
+                        getXAlign(it, x ?: this.x).toFloat(),
+                        (yHolder / this.scale).toFloat(),
+                        this.color.toInt(),
+                        this.shadow
                 )
                 yHolder += this.scale * 9
                 maxLinesHolder--
-                if (maxLinesHolder == 0)
+                if (maxLinesHolder == 0L)
                     return@forEach
             }
         } else {
             Renderer.getFontRenderer().drawString(
-                    this.string, getXAlign(this.string, x ?: this.x).toFloat(), ((y ?: this.y) / this.scale).toFloat(), this.color, this.shadow
+                    this.string,
+                    getXAlign(this.string, x ?: this.x).toFloat(),
+                    ((y ?: this.y) / this.scale).toFloat(),
+                    this.color.toInt(),
+                    this.shadow
             )
         }
         GlStateManager.disableBlend()

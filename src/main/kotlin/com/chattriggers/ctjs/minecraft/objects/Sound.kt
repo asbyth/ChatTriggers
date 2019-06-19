@@ -193,7 +193,7 @@ class Sound(private val config: Value) {
      *
      * @param model the model
      */
-    fun setAttenuation(model: Int) = apply { sndSystem!!.setAttenuation(this.source, model) }
+    fun setAttenuation(model: Long) = apply { sndSystem!!.setAttenuation(this.source, model.toInt()) }
 
     /**
      * Plays/resumes the sound

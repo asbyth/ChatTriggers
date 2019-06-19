@@ -62,7 +62,6 @@ Java.import 'com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.action.D
 Java.import 'com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.action.KeyAction'
 
 # Misc
-Console = Java.type('com.chattriggers.ctjs.engine.PrimaryLoader')[:INSTANCE].getConsole()
 Config = Java.type('com.chattriggers.ctjs.utils.config.Config')[:INSTANCE]
 ChatTriggers = Java.type('com.chattriggers.ctjs.Reference')[:INSTANCE]
 
