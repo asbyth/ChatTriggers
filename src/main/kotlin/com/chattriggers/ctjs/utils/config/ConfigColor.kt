@@ -29,20 +29,20 @@ open class ConfigColor
 
     private var redButton = GuiButton(
             0,
-            MathLib.map(this.value.red.toFloat(), 0f, 255f,
-                    (Renderer.screen.getWidth() / 2 - 100 + this.x).toFloat(),
-                    (Renderer.screen.getWidth() / 2 + 52 + this.x).toFloat()).toInt(),
+            MathLib.map(this.value.red.toDouble(), 0.0, 255.0,
+                    (Renderer.screen.getWidth() / 2 - 100 + this.x).toDouble(),
+                    (Renderer.screen.getWidth() / 2 + 52 + this.x).toDouble()).toInt(),
             this.y + 15,
             5, 10, "")
 
 
     private var greenButton = GuiButton(0,
-            MathLib.map(this.value.green.toFloat(), 0f, 255f, (Renderer.screen.getWidth() / 2 - 100 + this.x).toFloat(), (Renderer.screen.getWidth() / 2 + 52 + this.x).toFloat()).toInt(), this.y + 30,
+            MathLib.map(this.value.green.toDouble(), 0.0, 255.0, (Renderer.screen.getWidth() / 2 - 100 + this.x).toDouble(), (Renderer.screen.getWidth() / 2 + 52 + this.x).toDouble()).toInt(), this.y + 30,
             5, 10, "")
 
 
     private var blueButton = GuiButton(0,
-            MathLib.map(this.value.blue.toFloat(), 0f, 255f, (Renderer.screen.getWidth() / 2 - 100 + this.x).toFloat(), (Renderer.screen.getWidth() / 2 + 52 + this.x).toFloat()).toInt(), this.y + 45,
+            MathLib.map(this.value.blue.toDouble(), 0.0, 255.0, (Renderer.screen.getWidth() / 2 - 100 + this.x).toDouble(), (Renderer.screen.getWidth() / 2 + 52 + this.x).toDouble()).toInt(), this.y + 45,
             5, 10, "")
 
     private var redHeld: Boolean = false
@@ -54,52 +54,52 @@ open class ConfigColor
 
         val middle = Renderer.screen.getWidth() / 2
 
-        Rectangle(-0x80000000, (middle - 105 + this.x).toFloat(), (this.y - 5).toFloat(), 210f, 65f)
-                .setShadow(-0x30000000, 3f, 3f)
+        Rectangle(-0x80000000, (middle - 105 + this.x).toDouble(), (this.y - 5).toDouble(), 210.0, 65.0)
+                .setShadow(-0x30000000, 3.0, 3.0)
                 .draw()
-        Text(this.name!!, (middle - 100 + this.x).toFloat(), this.y.toFloat()).draw()
+        Text(this.name!!, (middle - 100 + this.x).toDouble(), this.y.toDouble()).draw()
 
         // red slider
-        Rectangle(-0x560000, (middle - 100 + this.x).toFloat(), (this.y + 19).toFloat(), 155f, 3f)
-                .setOutline(-0x1000000, 1f)
+        Rectangle(-0x560000, (middle - 100 + this.x).toDouble(), (this.y + 19).toDouble(), 155.0, 3.0)
+                .setOutline(-0x1000000, 1.0)
                 .draw()
 
         //#if MC<=10809
-        this.redButton.xPosition = MathLib.map(this.value.red.toFloat(), 0f, 255f, (middle - 100 + this.x).toFloat(), (middle + 52 + this.x).toFloat()).toInt()
+        this.redButton.xPosition = MathLib.map(this.value.red.toDouble(), 0.0, 255.0, (middle - 100 + this.x).toDouble(), (middle + 52 + this.x).toDouble()).toInt()
         this.redButton.drawButton(Client.getMinecraft(), mouseX, mouseY)
         //#else
-        //$$ this.redButton.x = MathLib.map(this.value.red.toFloat(), 0f, 255f, (middle - 100 + this.x).toFloat(), (middle + 52 + this.x).toFloat()).toInt()
+        //$$ this.redButton.x = MathLib.map(this.value.red.toDouble(), 0.0, 255.0, (middle - 100 + this.x).toDouble(), (middle + 52 + this.x).toDouble()).toInt()
         //$$ this.redButton.drawButton(Client.getMinecraft(), mouseX, mouseY, partialTicks)
         //#endif
 
         // green slider
-        Rectangle(-0xff7800, (middle - 100 + this.x).toFloat(), (this.y + 34).toFloat(), 155f, 3f)
-                .setOutline(-0x1000000, 1f)
+        Rectangle(-0xff7800, (middle - 100 + this.x).toDouble(), (this.y + 34).toDouble(), 155.0, 3.0)
+                .setOutline(-0x1000000, 1.0)
                 .draw()
 
         //#if MC<=10809
-        this.greenButton.xPosition = MathLib.map(this.value.green.toFloat(), 0f, 255f, (middle - 100 + this.x).toFloat(), (middle + 52 + this.x).toFloat()).toInt()
+        this.greenButton.xPosition = MathLib.map(this.value.green.toDouble(), 0.0, 255.0, (middle - 100 + this.x).toDouble(), (middle + 52 + this.x).toDouble()).toInt()
         this.greenButton.drawButton(Client.getMinecraft(), mouseX, mouseY)
         //#else
-        //$$ this.greenButton.x = MathLib.map(this.value.green.toFloat(), 0f, 255f, (middle - 100 + this.x).toFloat(), (middle + 52 + this.x).toFloat()).toInt()
+        //$$ this.greenButton.x = MathLib.map(this.value.green.toDouble(), 0.0, 255.0, (middle - 100 + this.x).toDouble(), (middle + 52 + this.x).toDouble()).toInt()
         //$$ this.greenButton.drawButton(Client.getMinecraft(), mouseX, mouseY, partialTicks)
         //#endif
 
         // blue slider
-        Rectangle(-0xffff34, (middle - 100 + this.x).toFloat(), (this.y + 49).toFloat(), 155f, 3f)
-                .setOutline(-0x1000000, 1f)
+        Rectangle(-0xffff34, (middle - 100 + this.x).toDouble(), (this.y + 49).toDouble(), 155.0, 3.0)
+                .setOutline(-0x1000000, 1.0)
                 .draw()
         //#if MC<=10809
-        this.blueButton.xPosition = MathLib.map(this.value.blue.toFloat(), 0f, 255f, (middle - 100 + this.x).toFloat(), (middle + 52 + this.x).toFloat()).toInt()
+        this.blueButton.xPosition = MathLib.map(this.value.blue.toDouble(), 0.0, 255.0, (middle - 100 + this.x).toDouble(), (middle + 52 + this.x).toDouble()).toInt()
         this.blueButton.drawButton(Client.getMinecraft(), mouseX, mouseY)
         //#else
-        //$$ this.blueButton.x = MathLib.map(this.value.blue.toFloat(), 0f, 255f, (middle - 100 + this.x).toFloat(), (middle + 52 + this.x).toFloat()).toInt()
+        //$$ this.blueButton.x = MathLib.map(this.value.blue.toDouble(), 0.0, 255.0, (middle - 100 + this.x).toDouble(), (middle + 52 + this.x).toDouble()).toInt()
         //$$ this.blueButton.drawButton(Client.getMinecraft(), mouseX, mouseY, partialTicks)
         //#endif
 
         // color preview
-        Rectangle(this.value.rgb, (middle + this.x + 60).toFloat(), (this.y + 15).toFloat(), 40f, 40f)
-                .setOutline(-0x1000000, 1f)
+        Rectangle(this.value.rgb, (middle + this.x + 60).toDouble(), (this.y + 15).toDouble(), 40.0, 40.0)
+                .setOutline(-0x1000000, 1.0)
                 .draw()
 
         handleHeldButtons(mouseX, middle)
@@ -119,11 +119,11 @@ open class ConfigColor
             this.value = Color(
                     MathLib.map(
                             //#if MC<=10809
-                            this.redButton.xPosition.toFloat(),
+                            this.redButton.xPosition.toDouble(),
                             //#else
-                            //$$ this.redButton.x.toFloat(),
+                            //$$ this.redButton.x.toDouble(),
                             //#endif
-                            (middle - 100 + this.x).toFloat(), (middle + 52 + this.x).toFloat(), 0f, 255f
+                            (middle - 100 + this.x).toDouble(), (middle + 52 + this.x).toDouble(), 0.0, 255.0
                     ).toInt(),
                     this.value.green,
                     this.value.blue
@@ -141,11 +141,11 @@ open class ConfigColor
                     this.value.red,
                     MathLib.map(
                             //#if MC<=10809
-                            this.greenButton.xPosition.toFloat(),
+                            this.greenButton.xPosition.toDouble(),
                             //#else
-                            //$$ this.greenButton.x.toFloat(),
+                            //$$ this.greenButton.x.toDouble(),
                             //#endif
-                            (middle - 100 + this.x).toFloat(), (middle + 52 + this.x).toFloat(), 0f, 255f
+                            (middle - 100 + this.x).toDouble(), (middle + 52 + this.x).toDouble(), 0.0, 255.0
                     ).toInt(),
                     this.value.blue
             )
@@ -163,11 +163,11 @@ open class ConfigColor
                     this.value.green,
                     MathLib.map(
                             //#if MC<=10809
-                            this.blueButton.xPosition.toFloat(),
+                            this.blueButton.xPosition.toDouble(),
                             //#else
-                            //$$ this.blueButton.x.toFloat(),
+                            //$$ this.blueButton.x.toDouble(),
                             //#endif
-                            (middle - 100 + this.x).toFloat(), (middle + 52 + this.x).toFloat(), 0f, 255f
+                            (middle - 100 + this.x).toDouble(), (middle + 52 + this.x).toDouble(), 0.0, 255.0
                     ).toInt()
             )
         }
@@ -207,13 +207,13 @@ open class ConfigColor
             this.value = this.initial
             val middle = Renderer.screen.getWidth() / 2
             //#if MC<=10809
-            this.redButton.xPosition = MathLib.map(this.value.red.toFloat(), 0f, 255f, (middle - 100 + this.x).toFloat(), (middle + 52 + this.x).toFloat()).toInt()
-            this.greenButton.xPosition = MathLib.map(this.value.green.toFloat(), 0f, 255f, (middle - 100 + this.x).toFloat(), (middle + 52 + this.x).toFloat()).toInt()
-            this.blueButton.xPosition = MathLib.map(this.value.blue.toFloat(), 0f, 255f, (middle - 100 + this.x).toFloat(), (middle + 52 + this.x).toFloat()).toInt()
+            this.redButton.xPosition = MathLib.map(this.value.red.toDouble(), 0.0, 255.0, (middle - 100 + this.x).toDouble(), (middle + 52 + this.x).toDouble()).toInt()
+            this.greenButton.xPosition = MathLib.map(this.value.green.toDouble(), 0.0, 255.0, (middle - 100 + this.x).toDouble(), (middle + 52 + this.x).toDouble()).toInt()
+            this.blueButton.xPosition = MathLib.map(this.value.blue.toDouble(), 0.0, 255.0, (middle - 100 + this.x).toDouble(), (middle + 52 + this.x).toDouble()).toInt()
             //#else
-            //$$ this.redButton.x = MathLib.map(this.value.red.toFloat(), 0f, 255f, (middle - 100 + this.x).toFloat(), (middle + 52 + this.x).toFloat()).toInt()
-            //$$ this.greenButton.x = MathLib.map(this.value.green.toFloat(), 0f, 255f, (middle - 100 + this.x).toFloat(), (middle + 52 + this.x).toFloat()).toInt()
-            //$$ this.blueButton.x = MathLib.map(this.value.blue.toFloat(), 0f, 255f, (middle - 100 + this.x).toFloat(), (middle + 52 + this.x).toFloat()).toInt()
+            //$$ this.redButton.x = MathLib.map(this.value.red.toDouble(), 0.0, 255.0, (middle - 100 + this.x).toDouble(), (middle + 52 + this.x).toDouble()).toInt()
+            //$$ this.greenButton.x = MathLib.map(this.value.green.toDouble(), 0.0, 255.0, (middle - 100 + this.x).toDouble(), (middle + 52 + this.x).toDouble()).toInt()
+            //$$ this.blueButton.x = MathLib.map(this.value.blue.toDouble(), 0.0, 255.0, (middle - 100 + this.x).toDouble(), (middle + 52 + this.x).toDouble()).toInt()
             //#endif
             this.resetButton.playPressSound(Client.getMinecraft().soundHandler)
         }

@@ -45,7 +45,7 @@ object IconHandler {
             if (x > ix && x < ix + size && y > iy && y < iy + size) {
                 try {
                     Desktop.getDesktop().browse(URL(this.url).toURI())
-                    World.playSound("gui.button.press", 100f, 1f)
+                    World.playSound("gui.button.press", 100.0, 1.0)
                 } catch (exception: Exception) {
                     exception.print()
                 }

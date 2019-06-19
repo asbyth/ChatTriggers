@@ -74,14 +74,14 @@ open class ConfigStringSelector
 
         val middle = Renderer.screen.getWidth() / 2
 
-        Rectangle(-0x80000000, (middle - 105 + this.x).toFloat(), (this.y - 5).toFloat(), 210f, 45f)
-                .setShadow(-0x30000000, 3f, 3f)
+        Rectangle(-0x80000000, (middle - 105 + this.x).toDouble(), (this.y - 5).toDouble(), 210.0, 45.0)
+                .setShadow(-0x30000000, 3.0, 3.0)
                 .draw()
-        Text(this.name!!, (middle - 100 + this.x).toFloat(), this.y.toFloat()).draw()
+        Text(this.name!!, (middle - 100 + this.x).toDouble(), this.y.toDouble()).draw()
 
         Text(getValue(),
-                (middle + this.x - Renderer.getStringWidth(getValue()) / 2).toFloat(),
-                (this.y + 20).toFloat()
+                (middle + this.x - Renderer.getStringWidth(getValue()) / 2).toDouble(),
+                (this.y + 20).toDouble()
         ).draw()
 
         //#if MC<=10809

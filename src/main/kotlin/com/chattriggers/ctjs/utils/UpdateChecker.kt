@@ -48,7 +48,7 @@ object UpdateChecker {
 
         if (!this.updateAvailable || this.warned) return
 
-        World.playSound("note.bass", 1000f, 1f)
+        World.playSound("note.bass", 1000.0, 1.0)
         Message(
                 "&c&m" + ChatLib.getChatBreak("-"),
                 "\n",

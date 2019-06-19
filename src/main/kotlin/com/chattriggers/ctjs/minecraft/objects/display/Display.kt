@@ -10,8 +10,8 @@ import org.graalvm.polyglot.Value
 abstract class Display(val lang: Lang) {
     private var lines = mutableListOf<DisplayLine>()
 
-    protected var renderX = 0f
-    protected var renderY = 0f
+    protected var renderX = 0.0
+    protected var renderY = 0.0
     protected var shouldRender = true
 
     protected var backgroundColor = 0x50000000
@@ -21,9 +21,9 @@ abstract class Display(val lang: Lang) {
     private var align = DisplayHandler.Align.LEFT
     private var order = DisplayHandler.Order.DOWN
 
-    protected var minWidth = 0f
-    private var width = 0f
-    private var height = 0f
+    protected var minWidth = 0.0
+    private var width = 0.0
+    private var height = 0.0
 
     init {
         DisplayHandler.registerDisplay(this)
@@ -33,8 +33,8 @@ abstract class Display(val lang: Lang) {
         if (!config.hasMembers()) return
 
         this.shouldRender = config.getMember("shouldRender")?.asBoolean() ?: true
-        this.renderX = config.getMember("renderX")?.asFloat() ?: 0f
-        this.renderY = config.getMember("renderY")?.asFloat() ?: 0f
+        this.renderX = config.getMember("renderX")?.asDouble() ?: 0.0
+        this.renderY = config.getMember("renderY")?.asDouble() ?: 0.0
 
         this.backgroundColor = config.getMember("backgroundColor")?.asInt() ?: 0x50000000
         this.textColor = config.getMember("textColor")?.asInt() ?: 0xffffffff.toInt()
@@ -57,7 +57,7 @@ abstract class Display(val lang: Lang) {
             this.setOrder(if (order.isString) order.asString() else order.asHostObject())
         }
 
-        this.minWidth = config.getMember("minWidth")?.asFloat() ?: 0f
+        this.minWidth = config.getMember("minWidth")?.asDouble() ?: 0.0
     }
 
     fun setBackgroundColor(backgroundColor: Int) = apply {
@@ -136,15 +136,15 @@ abstract class Display(val lang: Lang) {
         this.lines.clear()
     }
 
-    fun setRenderX(renderX: Float) = apply {
+    fun setRenderX(renderX: Double) = apply {
         this.renderX
     }
 
-    fun setRenderY(renderY: Float) = apply {
+    fun setRenderY(renderY: Double) = apply {
         this.renderY = renderY
     }
 
-    fun setRenderLoc(renderX: Float, renderY: Float) = apply {
+    fun setRenderLoc(renderX: Double, renderY: Double) = apply {
         this.renderX = renderX
         this.renderY = renderY
     }
@@ -153,10 +153,10 @@ abstract class Display(val lang: Lang) {
         this.shouldRender = shouldRender
     }
 
-    fun getWidth(): Float = this.width
-    fun getHeight(): Float = this.height
+    fun getWidth(): Double = this.width
+    fun getHeight(): Double = this.height
 
-    fun setMinWidth(minWidth: Float) = apply {
+    fun setMinWidth(minWidth: Double) = apply {
         this.minWidth = minWidth
     }
 
@@ -171,7 +171,7 @@ abstract class Display(val lang: Lang) {
 
         this.width = maxWidth
 
-        var i = 0f
+        var i = 0.0
         lines.forEach {
             drawLine(it, this.renderX, this.renderY + (i * 10), maxWidth)
             when (this.order) {
@@ -183,7 +183,7 @@ abstract class Display(val lang: Lang) {
         this.height = i
     }
 
-    private fun drawLine(line: DisplayLine, x: Float, y: Float, maxWidth: Float) {
+    private fun drawLine(line: DisplayLine, x: Double, y: Double, maxWidth: Double) {
         when (this.align) {
             DisplayHandler.Align.LEFT -> line.drawLeft(x, y, maxWidth, this.background, this.backgroundColor, this.textColor)
             DisplayHandler.Align.RIGHT -> line.drawRight(x, y, maxWidth, this.background, this.backgroundColor, this.textColor)

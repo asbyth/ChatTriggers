@@ -139,11 +139,11 @@ class Sound(private val config: ScriptObjectMirror) {
         }
 
         if (config.hasMember("volume")) {
-            setVolume(config["volume"] as Float)
+            setVolume(config["volume"] as Double)
         }
 
         if (config.hasMember("pitch")) {
-            setPitch(config["pitch"] as Float)
+            setPitch(config["pitch"] as Double)
         }
 
         if (config.hasMember("category")) {
@@ -159,7 +159,7 @@ class Sound(private val config: ScriptObjectMirror) {
      */
     fun setCategory(category: String) = apply {
         val category1 = SoundCategory.valueOf(category.toUpperCase())
-        setVolume(Client.getMinecraft().gameSettings.getSoundLevel(category1))
+        setVolume(Client.getMinecraft().gameSettings.getSoundLevel(category1).toDouble())
     }
 
     /**
@@ -168,7 +168,7 @@ class Sound(private val config: ScriptObjectMirror) {
      *
      * @param volume New volume, float value ( 0.0f - 1.0f ).
      */
-    fun setVolume(volume: Float) = apply { sndSystem!!.setVolume(this.source, volume) }
+    fun setVolume(volume: Double) = apply { sndSystem!!.setVolume(this.source, volume.toFloat()) }
 
     /**
      * Updates the position of this sound
@@ -177,14 +177,14 @@ class Sound(private val config: ScriptObjectMirror) {
      * @param y the y coordinate
      * @param z the z coordinate
      */
-    fun setPosition(x: Float, y: Float, z: Float) = apply { sndSystem!!.setPosition(this.source, x, y, z) }
+    fun setPosition(x: Double, y: Double, z: Double) = apply { sndSystem!!.setPosition(this.source, x.toFloat(), y.toFloat(), z.toFloat()) }
 
     /**
      * Sets this sound's pitch.
      *
      * @param pitch A float value ( 0.5f - 2.0f ).
      */
-    fun setPitch(pitch: Float) = apply { sndSystem!!.setPitch(this.source, pitch) }
+    fun setPitch(pitch: Double) = apply { sndSystem!!.setPitch(this.source, pitch.toFloat()) }
 
     /**
      * Sets the attenuation (fade out over space) of the song.

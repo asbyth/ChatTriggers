@@ -11,7 +11,8 @@ object Settings {
     @JvmStatic fun getSettings()= Client.getMinecraft().gameSettings
 
     @JvmStatic fun getFOV() = getSettings().fovSetting
-    @JvmStatic fun setFOV(fov: Float) { getSettings().fovSetting = fov }
+    @JvmStatic fun setFOV(fov: Double) { getSettings().fovSetting = fov.toFloat()
+    }
 
     @JvmStatic fun getDifficulty() = getSettings().difficulty.difficultyId
     @JvmStatic fun setDifficulty(difficulty: Int) { getSettings().difficulty = EnumDifficulty.getDifficultyEnum(difficulty) }
@@ -46,31 +47,31 @@ object Settings {
 
     object sound {
         @JvmStatic fun getMasterVolume() = getSettings().getSoundLevel(SoundCategory.MASTER)
-        @JvmStatic fun setMasterVolume(level: Float) = getSettings().setSoundLevel(SoundCategory.MASTER, level)
+        @JvmStatic fun setMasterVolume(level: Double) = getSettings().setSoundLevel(SoundCategory.MASTER, level.toFloat())
 
         @JvmStatic fun getMusicVolume() = getSettings().getSoundLevel(SoundCategory.MUSIC)
-        @JvmStatic fun setMusicVolume(level: Float) = getSettings().setSoundLevel(SoundCategory.MUSIC, level)
+        @JvmStatic fun setMusicVolume(level: Double) = getSettings().setSoundLevel(SoundCategory.MUSIC, level.toFloat())
 
         @JvmStatic fun getNoteblockVolume() = getSettings().getSoundLevel(SoundCategory.RECORDS)
-        @JvmStatic fun setNoteblockVolume(level: Float) = getSettings().setSoundLevel(SoundCategory.RECORDS, level)
+        @JvmStatic fun setNoteblockVolume(level: Double) = getSettings().setSoundLevel(SoundCategory.RECORDS, level.toFloat())
 
         @JvmStatic fun getWeather() = getSettings().getSoundLevel(SoundCategory.WEATHER)
-        @JvmStatic fun setWeather(level: Float) = getSettings().setSoundLevel(SoundCategory.WEATHER, level)
+        @JvmStatic fun setWeather(level: Double) = getSettings().setSoundLevel(SoundCategory.WEATHER, level.toFloat())
 
         @JvmStatic fun getBlocks() = getSettings().getSoundLevel(SoundCategory.BLOCKS)
-        @JvmStatic fun setBlocks(level: Float) = getSettings().setSoundLevel(SoundCategory.BLOCKS, level)
+        @JvmStatic fun setBlocks(level: Double) = getSettings().setSoundLevel(SoundCategory.BLOCKS, level.toFloat())
 
         @JvmStatic fun getHostileCreatures() = getSettings().getSoundLevel(SoundCategory.MOBS)
-        @JvmStatic fun setHostileCreatures(level: Float) = getSettings().setSoundLevel(SoundCategory.MOBS, level)
+        @JvmStatic fun setHostileCreatures(level: Double) = getSettings().setSoundLevel(SoundCategory.MOBS, level.toFloat())
 
         @JvmStatic fun getFriendlyCreatures() = getSettings().getSoundLevel(SoundCategory.ANIMALS)
-        @JvmStatic fun setFriendlyCreatures(level: Float) = getSettings().setSoundLevel(SoundCategory.ANIMALS, level)
+        @JvmStatic fun setFriendlyCreatures(level: Double) = getSettings().setSoundLevel(SoundCategory.ANIMALS, level.toFloat())
 
         @JvmStatic fun getPlayers() = getSettings().getSoundLevel(SoundCategory.PLAYERS)
-        @JvmStatic fun setPlayers(level: Float) = getSettings().setSoundLevel(SoundCategory.PLAYERS, level)
+        @JvmStatic fun setPlayers(level: Double) = getSettings().setSoundLevel(SoundCategory.PLAYERS, level.toFloat())
 
         @JvmStatic fun getAmbient() = getSettings().getSoundLevel(SoundCategory.AMBIENT)
-        @JvmStatic fun setAmbient(level: Float) = getSettings().setSoundLevel(SoundCategory.AMBIENT, level)
+        @JvmStatic fun setAmbient(level: Double) = getSettings().setSoundLevel(SoundCategory.AMBIENT, level.toFloat())
     }
 
     object video {
@@ -95,7 +96,7 @@ object Settings {
         @JvmStatic fun setGuiScale(scale: Int) { getSettings().guiScale = scale }
 
         @JvmStatic fun getBrightness() = getSettings().gammaSetting
-        @JvmStatic fun setBrightness(brightness: Float) { getSettings().gammaSetting = brightness }
+        @JvmStatic fun setBrightness(brightness: Double) { getSettings().gammaSetting = brightness.toFloat() }
 
         @JvmStatic fun getClouds() = getSettings().clouds
         @JvmStatic fun setClouds(clouds: Int) { getSettings().clouds = clouds }
@@ -143,7 +144,7 @@ object Settings {
 
         // opacity
         @JvmStatic fun getOpacity() = getSettings().chatOpacity
-        @JvmStatic fun setOpacity(opacity: Float) { getSettings().chatOpacity = opacity }
+        @JvmStatic fun setOpacity(opacity: Double) { getSettings().chatOpacity = opacity.toFloat() }
 
         // prompt on links
         @JvmStatic fun getPromptOnWebLinks() = getSettings().chatLinksPrompt

@@ -5,11 +5,11 @@ import com.chattriggers.ctjs.utils.kotlin.MCTessellator
 import com.chattriggers.ctjs.utils.kotlin.getRenderer
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
-import org.lwjgl.util.vector.Vector2f
+import javax.vecmath.Vector2d
 
 @External
 class Shape(private var color: Int) {
-    private var vertexes = mutableListOf<Vector2f>()
+    private var vertexes = mutableListOf<Vector2d>()
     private var drawMode = 9
 
     fun copy(): Shape = clone()
@@ -39,25 +39,25 @@ class Shape(private var color: Int) {
      */
     fun setDrawMode(drawMode: Int) = apply { this.drawMode = drawMode }
 
-    fun getVertexes(): List<Vector2f> = this.vertexes
-    fun addVertex(x: Float, y: Float) = apply { this.vertexes.add(Vector2f(x, y)) }
-    fun insertVertex(index: Int, x: Float, y: Float) = apply { this.vertexes.add(index, Vector2f(x, y)) }
+    fun getVertexes(): List<Vector2d> = this.vertexes
+    fun addVertex(x: Double, y: Double) = apply { this.vertexes.add(Vector2d(x, y)) }
+    fun insertVertex(index: Int, x: Double, y: Double) = apply { this.vertexes.add(index, Vector2d(x, y)) }
     fun removeVertex(index: Int) = apply { this.vertexes.removeAt(index) }
 
     /**
      * Sets the shape as a line pointing from [x1, y1] to [x2, y2] with a thickness
      */
-    fun setLine(x1: Float, y1: Float, x2: Float, y2: Float, thickness: Float) = apply {
+    fun setLine(x1: Double, y1: Double, x2: Double, y2: Double, thickness: Double) = apply {
         this.vertexes.clear()
 
-        val theta = -Math.atan2((y2 - y1).toDouble(), (x2 - x1).toDouble())
-        val i = Math.sin(theta).toFloat() * (thickness / 2)
-        val j = Math.cos(theta).toFloat() * (thickness / 2)
+        val theta = -Math.atan2(y2 - y1, x2 - x1)
+        val i = Math.sin(theta) * (thickness / 2)
+        val j = Math.cos(theta) * (thickness / 2)
 
-        this.vertexes.add(Vector2f(x1 + i, y1 + j))
-        this.vertexes.add(Vector2f(x2 + i, y2 + j))
-        this.vertexes.add(Vector2f(x2 - i, y2 - j))
-        this.vertexes.add(Vector2f(x1 - i, y1 - j))
+        this.vertexes.add(Vector2d(x1 + i, y1 + j))
+        this.vertexes.add(Vector2d(x2 + i, y2 + j))
+        this.vertexes.add(Vector2d(x2 - i, y2 - j))
+        this.vertexes.add(Vector2d(x1 - i, y1 - j))
 
         this.drawMode = 9
     }
@@ -66,24 +66,24 @@ class Shape(private var color: Int) {
      * Sets the shape as a circle with a center at [x, y]
      * with radius and number of steps around the circle
      */
-    fun setCircle(x: Float, y: Float, radius: Float, steps: Int) = apply {
+    fun setCircle(x: Double, y: Double, radius: Double, steps: Int) = apply {
         this.vertexes.clear()
 
         val theta = 2 * Math.PI / steps
-        val cos = Math.cos(theta).toFloat()
-        val sin = Math.sin(theta).toFloat()
+        val cos = Math.cos(theta)
+        val sin = Math.sin(theta)
 
-        var xHolder: Float
-        var circleX = 1f
-        var circleY = 0f
+        var xHolder: Double
+        var circleX = 1.0
+        var circleY = 0.0
 
         for (i in 0 .. steps) {
-            this.vertexes.add(Vector2f(x, y))
-            this.vertexes.add(Vector2f(circleX * radius + x, circleY * radius + y))
+            this.vertexes.add(Vector2d(x, y))
+            this.vertexes.add(Vector2d(circleX * radius + x, circleY * radius + y))
             xHolder = circleX
             circleX = cos * circleX - sin * circleY
             circleY = sin * xHolder + cos * circleY
-            this.vertexes.add(Vector2f(circleX * radius + x, circleY * radius + y))
+            this.vertexes.add(Vector2d(circleX * radius + x, circleY * radius + y))
         }
 
         this.drawMode = 5
@@ -107,7 +107,7 @@ class Shape(private var color: Int) {
         worldRenderer.begin(this.drawMode, DefaultVertexFormats.POSITION)
 
         for (vertex in this.vertexes)
-            worldRenderer.pos(vertex.x.toDouble(), vertex.y.toDouble(), 0.0).endVertex()
+            worldRenderer.pos(vertex.x, vertex.y, 0.0).endVertex()
 
         tessellator.draw()
         GlStateManager.color(1f, 1f, 1f, 1f)

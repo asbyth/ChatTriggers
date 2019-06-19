@@ -38,8 +38,8 @@ abstract class ConfigOption {
         //$$ this.resetButton.drawButton(Client.getMinecraft(), mouseX, mouseY, partialTicks);
         //#endif
 
-        Text("\u21BA", (Renderer.screen.getWidth() / 2 - 100 + this.x + 189).toFloat(), (this.y - 4).toFloat())
-                .setScale(2f)
+        Text("\u21BA", (Renderer.screen.getWidth() / 2 - 100 + this.x + 189).toDouble(), (this.y - 4).toDouble())
+                .setScale(2.0)
                 .setColor(-0x1)
                 .setShadow(true)
                 .draw()

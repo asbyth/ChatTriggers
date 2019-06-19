@@ -6,7 +6,7 @@ import com.chattriggers.ctjs.utils.kotlin.External
 import net.minecraft.client.renderer.GlStateManager
 
 @External
-class Text(private var string: String, private var x: Float = 0f, private var y: Float = 0f) {
+class Text(private var string: String, private var x: Double = 0.0, private var y: Double = 0.0) {
     private var lines = mutableListOf<String>()
 
     private var color = 0xffffffff.toInt()
@@ -16,7 +16,7 @@ class Text(private var string: String, private var x: Float = 0f, private var y:
 
     private var width = 0
     private var maxLines = 0
-    private var scale = 1f
+    private var scale = 1.0
 
     init {
         this.lines.add(this.string)
@@ -47,11 +47,11 @@ class Text(private var string: String, private var x: Float = 0f, private var y:
         }
     }
 
-    fun getX(): Float = this.x
-    fun setX(x: Float) = apply { this.x = x }
+    fun getX(): Double = this.x
+    fun setX(x: Double) = apply { this.x = x }
 
-    fun getY(): Float = this.y
-    fun setY(y: Float) = apply { this.y = y }
+    fun getY(): Double = this.y
+    fun setY(y: Double) = apply { this.y = y }
 
     fun getWidth(): Int = this.width
     fun setWidth(width: Int) = apply {
@@ -64,8 +64,8 @@ class Text(private var string: String, private var x: Float = 0f, private var y:
     fun getMaxLines(): Int = this.maxLines
     fun setMaxLines(maxLines: Int) = apply { this.maxLines = maxLines }
 
-    fun getScale(): Float = this.scale
-    fun setScale(scale: Float) = apply { this.scale = scale }
+    fun getScale(): Double = this.scale
+    fun setScale(scale: Double) = apply { this.scale = scale }
 
     fun getMaxWidth(): Int {
         return if (this.width == 0) {
@@ -80,7 +80,7 @@ class Text(private var string: String, private var x: Float = 0f, private var y:
         }
     }
 
-    fun getHeight(): Float {
+    fun getHeight(): Double {
         return if (this.width == 0)
             this.scale * 9
             else this.lines.size * this.scale * 9
@@ -91,21 +91,25 @@ class Text(private var string: String, private var x: Float = 0f, private var y:
     }
 
     @JvmOverloads
-    fun draw(x: Float? = null, y: Float? = null) = apply {
+    fun draw(x: Double? = null, y: Double? = null) = apply {
         GlStateManager.enableBlend()
         GlStateManager.scale(this.scale, this.scale, this.scale)
         if (this.width > 0) {
             var maxLinesHolder = this.maxLines
             var yHolder = y ?: this.y
             this.lines.forEach {
-                Renderer.getFontRenderer().drawString(it, getXAlign(it, x ?: this.x), yHolder / this.scale, this.color, this.shadow)
+                Renderer.getFontRenderer().drawString(
+                        it, getXAlign(it, x ?: this.x).toFloat(), (yHolder / this.scale).toFloat(), this.color, this.shadow
+                )
                 yHolder += this.scale * 9
                 maxLinesHolder--
                 if (maxLinesHolder == 0)
                     return@forEach
             }
         } else {
-            Renderer.getFontRenderer().drawString(this.string, getXAlign(this.string, x ?: this.x), (y ?: this.y) / this.scale, this.color, this.shadow)
+            Renderer.getFontRenderer().drawString(
+                    this.string, getXAlign(this.string, x ?: this.x).toFloat(), ((y ?: this.y) / this.scale).toFloat(), this.color, this.shadow
+            )
         }
         GlStateManager.disableBlend()
         Renderer.finishDraw()
@@ -117,7 +121,7 @@ class Text(private var string: String, private var x: Float = 0f, private var y:
                 else ChatLib.replaceFormatting(this.string)
     }
 
-    private fun getXAlign(string: String, x: Float): Float {
+    private fun getXAlign(string: String, x: Double): Double {
         val newX = x / this.scale
         return when (this.align) {
             DisplayHandler.Align.CENTER -> newX - Renderer.getStringWidth(string) / 2

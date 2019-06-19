@@ -49,9 +49,9 @@ object World {
      * @param pitch  the pitch of the sound
      */
     @JvmStatic
-    fun playSound(name: String, volume: Float, pitch: Float) {
+    fun playSound(name: String, volume: Double, pitch: Double) {
         //#if MC<=10809
-        Player.getPlayer()?.playSound(name, volume, pitch)
+        Player.getPlayer()?.playSound(name, volume.toFloat(), pitch.toFloat())
         //#else
         //$$ val sound = SoundEvent.REGISTRY.getObject(ResourceLocation("minecraft", name));
         //$$ Player.getPlayer()?.playSound(sound, volume, pitch);

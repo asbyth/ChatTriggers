@@ -87,16 +87,16 @@ object Renderer {
     }
 
     @JvmStatic @JvmOverloads
-    fun getRainbow(step: Float, speed: Float = 1f): Int {
-        val red = ((Math.sin((step / speed).toDouble()) + 0.75) * 170).toInt()
+    fun getRainbow(step: Double, speed: Double = 1.0): Int {
+        val red = ((Math.sin((step / speed)) + 0.75) * 170).toInt()
         val green = ((Math.sin(step / speed + 2 * Math.PI / 3) + 0.75) * 170).toInt()
         val blue = ((Math.sin(step / speed + 4 * Math.PI / 3) + 0.75) * 170).toInt()
         return color(red, green, blue, 255)
     }
 
     @JvmStatic @JvmOverloads
-    fun getRainbowColors(step: Float, speed: Float = 1f): IntArray {
-        val red = ((Math.sin((step / speed).toDouble()) + 0.75) * 170).toInt()
+    fun getRainbowColors(step: Double, speed: Double = 1.0): IntArray {
+        val red = ((Math.sin((step / speed)) + 0.75) * 170).toInt()
         val green = ((Math.sin(step / speed + 2 * Math.PI / 3) + 0.75) * 170).toInt()
         val blue = ((Math.sin(step / speed + 4 * Math.PI / 3) + 0.75) * 170).toInt()
         return intArrayOf(red, green, blue)
@@ -109,29 +109,29 @@ object Renderer {
     }
 
     @JvmStatic
-    fun translate(x: Float, y: Float) {
-        GL11.glTranslated(x.toDouble(), y.toDouble(), 0.0)
+    fun translate(x: Double, y: Double) {
+        GL11.glTranslated(x, y, 0.0)
     }
 
     @JvmStatic @JvmOverloads
-    fun scale(scaleX: Float, scaleY: Float = scaleX) {
-        GL11.glScalef(scaleX, scaleY, 1f)
+    fun scale(scaleX: Double, scaleY: Double = scaleX) {
+        GL11.glScalef(scaleX.toFloat(), scaleY.toFloat(), 1f)
     }
 
     @JvmStatic
-    fun rotate(angle: Float) {
-        GL11.glRotatef(angle, 0f, 0f, 1f)
+    fun rotate(angle: Double) {
+        GL11.glRotatef(angle.toFloat(), 0f, 0f, 1f)
     }
 
     @JvmStatic @JvmOverloads
-    fun colorize(red: Float, green: Float, blue: Float, alpha: Float = 255f) {
+    fun colorize(red: Double, green: Double, blue: Double, alpha: Double = 255.0) {
         colorized = fixAlpha(color(red.toInt(), green.toInt(), blue.toInt(), alpha.toInt()))
 
         GlStateManager.color(
-                MathLib.clampFloat(red, 0f, 255f),
-                MathLib.clampFloat(green, 0f, 255f),
-                MathLib.clampFloat(blue, 0f, 255f),
-                MathLib.clampFloat(alpha, 0f, 255f)
+                MathLib.clampDouble(red, 0.0, 255.0).toFloat(),
+                MathLib.clampDouble(green, 0.0, 255.0).toFloat(),
+                MathLib.clampDouble(blue, 0.0, 255.0).toFloat(),
+                MathLib.clampDouble(alpha, 0.0, 255.0).toFloat()
         )
     }
 
@@ -161,7 +161,7 @@ object Renderer {
                     imports = ["com.chattriggers.ctjs.minecraft.libs.renderer.Text"]
             )
     )
-    fun text(text: String, x: Float, y: Float): Text = Text(text, x, y)
+    fun text(text: String, x: Double, y: Double): Text = Text(text, x, y)
 
     @JvmStatic
     @Deprecated(
@@ -181,7 +181,7 @@ object Renderer {
                     imports = ["com.chattriggers.ctjs.minecraft.libs.renderer.Rectangle"]
             )
     )
-    fun rectangle(color: Int, x: Float, y: Float, width: Float, height: Float): Rectangle = Rectangle(color, x, y, width, height)
+    fun rectangle(color: Int, x: Double, y: Double, width: Double, height: Double): Rectangle = Rectangle(color, x, y, width, height)
 
     @JvmStatic
     @Deprecated(
@@ -194,7 +194,7 @@ object Renderer {
     fun shape(color: Int): Shape = Shape(color)
 
     @JvmStatic
-    fun drawRect(color: Int, x: Float, y: Float, width: Float, height: Float) {
+    fun drawRect(color: Int, x: Double, y: Double, width: Double, height: Double) {
         val pos = mutableListOf(x, y, x + width, y + height)
         if (pos[0] > pos[2])
             Collections.swap(pos, 0, 2)
@@ -216,10 +216,10 @@ object Renderer {
             GlStateManager.color(r, g, b, a)
         }
         worldRenderer.begin(7, DefaultVertexFormats.POSITION)
-        worldRenderer.pos(pos[0].toDouble(), pos[3].toDouble(), 0.0).endVertex()
-        worldRenderer.pos(pos[2].toDouble(), pos[3].toDouble(), 0.0).endVertex()
-        worldRenderer.pos(pos[2].toDouble(), pos[1].toDouble(), 0.0).endVertex()
-        worldRenderer.pos(pos[0].toDouble(), pos[1].toDouble(), 0.0).endVertex()
+        worldRenderer.pos(pos[0], pos[3], 0.0).endVertex()
+        worldRenderer.pos(pos[2], pos[3], 0.0).endVertex()
+        worldRenderer.pos(pos[2], pos[1], 0.0).endVertex()
+        worldRenderer.pos(pos[0], pos[1], 0.0).endVertex()
         tessellator.draw()
         GlStateManager.color(1f, 1f, 1f, 1f)
 
@@ -230,7 +230,7 @@ object Renderer {
     }
 
     @JvmStatic @JvmOverloads
-    fun drawShape(color: Int, vararg vertexes: List<Float>, drawMode: Int = 7) {
+    fun drawShape(color: Int, vararg vertexes: List<Double>, drawMode: Int = 7) {
         GlStateManager.enableBlend()
         GlStateManager.disableTexture2D()
 
@@ -250,7 +250,7 @@ object Renderer {
 
         vertexes.forEach {
             if (it.size == 2) {
-                worldRenderer.pos(it[0].toDouble(), it[1].toDouble(), 0.0).endVertex()
+                worldRenderer.pos(it[0], it[1], 0.0).endVertex()
             }
         }
 
@@ -264,8 +264,8 @@ object Renderer {
     }
 
     @JvmStatic @JvmOverloads
-    fun drawLine(color: Int, x1: Float, y1: Float, x2: Float, y2: Float, thickness: Float, drawMode: Int = 9) {
-        val theta = -Math.atan2((y2 - y1).toDouble(), (x2 - x1).toDouble())
+    fun drawLine(color: Int, x1: Double, y1: Double, x2: Double, y2: Double, thickness: Double, drawMode: Int = 9) {
+        val theta = -Math.atan2((y2 - y1), (x2 - x1))
         val i = Math.sin(theta).toFloat() * (thickness / 2)
         val j = Math.cos(theta).toFloat() * (thickness / 2)
 
@@ -286,10 +286,10 @@ object Renderer {
 
         worldRenderer.begin(drawMode, DefaultVertexFormats.POSITION)
 
-        worldRenderer.pos((x1 + i).toDouble(), (y1 + j).toDouble(), 0.0).endVertex()
-        worldRenderer.pos((x2 + i).toDouble(), (y2 + j).toDouble(), 0.0).endVertex()
-        worldRenderer.pos((x2 - i).toDouble(), (y2 - j).toDouble(), 0.0).endVertex()
-        worldRenderer.pos((x1 - i).toDouble(), (y1 - j).toDouble(), 0.0).endVertex()
+        worldRenderer.pos((x1 + i), (y1 + j), 0.0).endVertex()
+        worldRenderer.pos((x2 + i), (y2 + j), 0.0).endVertex()
+        worldRenderer.pos((x2 - i), (y2 - j), 0.0).endVertex()
+        worldRenderer.pos((x1 - i), (y1 - j), 0.0).endVertex()
 
         tessellator.draw()
 
@@ -301,14 +301,14 @@ object Renderer {
     }
 
     @JvmStatic @JvmOverloads
-    fun drawCircle(color: Int, x: Float, y: Float, radius: Float, steps: Int, drawMode: Int = 5) {
+    fun drawCircle(color: Int, x: Double, y: Double, radius: Double, steps: Int, drawMode: Int = 5) {
         val theta = 2 * Math.PI / steps
         val cos = Math.cos(theta).toFloat()
         val sin = Math.sin(theta).toFloat()
 
-        var xHolder: Float
-        var circleX = 1f
-        var circleY = 0f
+        var xHolder: Double
+        var circleX = 1.0
+        var circleY = 0.0
 
         val tessellator = MCTessellator.getInstance()
         val worldRenderer = tessellator.getRenderer()
@@ -327,12 +327,12 @@ object Renderer {
         worldRenderer.begin(drawMode, DefaultVertexFormats.POSITION)
 
         for (i in 0 .. steps) {
-            worldRenderer.pos(x.toDouble(), y.toDouble(), 0.0).endVertex()
-            worldRenderer.pos((circleX * radius + x).toDouble(), (circleY * radius + y).toDouble(), 0.0).endVertex()
+            worldRenderer.pos(x, y, 0.0).endVertex()
+            worldRenderer.pos((circleX * radius + x), (circleY * radius + y), 0.0).endVertex()
             xHolder = circleX
             circleX = cos * circleX - sin * circleY
             circleY = sin * xHolder + cos * circleY
-            worldRenderer.pos((circleX * radius + x).toDouble(), (circleY * radius + y).toDouble(), 0.0).endVertex()
+            worldRenderer.pos((circleX * radius + x), (circleY * radius + y), 0.0).endVertex()
         }
 
         tessellator.draw()
@@ -345,7 +345,7 @@ object Renderer {
     }
 
     @JvmStatic
-    fun drawString(text: String, x: Float, y: Float) {
+    fun drawString(text: String, x: Double, y: Double) {
         val fr = getFontRenderer()
 
         //TODO: THIS DEF AIN'T THE RIGHT PLACE FOR THIS BUT THATS @kerbybit's JOB!
@@ -354,7 +354,7 @@ object Renderer {
             var newY = y
 
             ChatLib.addColor(text).split("\n").forEach {
-                fr.drawString(it, x, newY, colorized ?: WHITE, false)
+                fr.drawString(it, x.toFloat(), newY.toFloat(), colorized ?: WHITE, false)
 
                 newY += fr.FONT_HEIGHT
             }
@@ -362,13 +362,13 @@ object Renderer {
             return
         }
 
-        fr.drawString(ChatLib.addColor(text), x, y, colorized ?: 0xffffffff.toInt(), false)
+        fr.drawString(ChatLib.addColor(text), x.toFloat(), y.toFloat(), colorized ?: 0xffffffff.toInt(), false)
         finishDraw()
     }
 
     @JvmStatic
-    fun drawStringWithShadow(text: String, x: Float, y: Float) {
-        getFontRenderer().drawString(ChatLib.addColor(text), x, y, colorized ?: 0xffffffff.toInt(), true)
+    fun drawStringWithShadow(text: String, x: Double, y: Double) {
+        getFontRenderer().drawString(ChatLib.addColor(text), x.toFloat(), y.toFloat(), colorized ?: 0xffffffff.toInt(), true)
         finishDraw()
     }
 
@@ -417,11 +417,11 @@ object Renderer {
         GlStateManager.rotate(180.0f, 0.0f, 0.0f, 1.0f)
         GlStateManager.rotate(45.0f, 0.0f, 1.0f, 0.0f)
         GlStateManager.rotate(-45.0f, 0.0f, 1.0f, 0.0f)
-        GlStateManager.rotate(-Math.atan((mouseY / 40.0f).toDouble()).toFloat() * 20.0f, 1.0f, 0.0f, 0.0f)
+        GlStateManager.rotate(-Math.atan((mouseY / 40.0)).toFloat() * 20.0f, 1.0f, 0.0f, 0.0f)
         if (!rotate) {
-            ent.renderYawOffset = Math.atan((mouseX / 40.0f).toDouble()).toFloat() * 20.0f
-            ent.rotationYaw = Math.atan((mouseX / 40.0f).toDouble()).toFloat() * 40.0f
-            ent.rotationPitch = -Math.atan((mouseY / 40.0f).toDouble()).toFloat() * 20.0f
+            ent.renderYawOffset = Math.atan((mouseX / 40.0)).toFloat() * 20.0f
+            ent.rotationYaw = Math.atan((mouseX / 40.0)).toFloat() * 40.0f
+            ent.rotationPitch = -Math.atan((mouseY / 40.0)).toFloat() * 20.0f
             ent.rotationYawHead = ent.rotationYaw
             ent.prevRotationYawHead = ent.rotationYaw
         }

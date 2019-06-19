@@ -199,14 +199,14 @@ class Item {
      * @param scale the scale
      */
     @JvmOverloads
-    fun draw(x: Float, y: Float, scale: Float = 1f) {
+    fun draw(x: Double, y: Double, scale: Double = 1.0) {
         val itemRenderer = Client.getMinecraft().renderItem
 
         GlStateManager.pushMatrix()
 
-        GlStateManager.scale(scale, scale, 1f)
-        GlStateManager.translate(x / scale, y / scale, 0f)
-        GL11.glColor4f(1f, 1f, 1f, 1f)
+        GlStateManager.scale(scale, scale, 1.0)
+        GlStateManager.translate(x / scale, y / scale, 0.0)
+        GL11.glColor4d(1.0, 1.0, 1.0, 1.0)
 
         RenderHelper.enableStandardItemLighting()
         RenderHelper.enableGUIStandardItemLighting()

@@ -68,8 +68,8 @@ object Tessellator {
      */
     @JvmStatic
     @JvmOverloads
-    fun colorize(red: Float, green: Float, blue: Float, alpha: Float = 255f) = apply {
-        GlStateManager.color(red, green, blue, alpha)
+    fun colorize(red: Double, green: Double, blue: Double, alpha: Double = 255.0) = apply {
+        GlStateManager.color(red.toFloat(), green.toFloat(), blue.toFloat(), alpha.toFloat())
         this.colorized = true
     }
 
@@ -84,8 +84,8 @@ object Tessellator {
      * @return the Tessellator to allow for method chaining
      */
     @JvmStatic
-    fun rotate(angle: Float, x: Float, y: Float, z: Float) = apply {
-        GL11.glRotatef(angle, x, y, z)
+    fun rotate(angle: Double, x: Double, y: Double, z: Double) = apply {
+        GL11.glRotated(angle, x, y, z)
     }
 
     /**
@@ -98,8 +98,8 @@ object Tessellator {
      * @return the Tessellator to allow for method chaining
      */
     @JvmStatic
-    fun translate(x: Float, y: Float, z: Float) = apply {
-        GL11.glTranslatef(x, y, z)
+    fun translate(x: Double, y: Double, z: Double) = apply {
+        GL11.glTranslated(x, y, z)
     }
 
     /**
@@ -113,8 +113,8 @@ object Tessellator {
      */
     @JvmStatic
     @JvmOverloads
-    fun scale(x: Float, y: Float = x, z: Float = x) = apply {
-        GL11.glScalef(x, y, z)
+    fun scale(x: Double, y: Double = x, z: Double = x) = apply {
+        GL11.glScaled(x, y, z)
     }
 
     /**
@@ -126,12 +126,12 @@ object Tessellator {
      * @return the Tessellator to allow for method chaining
      */
     @JvmStatic
-    fun pos(x: Float, y: Float, z: Float) = apply {
+    fun pos(x: Double, y: Double, z: Double) = apply {
         if (!this.began)
             this.begin()
         if (!this.firstVertex)
             this.worldRenderer.endVertex()
-        this.worldRenderer.pos(x.toDouble(), y.toDouble(), z.toDouble())
+        this.worldRenderer.pos(x, y, z)
         this.firstVertex = false
     }
 
@@ -144,8 +144,8 @@ object Tessellator {
      * @return the Tessellator to allow for method chaining
      */
     @JvmStatic
-    fun tex(u: Float, v: Float) = apply {
-        this.worldRenderer.tex(u.toDouble(), v.toDouble())
+    fun tex(u: Double, v: Double) = apply {
+        this.worldRenderer.tex(u, v)
     }
 
     /**
@@ -158,7 +158,7 @@ object Tessellator {
         this.worldRenderer.endVertex()
 
         if (!this.colorized)
-            colorize(1f, 1f, 1f, 1f)
+            colorize(1.0, 1.0, 1.0, 1.0)
 
         this.tessellator.draw()
         this.began = false
@@ -183,33 +183,33 @@ object Tessellator {
      * @param increase       whether or not to scale the text up as the player moves away
      */
     @JvmStatic
-    fun drawString(text: String, x: Float, y: Float, z: Float, renderBlackBox: Boolean, partialTicks: Float, scale: Float, color: Int, increase: Boolean) {
+    fun drawString(text: String, x: Double, y: Double, z: Double, renderBlackBox: Boolean, partialTicks: Double, scale: Double, color: Int, increase: Boolean) {
         var scale = scale
         val mc = Minecraft.getMinecraft()
 
         val renderManager = mc.renderManager
         val fontRenderer = Renderer.getFontRenderer()
 
-        val playerX = (Player.getPlayer()!!.lastTickPosX + (Player.getPlayer()!!.posX - Player.getPlayer()!!.lastTickPosX) * partialTicks).toFloat()
-        val playerY = (Player.getPlayer()!!.lastTickPosY + (Player.getPlayer()!!.posY - Player.getPlayer()!!.lastTickPosY) * partialTicks).toFloat()
-        val playerZ = (Player.getPlayer()!!.lastTickPosZ + (Player.getPlayer()!!.posZ - Player.getPlayer()!!.lastTickPosZ) * partialTicks).toFloat()
+        val playerX = (Player.getPlayer()!!.lastTickPosX + (Player.getPlayer()!!.posX - Player.getPlayer()!!.lastTickPosX) * partialTicks)
+        val playerY = (Player.getPlayer()!!.lastTickPosY + (Player.getPlayer()!!.posY - Player.getPlayer()!!.lastTickPosY) * partialTicks)
+        val playerZ = (Player.getPlayer()!!.lastTickPosZ + (Player.getPlayer()!!.posZ - Player.getPlayer()!!.lastTickPosZ) * partialTicks)
 
         val dx = x - playerX
         val dy = y - playerY
         val dz = z - playerZ
 
         if (increase) {
-            val distance = Math.sqrt((dx * dx + dy * dy + dz * dz).toDouble()).toFloat()
+            val distance = Math.sqrt((dx * dx + dy * dy + dz * dz)).toFloat()
             val multiplier = distance / 120f //mobs only render ~120 blocks away
             scale *= 0.45f * multiplier
         }
 
         GL11.glColor4f(1f, 1f, 1f, 0.5f)
         GL11.glPushMatrix()
-        GL11.glTranslatef(dx, dy, dz)
+        GL11.glTranslated(dx, dy, dz)
         GL11.glRotatef(-renderManager.playerViewY, 0.0f, 1.0f, 0.0f)
         GL11.glRotatef(renderManager.playerViewX, 1.0f, 0.0f, 0.0f)
-        GL11.glScalef(-scale, -scale, scale)
+        GL11.glScaled(-scale, -scale, scale)
         GL11.glDisable(GL11.GL_LIGHTING)
         GL11.glDepthMask(false)
         GL11.glDisable(GL11.GL_DEPTH_TEST)
@@ -222,10 +222,10 @@ object Tessellator {
             val j = textWidth / 2
             GlStateManager.disableTexture2D()
             worldRenderer.begin(7, DefaultVertexFormats.POSITION_COLOR)
-            worldRenderer.pos((-j - 1).toDouble(), (-1).toDouble(), 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex()
-            worldRenderer.pos((-j - 1).toDouble(), 8.toDouble(), 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex()
-            worldRenderer.pos((j + 1).toDouble(), 8.toDouble(), 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex()
-            worldRenderer.pos((j + 1).toDouble(), (-1).toDouble(), 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex()
+            worldRenderer.pos(-j - 1.0, -1.0, 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex()
+            worldRenderer.pos(-j - 1.0, 8.0, 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex()
+            worldRenderer.pos(j + 1.0, 8.0, 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex()
+            worldRenderer.pos(j + 1.0, -1.0, 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex()
             tessellator.draw()
             GlStateManager.enableTexture2D()
         }
