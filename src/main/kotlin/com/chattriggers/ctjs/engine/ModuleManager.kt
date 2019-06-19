@@ -36,6 +36,17 @@ object ModuleManager {
         cachedModules = modules
         PrimaryLoader.initialize(modules)
 
+        try {
+            PrimaryLoader.scriptContext.eval("js", "x")
+        } catch (e: Exception) {
+            // Do nothing. We want this to error for some godforsaken reason.
+            // Don't question the madness that we have been driven to in order
+            // to fix this error, we simply had to sell our souls to the devil.
+        }
+
+        if (Config.clearConsoleOnLoad)
+            PrimaryLoader.console.clearConsole()
+
         loaders.forEach { it.preload() }
         loaders.forEach { it.load(modules) }
     }

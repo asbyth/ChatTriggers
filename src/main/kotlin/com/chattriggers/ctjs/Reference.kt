@@ -36,9 +36,6 @@ object Reference {
         CommandHandler.getCommandList().clear()
         ModuleManager.unloadTriggers()
 
-        if (Config.clearConsoleOnLoad)
-            PrimaryLoader.console.clearConsole()
-
         if (asCommand) {
             ChatLib.chat("&7Unloaded all of ChatTriggers")
             this.isLoaded = true
