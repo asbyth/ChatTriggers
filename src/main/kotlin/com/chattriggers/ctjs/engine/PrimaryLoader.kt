@@ -20,17 +20,9 @@ object PrimaryLoader {
     var console: Console = Console()
     var scriptContext: Context = instanceScriptContext()
 
-    fun newScriptThread(block: () -> Unit) {
-        thread {
-            scriptContext.enter()
-            block()
-            scriptContext.leave()
-        }
-    }
-
     fun initialize(modules: List<Module>) {
         try {
-            scriptContext.close(true)
+            scriptContext.close(false)
         } catch (e: Exception) {
             println("error closing context. probably ruby!")
         }
@@ -70,13 +62,13 @@ object PrimaryLoader {
 
     fun importModule(name: String, extra: Boolean, isRequired: Boolean = false): List<Module>? {
         if (extra) {
-            newScriptThread {
+            thread {
                 ChatLib.chat("&7Importing $name...")
                 val res = doImport(name)
 
                 if (!res) {
                     ChatLib.chat("&cCan't find module with name $name")
-                    return@newScriptThread
+                    return@thread
                 }
 
                 val moduleFolder = getFoldersInDir(modulesFolder).firstOrNull {

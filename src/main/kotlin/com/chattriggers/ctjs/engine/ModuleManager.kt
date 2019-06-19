@@ -32,12 +32,14 @@ object ModuleManager {
     }
 
     fun loadModules(updateCheck: Boolean, asCommand: Boolean = false) {
-        val modules = PrimaryLoader.fetchModules(updateCheck)
-        cachedModules = modules
-        PrimaryLoader.initialize(modules)
+        thread {
+            val modules = PrimaryLoader.fetchModules(updateCheck)
+            cachedModules = modules
+            PrimaryLoader.initialize(modules)
 
-        loaders.forEach { it.preload() }
-        loaders.forEach { it.load(modules) }
+            loaders.forEach { it.preload() }
+            loaders.forEach { it.load(modules) }
+        }
     }
 
     fun loadModule(module: Module) {
