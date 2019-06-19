@@ -20,7 +20,7 @@ class KeyBind {
      * @param keyCode     the keycode which the key bind will respond to, see Keyboard below. Ex. Keyboard.KEY_A
      * @see [Keyboard](http://legacy.lwjgl.org/javadoc/org/lwjgl/input/Keyboard.html)
      */
-    constructor(description: String, keyCode: Int) {
+    constructor(description: String, keyCode: Long) {
         for (key in Client.getMinecraft().gameSettings.keyBindings) {
             if (key.keyCategory == "ChatTriggers" && key.keyDescription == description) {
                 Client.getMinecraft().gameSettings.keyBindings = ArrayUtils.removeElement(Client.getMinecraft().gameSettings.keyBindings, key)
@@ -28,7 +28,7 @@ class KeyBind {
             }
         }
 
-        this.keyBinding = KeyBinding(description, keyCode, "ChatTriggers")
+        this.keyBinding = KeyBinding(description, keyCode.toInt(), "ChatTriggers")
         ClientRegistry.registerKeyBinding(this.keyBinding)
 
         keyBinds.add(this)

@@ -69,10 +69,10 @@ class Book(bookName: String) {
      * @param message    the message to set the page to
      * @return the current book to allow method chaining
      */
-    fun setPage(pageNumber: Int, message: Message) = apply {
+    fun setPage(pageNumber: Long, message: Message) = apply {
         val pages = bookData.getTag("pages") as NBTTagList
 
-        pages.set(pageNumber, NBTTagString(
+        pages.set(pageNumber.toInt(), NBTTagString(
                 TextComponentSerializer.componentToJson(
                         message.getChatMessage()
                 )
@@ -97,7 +97,7 @@ class Book(bookName: String) {
     }
 
     @JvmOverloads
-    fun display(page: Int = 0) {
+    fun display(page: Long = 0) {
         if (bookScreen == null) {
             bookScreen = GuiScreenBook(Player.getPlayer(), book, false)
         }
@@ -105,7 +105,7 @@ class Book(bookName: String) {
         ReflectionHelper.setPrivateValue<GuiScreenBook, Int>(
                 GuiScreenBook::class.java,
                 bookScreen,
-                page,
+                page.toInt(),
                 "currPage",
                 "field_146484_x"
         )

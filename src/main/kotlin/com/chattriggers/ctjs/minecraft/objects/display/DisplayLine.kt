@@ -18,8 +18,8 @@ import javax.vecmath.Vector2d
 abstract class DisplayLine(val lang: Lang, text: String) {
     private lateinit var text: Text
     private var textWidth = 0.0
-    private var textColor: Int? = null
-    private var backgroundColor: Int? = null
+    private var textColor: Long? = null
+    private var backgroundColor: Long? = null
 
     private var background: DisplayHandler.Background? = null
     private var align: DisplayHandler.Align? = null
@@ -39,8 +39,8 @@ abstract class DisplayLine(val lang: Lang, text: String) {
     constructor(lang: Lang, text: String, config: Value) : this(lang, text) {
         if (!config.hasMembers()) return
 
-        this.textColor = config.getMember("text_color")?.asInt()
-        this.backgroundColor = config.getMember("background_color")?.asInt()
+        this.textColor = config.getMember("text_color")?.asLong()
+        this.backgroundColor = config.getMember("background_color")?.asLong()
 
         run {
             val align = config.getMember("align") ?: return@run
@@ -61,7 +61,7 @@ abstract class DisplayLine(val lang: Lang, text: String) {
         this.textWidth = Renderer.getStringWidth(text) * this.text.getScale()
     }
 
-    fun setTextColor(color: Int) = apply {
+    fun setTextColor(color: Long) = apply {
         this.textColor = color
     }
 
@@ -92,7 +92,7 @@ abstract class DisplayLine(val lang: Lang, text: String) {
         }
     }
 
-    fun setBackgroundColor(color: Int) = apply {
+    fun setBackgroundColor(color: Long) = apply {
         this.backgroundColor = color
     }
 
@@ -167,17 +167,17 @@ abstract class DisplayLine(val lang: Lang, text: String) {
         this.draggedState[button] = Vector2d(Client.getMouseX().toDouble(), Client.getMouseY().toDouble())
     }
 
-    private fun drawFullBG(bg: DisplayHandler.Background, color: Int, x: Double, y: Double, width: Double, height: Double) {
+    private fun drawFullBG(bg: DisplayHandler.Background, color: Long, x: Double, y: Double, width: Double, height: Double) {
         if (bg === DisplayHandler.Background.FULL)
             Renderer.drawRect(color, x, y, width, height)
     }
 
-    private fun drawPerLineBG(bg: DisplayHandler.Background, color: Int, x: Double, y: Double, width: Double, height: Double) {
+    private fun drawPerLineBG(bg: DisplayHandler.Background, color: Long, x: Double, y: Double, width: Double, height: Double) {
         if (bg === DisplayHandler.Background.PER_LINE)
             Renderer.drawRect(color, x, y, width, height)
     }
 
-    fun drawLeft(x: Double, y: Double, maxWidth: Double, background: DisplayHandler.Background, backgroundColor: Int, textColor: Int) {
+    fun drawLeft(x: Double, y: Double, maxWidth: Double, background: DisplayHandler.Background, backgroundColor: Long, textColor: Long) {
         val bg = this.background ?: background
         val bgColor = this.backgroundColor ?: backgroundColor
         val textCol = this.textColor ?: textColor
@@ -203,7 +203,7 @@ abstract class DisplayLine(val lang: Lang, text: String) {
         handleInput(xOff - 1, y - 1, (this.textWidth + 2), 10 * this.text.getScale())
     }
 
-    fun drawRight(x: Double, y: Double, maxWidth: Double, background: DisplayHandler.Background, backgroundColor: Int, textColor: Int) {
+    fun drawRight(x: Double, y: Double, maxWidth: Double, background: DisplayHandler.Background, backgroundColor: Long, textColor: Long) {
         val bg = this.background ?: background
         val bgColor = this.backgroundColor ?: backgroundColor
         val textCol = this.textColor ?: textColor
@@ -229,7 +229,7 @@ abstract class DisplayLine(val lang: Lang, text: String) {
         handleInput(xOff - 1, y - 1, (this.textWidth + 2), 10 * this.text.getScale())
     }
 
-    fun drawCenter(x: Double, y: Double, maxWidth: Double, background: DisplayHandler.Background, backgroundColor: Int, textColor: Int) {
+    fun drawCenter(x: Double, y: Double, maxWidth: Double, background: DisplayHandler.Background, backgroundColor: Long, textColor: Long) {
         val bg = this.background ?: background
         val bgColor = this.backgroundColor ?: backgroundColor
         val textCol = this.textColor ?: textColor

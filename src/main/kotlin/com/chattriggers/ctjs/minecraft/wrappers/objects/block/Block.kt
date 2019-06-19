@@ -31,8 +31,8 @@ open class Block {
         block = MCBlock.getBlockFromName(blockName)!!
     }
 
-    constructor(blockID: Int) {
-        block = MCBlock.getBlockById(blockID)
+    constructor(blockID: Long) {
+        block = MCBlock.getBlockById(blockID.toInt())
     }
 
     constructor(item: Item) {

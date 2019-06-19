@@ -222,8 +222,8 @@ abstract class Gui(val lang: Lang) : GuiScreen() {
      * @param y          Y position of the button
      * @param buttonText the label of the button
      */
-    fun addButton(buttonId: Int, x: Int, y: Int, buttonText: String) {
-        this.buttonList.add(GuiButton(buttonId, x, y, buttonText))
+    fun addButton(buttonId: Long, x: Long, y: Long, buttonText: String) {
+        this.buttonList.add(GuiButton(buttonId.toInt(), x.toInt(), y.toInt(), buttonText))
     }
 
     /**
@@ -236,13 +236,13 @@ abstract class Gui(val lang: Lang) : GuiScreen() {
      * @param height     the height of the button
      * @param buttonText the label of the button
      */
-    fun addButton(buttonId: Int, x: Int, y: Int, width: Int = 200, height: Int = 20, buttonText: String) {
-        this.buttonList.add(GuiButton(buttonId, x, y, width, height, buttonText))
+    fun addButton(buttonId: Long, x: Long, y: Long, width: Long = 200, height: Long = 20, buttonText: String) {
+        this.buttonList.add(GuiButton(buttonId.toInt(), x.toInt(), y.toInt(), width.toInt(), height.toInt(), buttonText))
     }
 
-    fun setButtonVisibility(buttonId: Int, visible: Boolean) {
+    fun setButtonVisibility(buttonId: Long, visible: Boolean) {
         this.buttonList.firstOrNull {
-            it.id == buttonId
+            it.id == buttonId.toInt()
         }?.visible = visible
     }
 }

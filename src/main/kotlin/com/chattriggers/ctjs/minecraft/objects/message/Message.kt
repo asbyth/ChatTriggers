@@ -18,7 +18,7 @@ class Message {
     private lateinit var chatMessage: ITextComponent
 
     private var messageParts = mutableListOf<TextComponent>()
-    private var chatLineId = -1
+    private var chatLineId = -1L
     private var recursive = false
     private var formatted = true
 
@@ -78,8 +78,8 @@ class Message {
      */
     fun getMessageParts(): List<TextComponent> = this.messageParts
 
-    fun getChatLineId(): Int = this.chatLineId
-    fun setChatLineId(id: Int) = apply { this.chatLineId = id }
+    fun getChatLineId(): Long = this.chatLineId
+    fun setChatLineId(id: Long) = apply { this.chatLineId = id }
 
     fun isRecursive(): Boolean = this.recursive
     fun setRecursive(recursive: Boolean) = apply { this.recursive = recursive }
@@ -94,10 +94,10 @@ class Message {
      * @param component the new TextComponent or String to replace with
      * @return the Message for method chaining
      */
-    fun setTextComponent(index: Int, component: Any) = apply {
+    fun setTextComponent(index: Long, component: Any) = apply {
         when (component) {
-            is String -> this.messageParts[index] = TextComponent(component)
-            is TextComponent -> this.messageParts[index] = component
+            is String -> this.messageParts[index.toInt()] = TextComponent(component)
+            is TextComponent -> this.messageParts[index.toInt()] = component
         }
     }
 
@@ -121,10 +121,10 @@ class Message {
      * @param component the new TextComponent or String to insert
      * @return the Message for method chaining
      */
-    fun addTextComponent(index: Int, component: Any) = apply {
+    fun addTextComponent(index: Long, component: Any) = apply {
         when (component) {
-            is String -> this.messageParts.add(index, TextComponent(component))
-            is TextComponent -> this.messageParts.add(index, component)
+            is String -> this.messageParts.add(index.toInt(), TextComponent(component))
+            is TextComponent -> this.messageParts.add(index.toInt(), component)
         }
     }
 
@@ -153,8 +153,8 @@ class Message {
         parseMessage()
         if (!ChatLib.isPlayer("[CHAT]: " + this.chatMessage.formattedText)) return
 
-        if (this.chatLineId != -1) {
-            Client.getChatGUI()?.printChatMessageWithOptionalDeletion(this.chatMessage, this.chatLineId)
+        if (this.chatLineId != -1L) {
+            Client.getChatGUI()?.printChatMessageWithOptionalDeletion(this.chatMessage, this.chatLineId.toInt())
             return
         }
 

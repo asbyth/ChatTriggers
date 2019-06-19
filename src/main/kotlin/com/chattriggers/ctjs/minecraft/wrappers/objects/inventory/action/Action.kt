@@ -10,27 +10,27 @@ import com.chattriggers.ctjs.utils.kotlin.External
 //#endif
 
 @External
-abstract class Action(var slot: Int, var windowId: Int) {
-    fun setSlot(slot: Int) = apply {
+abstract class Action(var slot: Long, var windowId: Long) {
+    fun setSlot(slot: Long) = apply {
         this.slot = slot
     }
 
-    fun setWindowId(windowId: Int) = apply {
+    fun setWindowId(windowId: Long) = apply {
         this.windowId = windowId
     }
 
     abstract fun complete()
 
     //#if MC<=10809
-    protected fun doClick(button: Int, mode: Int) {
+    protected fun doClick(button: Long, mode: Long) {
     //#else
-    //$$ protected fun doClick(button: Int, mode: MCClickType) {
+    //$$ protected fun doClick(button: Long, mode: MCClickType) {
     //#endif
         Client.getMinecraft().playerController.windowClick(
-            windowId,
-            slot,
-            button,
-            mode,
+            windowId.toInt(),
+            slot.toInt(),
+            button.toInt(),
+            mode.toInt(),
             Player.getPlayer()
         )
     }
@@ -47,7 +47,7 @@ abstract class Action(var slot: Int, var windowId: Int) {
          * @return the new action
          */
         @JvmStatic
-        fun of(inventory: Inventory, slot: Int, typeString: String) =
+        fun of(inventory: Inventory, slot: Long, typeString: String) =
             when (Type.valueOf(typeString.toUpperCase())) {
                 Type.CLICK -> ClickAction(slot, inventory.getWindowId())
                 Type.DRAG -> DragAction(slot, inventory.getWindowId())

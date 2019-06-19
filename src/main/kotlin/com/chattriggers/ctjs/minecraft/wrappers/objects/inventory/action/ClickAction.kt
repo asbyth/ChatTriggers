@@ -8,7 +8,7 @@ import com.chattriggers.ctjs.utils.kotlin.External
 //#endif
 
 @External
-class ClickAction(slot: Int, windowId: Int) : Action(slot, windowId) {
+class ClickAction(slot: Long, windowId: Long) : Action(slot, windowId) {
     private lateinit var clickType: ClickType
     private var holdingShift = false
     private var itemInHand = Player.getPlayer()?.inventory?.currentItem == null
@@ -77,14 +77,14 @@ class ClickAction(slot: Int, windowId: Int) : Action(slot, windowId) {
 
     override fun complete() {
         //#if MC<=10809
-        var mode = 0
+        var mode = 0L
 
         if (this.clickType == ClickType.MIDDLE) {
-            mode = 3
-        } else if (slot == -999 && !this.itemInHand) {
-            mode = 4
+            mode = 3L
+        } else if (slot == -999L && !this.itemInHand) {
+            mode = 4L
         } else if (this.holdingShift) {
-            mode = 1
+            mode = 1L
         }
         //#else
         //$$ val mode: MCClickType = if (this.clickType == ClickType.MIDDLE) {
@@ -100,7 +100,7 @@ class ClickAction(slot: Int, windowId: Int) : Action(slot, windowId) {
         //$$ }
         //#endif
 
-        doClick(clickType.button, mode)
+        doClick(clickType.button.toLong(), mode)
     }
 
     enum class ClickType(val button: Int) {

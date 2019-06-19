@@ -41,23 +41,23 @@ object Renderer {
     @JvmStatic val WHITE = color(255, 255, 255, 255)
 
     @JvmStatic
-    fun getColor(color: Int): Int {
+    fun getColor(color: Long): Int {
         return when (color) {
-            0 -> BLACK
-            1 -> DARK_BLUE
-            2 -> DARK_GREEN
-            3 -> DARK_AQUA
-            4 -> DARK_RED
-            5 -> DARK_PURPLE
-            6 -> GOLD
-            7 -> GRAY
-            8 -> DARK_GRAY
-            9 -> BLUE
-            10 -> GREEN
-            11 -> AQUA
-            12 -> RED
-            13 -> LIGHT_PURPLE
-            14 -> YELLOW
+            0L -> BLACK
+            1L -> DARK_BLUE
+            2L -> DARK_GREEN
+            3L -> DARK_AQUA
+            4L -> DARK_RED
+            5L -> DARK_PURPLE
+            6L -> GOLD
+            7L -> GRAY
+            8L -> DARK_GRAY
+            9L -> BLUE
+            10L -> GREEN
+            11L -> AQUA
+            12L -> RED
+            13L -> LIGHT_PURPLE
+            14L -> YELLOW
             else -> WHITE
         }
     }
@@ -79,11 +79,21 @@ object Renderer {
     }
 
     @JvmStatic @JvmOverloads
+    fun color(red: Double, green: Double, blue: Double, alpha: Double = 255.0): Int {
+        return color(red.toInt(), green.toInt(), blue.toInt(), alpha.toInt())
+    }
+
+    @JvmStatic @JvmOverloads
     fun color(red: Int, green: Int, blue: Int, alpha: Int = 255): Int {
-        return (MathLib.clamp(alpha, 0, 255) * 0x1000000
-                + MathLib.clamp(red, 0, 255) * 0x10000
-                + MathLib.clamp(green, 0, 255) * 0x100
-                + MathLib.clamp(blue, 0, 255))
+        return ((MathLib.clamp(alpha.toLong(), 0, 255) * 0x1000000
+                + MathLib.clamp(red.toLong(), 0, 255) * 0x10000
+                + MathLib.clamp(green.toLong(), 0, 255) * 0x100
+                + MathLib.clamp(blue.toLong(), 0, 255)).toInt())
+    }
+
+    @JvmStatic @JvmOverloads
+    fun color(red: Long, green: Long, blue: Long, alpha: Long = 255): Int {
+        return color(red.toInt(), green.toInt(), blue.toInt(), alpha.toInt())
     }
 
     @JvmStatic @JvmOverloads
@@ -125,7 +135,7 @@ object Renderer {
 
     @JvmStatic @JvmOverloads
     fun colorize(red: Double, green: Double, blue: Double, alpha: Double = 255.0) {
-        colorized = fixAlpha(color(red.toInt(), green.toInt(), blue.toInt(), alpha.toInt()))
+        colorized = fixAlpha(color(red, green, blue, alpha).toLong()).toInt()
 
         GlStateManager.color(
                 MathLib.clampDouble(red, 0.0, 255.0).toFloat(),
@@ -136,7 +146,7 @@ object Renderer {
     }
 
     @JvmStatic
-    fun fixAlpha(color: Int): Int {
+    fun fixAlpha(color: Long): Long {
         val alpha = color shr 24 and 255
         return if (alpha < 10)
             (color and 0xFF_FF_FF) or 0xA_FF_FF_FF
@@ -181,7 +191,7 @@ object Renderer {
                     imports = ["com.chattriggers.ctjs.minecraft.libs.renderer.Rectangle"]
             )
     )
-    fun rectangle(color: Int, x: Double, y: Double, width: Double, height: Double): Rectangle = Rectangle(color, x, y, width, height)
+    fun rectangle(color: Long, x: Double, y: Double, width: Double, height: Double): Rectangle = Rectangle(color, x, y, width, height)
 
     @JvmStatic
     @Deprecated(
@@ -191,10 +201,10 @@ object Renderer {
                     imports = ["com.chattriggers.ctjs.minecraft.libs.renderer.Shape"]
             )
     )
-    fun shape(color: Int): Shape = Shape(color)
+    fun shape(color: Long): Shape = Shape(color)
 
     @JvmStatic
-    fun drawRect(color: Int, x: Double, y: Double, width: Double, height: Double) {
+    fun drawRect(color: Long, x: Double, y: Double, width: Double, height: Double) {
         val pos = mutableListOf(x, y, x + width, y + height)
         if (pos[0] > pos[2])
             Collections.swap(pos, 0, 2)
@@ -230,7 +240,7 @@ object Renderer {
     }
 
     @JvmStatic @JvmOverloads
-    fun drawShape(color: Int, vararg vertexes: List<Double>, drawMode: Int = 7) {
+    fun drawShape(color: Long, vararg vertexes: List<Double>, drawMode: Long = 7L) {
         GlStateManager.enableBlend()
         GlStateManager.disableTexture2D()
 
@@ -246,7 +256,7 @@ object Renderer {
             GlStateManager.color(r, g, b, a)
         }
 
-        worldRenderer.begin(drawMode, DefaultVertexFormats.POSITION)
+        worldRenderer.begin(drawMode.toInt(), DefaultVertexFormats.POSITION)
 
         vertexes.forEach {
             if (it.size == 2) {
@@ -264,7 +274,7 @@ object Renderer {
     }
 
     @JvmStatic @JvmOverloads
-    fun drawLine(color: Int, x1: Double, y1: Double, x2: Double, y2: Double, thickness: Double, drawMode: Int = 9) {
+    fun drawLine(color: Long, x1: Double, y1: Double, x2: Double, y2: Double, thickness: Double, drawMode: Long = 9L) {
         val theta = -Math.atan2((y2 - y1), (x2 - x1))
         val i = Math.sin(theta).toFloat() * (thickness / 2)
         val j = Math.cos(theta).toFloat() * (thickness / 2)
@@ -284,7 +294,7 @@ object Renderer {
             GlStateManager.color(r, g, b, a)
         }
 
-        worldRenderer.begin(drawMode, DefaultVertexFormats.POSITION)
+        worldRenderer.begin(drawMode.toInt(), DefaultVertexFormats.POSITION)
 
         worldRenderer.pos((x1 + i), (y1 + j), 0.0).endVertex()
         worldRenderer.pos((x2 + i), (y2 + j), 0.0).endVertex()
@@ -301,7 +311,7 @@ object Renderer {
     }
 
     @JvmStatic @JvmOverloads
-    fun drawCircle(color: Int, x: Double, y: Double, radius: Double, steps: Int, drawMode: Int = 5) {
+    fun drawCircle(color: Long, x: Double, y: Double, radius: Double, steps: Long, drawMode: Long = 5L) {
         val theta = 2 * Math.PI / steps
         val cos = Math.cos(theta).toFloat()
         val sin = Math.sin(theta).toFloat()
@@ -324,7 +334,7 @@ object Renderer {
             GlStateManager.color(r, g, b, a)
         }
 
-        worldRenderer.begin(drawMode, DefaultVertexFormats.POSITION)
+        worldRenderer.begin(drawMode.toInt(), DefaultVertexFormats.POSITION)
 
         for (i in 0 .. steps) {
             worldRenderer.pos(x, y, 0.0).endVertex()
@@ -396,7 +406,7 @@ object Renderer {
     }
 
     @JvmStatic
-    fun drawPlayer(player: Any, x: Int, y: Int, rotate: Boolean) {
+    fun drawPlayer(player: Any, x: Long, y: Long, rotate: Boolean) {
         val mouseX = -30f
         val mouseY = 0f
 

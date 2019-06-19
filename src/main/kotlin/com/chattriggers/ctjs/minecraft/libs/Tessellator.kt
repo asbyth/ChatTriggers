@@ -43,7 +43,7 @@ object Tessellator {
      */
     @JvmStatic
     @JvmOverloads
-    fun begin(drawMode: Int = GL11.GL_QUADS, textured: Boolean = true) = apply {
+    fun begin(drawMode: Long = GL11.GL_QUADS.toLong(), textured: Boolean = true) = apply {
         GL11.glPushMatrix()
 
         GlStateManager.enableBlend()
@@ -52,7 +52,7 @@ object Tessellator {
         val renderManager = Client.getMinecraft().renderManager
         GlStateManager.translate(-renderManager.viewerPosX, -renderManager.viewerPosY, -renderManager.viewerPosZ)
 
-        this.worldRenderer.begin(drawMode, if (textured) DefaultVertexFormats.POSITION_TEX else DefaultVertexFormats.POSITION)
+        this.worldRenderer.begin(drawMode.toInt(), if (textured) DefaultVertexFormats.POSITION_TEX else DefaultVertexFormats.POSITION)
         this.firstVertex = true
         this.began = true
     }
@@ -183,7 +183,7 @@ object Tessellator {
      * @param increase       whether or not to scale the text up as the player moves away
      */
     @JvmStatic
-    fun drawString(text: String, x: Double, y: Double, z: Double, renderBlackBox: Boolean, partialTicks: Double, scale: Double, color: Int, increase: Boolean) {
+    fun drawString(text: String, x: Double, y: Double, z: Double, renderBlackBox: Boolean, partialTicks: Double, scale: Double, color: Long, increase: Boolean) {
         var scale = scale
         val mc = Minecraft.getMinecraft()
 
@@ -230,7 +230,7 @@ object Tessellator {
             GlStateManager.enableTexture2D()
         }
 
-        fontRenderer.drawString(text, -textWidth / 2, 0, color)
+        fontRenderer.drawString(text, -textWidth / 2, 0, color.toInt())
 
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f)
         GL11.glDepthMask(true)

@@ -87,11 +87,11 @@ object World {
      * @param fadeOut  time to fade out
      */
     @JvmStatic
-    fun showTitle(title: String, subtitle: String, fadeIn: Int, time: Int, fadeOut: Int) {
+    fun showTitle(title: String, subtitle: String, fadeIn: Long, time: Long, fadeOut: Long) {
         val gui = Client.getMinecraft().ingameGUI
-        gui.displayTitle(ChatLib.addColor(title), null, fadeIn, time, fadeOut)
-        gui.displayTitle(null, ChatLib.addColor(subtitle), fadeIn, time, fadeOut)
-        gui.displayTitle(null, null, fadeIn, time, fadeOut)
+        gui.displayTitle(ChatLib.addColor(title), null, fadeIn.toInt(), time.toInt(), fadeOut.toInt())
+        gui.displayTitle(null, ChatLib.addColor(subtitle), fadeIn.toInt(), time.toInt(), fadeOut.toInt())
+        gui.displayTitle(null, null, fadeIn.toInt(), time.toInt(), fadeOut.toInt())
     }
 
     @JvmStatic
@@ -130,8 +130,8 @@ object World {
      * @return the [Block] at the location
      */
     @JvmStatic
-    fun getBlockAt(x: Int, y: Int, z: Int): Block {
-        val blockPos = BlockPos(x, y, z)
+    fun getBlockAt(x: Long, y: Long, z: Long): Block {
+        val blockPos = BlockPos(x.toInt(), y.toInt(), z.toInt())
         val blockState = getWorld()!!.getBlockState(blockPos)
 
         return Block(blockState.block).setBlockPos(blockPos)
@@ -167,10 +167,10 @@ object World {
     fun hasPlayer(name: String): Boolean = getWorld()?.getPlayerEntityByName(name) != null
 
     @JvmStatic
-    fun getChunk(x: Int, y: Int, z: Int): Chunk {
+    fun getChunk(x: Long, y: Long, z: Long): Chunk {
         return Chunk(
                 getWorld()!!.getChunkFromBlockCoords(
-                        BlockPos(x, y, z)
+                        BlockPos(x.toInt(), y.toInt(), z.toInt())
                 )
         )
     }

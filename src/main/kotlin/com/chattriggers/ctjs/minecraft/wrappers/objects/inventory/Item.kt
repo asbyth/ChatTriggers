@@ -46,8 +46,8 @@ class Item {
         itemStack = ItemStack(item)
     }
 
-    constructor(itemID: Int) {
-        item = MCItem.getItemById(itemID)
+    constructor(itemID: Long) {
+        item = MCItem.getItemById(itemID.toInt())
         itemStack = ItemStack(item)
     }
 
@@ -89,8 +89,8 @@ class Item {
 
     fun getID(): Int = MCItem.getIdFromItem(item)
 
-    fun setStackSize(stackSize: Int) = apply {
-        itemStack = ItemStack(item, stackSize)
+    fun setStackSize(stackSize: Long) = apply {
+        itemStack = ItemStack(item, stackSize.toInt())
     }
 
     fun getStackSize(): Int {
@@ -175,8 +175,8 @@ class Item {
 
     fun getDamage(): Int = itemStack.itemDamage
 
-    fun setDamage(damage: Int) = apply {
-        itemStack.itemDamage = damage
+    fun setDamage(damage: Long) = apply {
+        itemStack.itemDamage = damage.toInt()
     }
 
     fun getMaxDamage(): Int = itemStack.maxDamage

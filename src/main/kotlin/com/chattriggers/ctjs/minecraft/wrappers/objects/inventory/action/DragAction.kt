@@ -7,7 +7,7 @@ import com.chattriggers.ctjs.utils.kotlin.External
 //#endif
 
 @External
-class DragAction(slot: Int, windowId: Int) : Action(slot, windowId) {
+class DragAction(slot: Long, windowId: Long) : Action(slot, windowId) {
     private lateinit var clickType: ClickType
     private lateinit var stage: Stage
 
@@ -67,7 +67,7 @@ class DragAction(slot: Int, windowId: Int) : Action(slot, windowId) {
         }
 
         //#if MC<=10809
-        doClick(button, 5)
+        doClick(button.toLong(), 5)
         //#else
         //$$ doClick(button, MCClickType.QUICK_CRAFT)
         //#endif

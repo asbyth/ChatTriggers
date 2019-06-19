@@ -17,7 +17,7 @@ class ParticleEffect constructor(x: Double, y: Double, z: Double, xSpeed: Double
         if (a != null) setAlpha(a)
     }
 
-    fun setColor(color: Int) = apply {
+    fun setColor(color: Long) = apply {
         setColor(
             (color shr 16 and 255).toDouble() / 255.0f,
             (color shr 8 and 255).toDouble() / 255.0f,

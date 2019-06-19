@@ -98,7 +98,7 @@ open class ConfigColor
         //#endif
 
         // color preview
-        Rectangle(this.value.rgb, (middle + this.x + 60).toDouble(), (this.y + 15).toDouble(), 40.0, 40.0)
+        Rectangle(this.value.rgb.toLong(), (middle + this.x + 60).toDouble(), (this.y + 15).toDouble(), 40.0, 40.0)
                 .setOutline(-0x1000000, 1.0)
                 .draw()
 

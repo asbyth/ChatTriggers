@@ -24,6 +24,7 @@ object PrimaryLoader {
         try {
             scriptContext.close(false)
         } catch (e: Exception) {
+            e.printStackTrace()
             println("error closing context. probably ruby!")
         }
 

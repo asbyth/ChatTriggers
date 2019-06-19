@@ -32,13 +32,13 @@ object ModulesGui : GuiScreen() {
         if (-window.scroll < 0) window.scroll = 0.0
 
         if (-window.scroll > 0) {
-            Renderer.drawRect(0xaa000000.toInt(), Renderer.screen.getWidth() - 20.0, Renderer.screen.getHeight() - 20.0, 20.0, 20.0)
+            Renderer.drawRect(0xaa000000, Renderer.screen.getWidth() - 20.0, Renderer.screen.getHeight() - 20.0, 20.0, 20.0)
             Renderer.drawString("^", Renderer.screen.getWidth() - 12.0, Renderer.screen.getHeight() - 12.0)
         }
 
         Renderer.drawRect(0x50000000, middle - width / 2.0, window.scroll + 95.0, width, window.height - 90)
 
-        Renderer.drawRect(0xaa000000.toInt(), middle - width / 2.0, window.scroll + 95.0, width, 25.0)
+        Renderer.drawRect(0xaa000000, middle - width / 2.0, window.scroll + 95.0, width, 25.0)
         window.title.draw(middle - width / 2.0 + 5, window.scroll + 100.0)
         window.exit.setString(ChatLib.addColor("&cx")).draw(middle + width / 2.0 - 17, window.scroll + 99.0)
 

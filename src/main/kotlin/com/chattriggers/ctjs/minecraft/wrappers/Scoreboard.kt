@@ -59,7 +59,7 @@ object Scoreboard {
      * @return the score object at the index
      */
     @JvmStatic
-    fun getLineByIndex(index: Int): Score = getLines()[index]
+    fun getLineByIndex(index: Long): Score = getLines()[index.toInt()]
 
     /**
      * Gets a list of lines that have a certain score,
@@ -69,8 +69,8 @@ object Scoreboard {
      * @return a list of actual score objects
      */
     @JvmStatic
-    fun getLinesByScore(score: Int): List<Score> = getLines().filter {
-        it.getPoints() == score
+    fun getLinesByScore(score: Long): List<Score> = getLines().filter {
+        it.getPoints() == score.toInt()
     }
 
     /**
@@ -81,7 +81,7 @@ object Scoreboard {
      * @param override whether or not to remove old lines with the same score
      */
     @JvmStatic
-    fun setLine(score: Int, line: String, override: Boolean) {
+    fun setLine(score: Long, line: String, override: Boolean) {
         try {
             val scoreboard = World.getWorld()?.scoreboard ?: return
 
@@ -91,7 +91,7 @@ object Scoreboard {
 
             if (override) {
                 scores.filter {
-                    it.scorePoints == score
+                    it.scorePoints == score.toInt()
                 }.forEach {
                     scoreboard.removeObjectiveFromEntity(it.playerName, sidebarObjective)
                 }
@@ -103,7 +103,7 @@ object Scoreboard {
             //$$ val theScore = scoreboard.getOrCreateScore(line, sidebarObjective);
             //#endif
 
-            theScore.scorePoints = score
+            theScore.scorePoints = score.toInt()
         } catch (ignored: Exception) { }
     }
 

@@ -8,9 +8,9 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import javax.vecmath.Vector2d
 
 @External
-class Shape(private var color: Int) {
+class Shape(private var color: Long) {
     private var vertexes = mutableListOf<Vector2d>()
-    private var drawMode = 9
+    private var drawMode = 9L
 
     fun copy(): Shape = clone()
     fun clone(): Shape {
@@ -20,10 +20,10 @@ class Shape(private var color: Int) {
         return clone
     }
 
-    fun getColor(): Int = this.color
-    fun setColor(color: Int) = apply { this.color = color }
+    fun getColor(): Long = this.color
+    fun setColor(color: Long) = apply { this.color = color }
 
-    fun getDrawMode(): Int = this.drawMode
+    fun getDrawMode(): Long = this.drawMode
     /**
      * Sets the GL draw mode of the shape. Possible draw modes are:<br>
      * 0 = points<br>
@@ -37,7 +37,7 @@ class Shape(private var color: Int) {
      * 8 = quad strip<br>
      * 9 = polygon
      */
-    fun setDrawMode(drawMode: Int) = apply { this.drawMode = drawMode }
+    fun setDrawMode(drawMode: Long) = apply { this.drawMode = drawMode }
 
     fun getVertexes(): List<Vector2d> = this.vertexes
     fun addVertex(x: Double, y: Double) = apply { this.vertexes.add(Vector2d(x, y)) }
@@ -104,7 +104,7 @@ class Shape(private var color: Int) {
         if (Renderer.colorized == null)
             GlStateManager.color(r, g, b, a)
 
-        worldRenderer.begin(this.drawMode, DefaultVertexFormats.POSITION)
+        worldRenderer.begin(this.drawMode.toInt(), DefaultVertexFormats.POSITION)
 
         for (vertex in this.vertexes)
             worldRenderer.pos(vertex.x, vertex.y, 0.0).endVertex()

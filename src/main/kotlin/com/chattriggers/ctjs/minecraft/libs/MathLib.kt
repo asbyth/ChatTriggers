@@ -61,7 +61,7 @@ object MathLib {
      * @return the clamped number
      */
     @JvmStatic
-    fun clamp(number: Int, min: Int, max: Int): Int {
+    fun clamp(number: Long, min: Long, max: Long): Long {
         return if (number < min) min else if (number > max) max else number
     }
 }

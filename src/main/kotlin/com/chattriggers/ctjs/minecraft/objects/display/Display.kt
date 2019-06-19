@@ -14,8 +14,8 @@ abstract class Display(val lang: Lang) {
     protected var renderY = 0.0
     protected var shouldRender = true
 
-    protected var backgroundColor = 0x50000000
-    protected var textColor = 0xffffffff.toInt()
+    protected var backgroundColor = 0x50000000L
+    protected var textColor = 0xffffffff
 
     private var background = DisplayHandler.Background.NONE
     private var align = DisplayHandler.Align.LEFT
@@ -36,8 +36,8 @@ abstract class Display(val lang: Lang) {
         this.renderX = config.getMember("renderX")?.asDouble() ?: 0.0
         this.renderY = config.getMember("renderY")?.asDouble() ?: 0.0
 
-        this.backgroundColor = config.getMember("backgroundColor")?.asInt() ?: 0x50000000
-        this.textColor = config.getMember("textColor")?.asInt() ?: 0xffffffff.toInt()
+        this.backgroundColor = config.getMember("backgroundColor")?.asLong() ?: 0x50000000
+        this.textColor = config.getMember("textColor")?.asLong() ?: 0xffffffff
 
         run {
             val background = config.getMember("background") ?: return@run this.setBackground(DisplayHandler.Background.NONE)
@@ -60,11 +60,11 @@ abstract class Display(val lang: Lang) {
         this.minWidth = config.getMember("minWidth")?.asDouble() ?: 0.0
     }
 
-    fun setBackgroundColor(backgroundColor: Int) = apply {
+    fun setBackgroundColor(backgroundColor: Long) = apply {
         this.backgroundColor = backgroundColor
     }
 
-    fun setTextColor(textColor: Int) = apply {
+    fun setTextColor(textColor: Long) = apply {
         this.textColor = textColor
     }
 
