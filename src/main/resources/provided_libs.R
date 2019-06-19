@@ -63,6 +63,5 @@
 # key_action <- java.type('com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.action.KeyAction')
 #
 # # Misc
-# console <- java.type('com.chattriggers.ctjs.engine.langs.py.PyLoader')$INSTANCE$getConsole()
 # config <- java.type('com.chattriggers.ctjs.utils.config.Config'$INSTANCE
 # chat_triggers <- java.type('com.chattriggers.ctjs.Reference')$INSTANCE
