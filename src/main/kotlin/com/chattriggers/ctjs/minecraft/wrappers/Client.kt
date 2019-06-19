@@ -14,6 +14,8 @@ import org.lwjgl.opengl.Display
 
 @External
 object Client {
+    var settings: Settings = Settings
+
     /**
      * Gets Minecraft's Minecraft object
      *

@@ -47,7 +47,6 @@
 #
 # # Wrappers
 # client <- java.type('com.chattriggers.ctjs.minecraft.wrappers.Client')
-# settings <- java.type('com.chattriggers.ctjs.minecraft.wrappers.Settings')
 # player <- java.type('com.chattriggers.ctjs.minecraft.wrappers.Player')
 # world <- java.type('com.chattriggers.ctjs.minecraft.wrappers.World')
 # server <- java.type('com.chattriggers.ctjs.minecraft.wrappers.Server')

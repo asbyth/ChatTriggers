@@ -46,7 +46,6 @@ Java.import 'com.chattriggers.ctjs.minecraft.objects.Sound'
 
 # Wrappers
 Java.import 'com.chattriggers.ctjs.minecraft.wrappers.Client'
-Java.import 'com.chattriggers.ctjs.minecraft.wrappers.Settings'
 Java.import 'com.chattriggers.ctjs.minecraft.wrappers.Player'
 Java.import 'com.chattriggers.ctjs.minecraft.wrappers.World'
 Java.import 'com.chattriggers.ctjs.minecraft.wrappers.Server'

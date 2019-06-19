@@ -49,7 +49,6 @@ Sound = java.type('com.chattriggers.ctjs.minecraft.objects.Sound')
 
 # Wrappers
 Client = java.type('com.chattriggers.ctjs.minecraft.wrappers.Client')
-Settings = java.type('com.chattriggers.ctjs.minecraft.wrappers.Settings')
 Player = java.type('com.chattriggers.ctjs.minecraft.wrappers.Player')
 World = java.type('com.chattriggers.ctjs.minecraft.wrappers.World')
 Server = java.type('com.chattriggers.ctjs.minecraft.wrappers.Server')
