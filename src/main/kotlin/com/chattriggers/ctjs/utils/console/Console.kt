@@ -13,6 +13,9 @@ import java.io.PrintStream
 import javax.swing.*
 import javax.swing.plaf.metal.MetalLookAndFeel
 import javax.swing.plaf.metal.OceanTheme
+import javax.swing.text.DefaultCaret
+
+
 
 class Console {
     private val frame: JFrame = JFrame("ct.js Console")
@@ -33,6 +36,9 @@ class Console {
         this.languageSelector = JComboBox(arrayOf("js", "python", "R", "ruby"))
         textArea.isEditable = false
         textArea.font = Font("DejaVu Sans Mono", Font.PLAIN, 15)
+        textArea.autoscrolls = true
+        val caret = textArea.caret as DefaultCaret
+        caret.updatePolicy = DefaultCaret.ALWAYS_UPDATE
         val inputField = JTextField(1)
         inputField.isFocusable = true
         inputField.caretColor = Color.WHITE
