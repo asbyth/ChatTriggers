@@ -37,7 +37,7 @@ object PrimaryLoader {
         }
 
         jars.forEach {
-            TODO()
+            scriptContext.eval("js", "Java.addToClasspath(\"$it\")")
         }
     }
 
