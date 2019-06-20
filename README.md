@@ -22,10 +22,12 @@
 
 ### *Beta*
 [![forthebadge](https://forthebadge.com/images/badges/60-percent-of-the-time-works-every-time.svg)](https://forthebadge.com)<br>
-ChatTriggers is currently in beta. Although we try to follow standard version conventions and deprecate old methods before removing them, there may be times where we need to restructure something to the point where deprecation is impossible. Modules can and will break at any  time.
+The GraalVM branch is unstable, and not fully tested. As such, do not expect your modules do work first try. We will be rapidly fixing issues and releasing builds, so if you are having issues with your modules, be sure to check out the [releases page](https://github.com/ChatTriggers/ct.js/releases) to make sure you're on the latest build. If so, please open an [issue](https://github.com/ChatTriggers/ct.js/issues) stating that you are on the Graal build.
+
+See the Setup section below for instructions on installing and configuring GraalVM.
 
 # About
-ChatTriggers is a framework for Minecraft that allows for live scripting and client modification using JavaScript. We provide libraries, wrappers, objects and more to make your life as a modder as easy as possible. Even without the proper wrapper, you can still use exposed Minecraft methods and variables but you will need knowledge of FML mappings. The entire ChatTriggers engine is built on Nashorn using Java 8 so you have access to any Nashorn methods and functions and up to ES5 support.
+ChatTriggers is a framework for Minecraft that allows for live scripting and client modification using various interpreted languages. We provide libraries, wrappers, objects and more to make your life as a modder as easy as possible. Even without the proper wrapper, you can still use exposed Minecraft methods and variables but you will need knowledge of FML mappings.
 
 The basic premise of ChatTriggers is that everything is based around Triggers. From a modding standpoint, Triggers can be thought of as event listeners. These can range from a chat Trigger that runs on a specific chat event matching criteria to a render overlay Trigger that runs when the crosshair is being rendered. We are constantly adding more Triggers and Trigger types as the mod evolves for more integration with Minecraft.
 ```JavaScript
@@ -45,13 +47,38 @@ register("renderCrosshair", function(event) {
 });
 ```
 
-You can learn the basics of scripting with ChatTriggers from the [Slate tutorial](https://www.chattriggers.com/slate/) and once you get the basics, check out the [JavaDocs](https://www.chattriggers.com/javadocs/) for a more in depth look at all of the available methods. 
+You can learn the basics of scripting with ChatTriggers from the [Slate tutorial](https://www.chattriggers.com/slate/) and once you get the basics, check out the [JavaDocs](https://www.chattriggers.com/javadocs/) for a more in depth look at all of the available methods.
+
+# Languages
+The GraalVM build of ct.js supports scripting in the following languages: 
+- JavaScript ES2019
+- Python 3.7
+- Ruby 2.6.2
+- R 3.5.1
+
+You can use any mixture of the above languages in your modules, provided they have the correct file extension. In order to use objects across languages, you must use GraalVM's `Polyglot` API. 
 
 # Releases
-The [ChatTriggers website](https://www.chattriggers.com/) will always be kept up to date with the latest release. As of beta version 0.6.4, we have started to move the release changelog along with a .jar download (mirror of the website) to the [GitHub releases page](https://github.com/ChatTriggers/ct.js/releases).
+Releases will be released on the [GitHub releases page](https://github.com/ChatTriggers/ct.js/releases). Be sure to check out the [ChatTrigger's Discord](https://discord.gg/0fNjZyopOvBHZyG8) to be notified about new releases.
 
-# Feature changes
-Any major features are moved to separate branches before being merged into master. This will avoid the issue of waiting after a release to fix bugs when we want to be working on new features. Any contributors will have to abide by the same standard. New features get their own branch and bug fixes require a pull request on the master branch.
+# Setup
+GraalVM is a replacement for the JVM (Java Virtual Machine). As such, the setup required to use this in conjunction with a Minecraft mod is a bit more involved than normal.
+
+The first step is to download GraalVM from their [Github release page](https://github.com/oracle/graal/releases). Down the folder and place it somewhere easily accessable on your computer. In order to install the languages listed above, you must use Graal's `gu` utility. In order to do so, add the following folder to your PATH environment variable:
+- `<path/to/GraalVM/folder>/bin` for Windows/Linux
+- `<path/to/GraalVM/folder>/Contents/Home/bin` for MacOS
+
+Once the bin folder has been appended to your path, execute the following commands:
+- `gu install js`
+- `gu install python`
+- `gu install ruby`
+- `gu install R`
+
+Graal is now fully configured, however your must configure your Minecraft launcher to use it. Open your Minecraft launcher, go to the Launcher Settings page, and make sure Advanced Settings is enabled. GraalVM is configured on a per-profile basis, so navigate to the profile you would like to use it on, check the Java Executable option, and set it to the following path:
+- `<path/to/GraalVM/folder>/bin/java` for Windows/Linux
+- `<path/to/GraalVM/folder>/Contents/Home/bin/java` for MacOS
+
+Minecraft is not fully configured to use GraalVM. Note that everything else about Minecraft is exactly the same; you still install forge and drop the ct.js jar into the mods folder.
 
 # Issues
 Any issue can be opened using the normal [GitHub issue page](https://github.com/ChatTriggers/ct.js/issues). Issues can be anything from bug reports to feature requests. For us to consider an issue to be valid, it needs a simple but effective title that conveys the problem in a few words and a well thought out and well written description.
