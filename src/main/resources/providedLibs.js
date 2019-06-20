@@ -22,6 +22,7 @@ const OnRenderTrigger = Java.type('com.chattriggers.ctjs.triggers.OnRenderTrigge
 const OnSoundPlayTrigger = Java.type('com.chattriggers.ctjs.triggers.OnSoundPlayTrigger');
 const OnStepTrigger = Java.type('com.chattriggers.ctjs.triggers.OnStepTrigger');
 const OnTrigger = Java.type('com.chattriggers.ctjs.triggers.OnTrigger');
+const InteractAction = Java.type("net.minecraftforge.event.entity.player.PlayerInteractEvent.Action");
 
 // Libraries
 const ChatLib = Java.type('com.chattriggers.ctjs.minecraft.libs.ChatLib');

@@ -631,4 +631,12 @@ abstract class Register(val lang: Lang) {
     fun registerItemTooltip(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.TOOLTIP, lang)
     }
+
+    fun registerPlayerInteract(method: Value): OnRegularTrigger {
+        return OnRegularTrigger(method, TriggerType.PLAYER_INTERACT, lang)
+    }
+
+    fun registerBlockBreak(method: Value): OnRegularTrigger {
+        return OnRegularTrigger(method, TriggerType.BLOCK_BREAK, lang)
+    }
 }
