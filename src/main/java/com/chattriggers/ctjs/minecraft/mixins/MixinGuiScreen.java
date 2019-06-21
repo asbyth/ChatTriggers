@@ -15,6 +15,6 @@ public abstract class MixinGuiScreen {
             cancellable = true
     )
     private void onSendChatMessage(String msg, boolean addToChat, CallbackInfo ci) {
-        TriggerType.MESSAGE_SENT.triggerAll(ci, msg);
+        TriggerType.MESSAGE_SENT.trigger(ci, msg);
     }
 }
