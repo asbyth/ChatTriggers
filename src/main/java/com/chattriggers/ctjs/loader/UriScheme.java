@@ -94,7 +94,7 @@ public class UriScheme {
                     InputStream inputStream = clientSocket.getInputStream();
                     String module = new BufferedReader(new InputStreamReader(inputStream))
                             .lines().collect(Collectors.joining("\n"));
-                    ModuleManager.INSTANCE.importModule(module);
+                    ModuleManager.INSTANCE.importModule(module, true, false);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -113,17 +113,6 @@ public class UriScheme {
     private static void copyModuleIn(String module) {
         System.out.println("Adding module named " + module + " to the to download list!");
 
-        String dataFolder = System.getenv("APPDATA");
-        File modulesDir = new File(dataFolder + "\\.minecraft\\config\\ChatTriggers\\modules");
-
-        File toDownload = new File(modulesDir, ".to_download.txt");
-
-        try {
-            PrintWriter pw = new PrintWriter(new FileWriter(toDownload, true));
-            pw.append(module).append(",");
-            pw.close();
-        } catch (Exception e) {
-            System.out.println("Error writing to file.");
-        }
+        ModuleManager.toDownload.add(module);
     }
 }

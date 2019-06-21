@@ -68,7 +68,6 @@ const ClickAction = Java.type('com.chattriggers.ctjs.minecraft.wrappers.objects.
 const DragAction = Java.type('com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.action.DragAction');
 const KeyAction = Java.type('com.chattriggers.ctjs.minecraft.wrappers.objects.inventory.action.KeyAction');
 
-
 // Misc
 const Config = Java.type('com.chattriggers.ctjs.utils.config.Config').INSTANCE;
 const ChatTriggers = Java.type('com.chattriggers.ctjs.Reference').INSTANCE;

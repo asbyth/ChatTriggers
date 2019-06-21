@@ -1,20 +1,21 @@
 package com.chattriggers.ctjs.utils.console
 
+import com.chattriggers.ctjs.engine.Lang
+import com.chattriggers.ctjs.engine.ModuleManager
 import com.chattriggers.ctjs.engine.PrimaryLoader
 import com.chattriggers.ctjs.triggers.OnTrigger
 import com.chattriggers.ctjs.utils.config.Config
 import io.sentry.Sentry
 import net.minecraft.network.ThreadQuickExitException
+import org.graalvm.polyglot.Value
 import java.awt.*
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
 import java.awt.event.WindowEvent
 import java.io.PrintStream
 import javax.swing.*
-import javax.swing.plaf.metal.MetalLookAndFeel
-import javax.swing.plaf.metal.OceanTheme
 
-class Console {
+object Console {
     private val frame: JFrame = JFrame("ct.js Console")
     private val taos: TextAreaOutputStream
     private val languageSelector: JComboBox<String>
@@ -30,7 +31,7 @@ class Console {
         val jpanel = JPanel(BorderLayout())
         val textArea = JTextArea()
         this.taos = TextAreaOutputStream(textArea)
-        this.languageSelector = JComboBox(arrayOf("js", "python", "R", "ruby"))
+        this.languageSelector = JComboBox(Lang.values().map { it.langName }.toTypedArray())
         textArea.isEditable = false
         textArea.font = Font("DejaVu Sans Mono", Font.PLAIN, 15)
         val inputField = JTextField(1)
@@ -60,10 +61,15 @@ class Console {
 
                         taos.println("${languageSelector.selectedItem}> $command")
 
-                        try {
-                            taos.println(PrimaryLoader.scriptContext.eval(languageSelector.selectedItem as String, command))
-                        } catch (error: ThreadQuickExitException) { } catch (e: Exception) {
-                            printStackTrace(e)
+                        val language = Lang.values().first { it.langName == languageSelector.selectedItem }
+                        PrimaryLoader.getLoader(language).synchronized {
+                            try {
+                                val value = eval(language.graalName, command)
+                                taos.println(value.asString())
+                            } catch (e: ThreadQuickExitException) {
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
                         }
                     }
 
@@ -212,10 +218,5 @@ class Console {
 
         this.frame.toFront()
         this.frame.repaint()
-    }
-
-    protected fun finalize() {
-        this.frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-        this.frame.dispatchEvent(WindowEvent(frame, WindowEvent.WINDOW_CLOSING))
     }
 }

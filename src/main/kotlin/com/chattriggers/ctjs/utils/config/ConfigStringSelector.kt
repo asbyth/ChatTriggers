@@ -1,6 +1,5 @@
 package com.chattriggers.ctjs.utils.config
 
-import com.chattriggers.ctjs.engine.ModuleManager
 import com.chattriggers.ctjs.minecraft.libs.renderer.Rectangle
 import com.chattriggers.ctjs.minecraft.libs.renderer.Renderer
 import com.chattriggers.ctjs.minecraft.libs.renderer.Text

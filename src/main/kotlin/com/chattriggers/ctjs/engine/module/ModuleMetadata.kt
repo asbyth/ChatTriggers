@@ -1,5 +1,8 @@
 package com.chattriggers.ctjs.engine.module
 
+import com.chattriggers.ctjs.minecraft.libs.FileLib
+import com.google.gson.Gson
+import java.io.File
 import java.util.ArrayList
 
 data class ModuleMetadata(
@@ -16,4 +19,14 @@ data class ModuleMetadata(
 ) {
     val isDefault: Boolean
         get() = name == null
+
+    companion object {
+        fun fromJson(json: String): ModuleMetadata {
+            return Gson().fromJson(json, ModuleMetadata::class.java)
+        }
+
+        fun fromFile(file: File): ModuleMetadata {
+            return fromJson(FileLib.read(file) ?: "")
+        }
+    }
 }

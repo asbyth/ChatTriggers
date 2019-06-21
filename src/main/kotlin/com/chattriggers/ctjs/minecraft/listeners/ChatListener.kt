@@ -1,6 +1,5 @@
 package com.chattriggers.ctjs.minecraft.listeners
 
-import com.chattriggers.ctjs.engine.ModuleManager
 import com.chattriggers.ctjs.minecraft.libs.ChatLib
 import com.chattriggers.ctjs.minecraft.libs.EventLib
 import com.chattriggers.ctjs.print

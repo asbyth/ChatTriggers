@@ -2,7 +2,6 @@ package com.chattriggers.ctjs
 
 import com.chattriggers.ctjs.commands.CTCommand
 import com.chattriggers.ctjs.engine.ModuleManager
-import com.chattriggers.ctjs.engine.PrimaryLoader
 import com.chattriggers.ctjs.loader.UriScheme
 import com.chattriggers.ctjs.minecraft.libs.FileLib
 import com.chattriggers.ctjs.minecraft.objects.Sound
@@ -75,7 +74,7 @@ object CTJS {
             ModuleManager.loadModules(true)
         } catch (e: Exception) {
             e.printStackTrace()
-            PrimaryLoader.console.printStackTrace(e)
+            e.print()
         }
 
         registerHooks()

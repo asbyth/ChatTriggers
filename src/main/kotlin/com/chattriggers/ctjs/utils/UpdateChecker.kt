@@ -1,7 +1,6 @@
 package com.chattriggers.ctjs.utils
 
 import com.chattriggers.ctjs.Reference
-import com.chattriggers.ctjs.engine.ModuleManager
 import com.chattriggers.ctjs.minecraft.libs.ChatLib
 import com.chattriggers.ctjs.minecraft.libs.FileLib
 import com.chattriggers.ctjs.minecraft.libs.renderer.Renderer

@@ -1,8 +1,7 @@
 package com.chattriggers.ctjs.minecraft.libs
 
 import com.chattriggers.ctjs.engine.Lang
-import com.chattriggers.ctjs.engine.Loader
-import com.chattriggers.ctjs.engine.PrimaryLoader
+import com.chattriggers.ctjs.print
 import com.chattriggers.ctjs.triggers.OnRegularTrigger
 import com.chattriggers.ctjs.triggers.OnTrigger
 import com.chattriggers.ctjs.triggers.TriggerType
@@ -44,7 +43,7 @@ abstract class XMLHttpRequest(val lang: Lang) {
             this.conn = url.openConnection() as HttpURLConnection
             this.conn?.requestMethod = method
         } catch (e: Exception) {
-            PrimaryLoader.console.printStackTrace(e)
+            e.print()
         }
     }
 
@@ -78,7 +77,7 @@ abstract class XMLHttpRequest(val lang: Lang) {
                 sendPost(*parameters)
             }
         } catch (e: Exception) {
-            PrimaryLoader.console.printStackTrace(e)
+            e.print()
         }
     }
 
@@ -95,7 +94,7 @@ abstract class XMLHttpRequest(val lang: Lang) {
                 sendGet()
             }
         } catch (e: Exception) {
-            PrimaryLoader.console.printStackTrace(e)
+            e.print()
         }
     }
 
@@ -137,7 +136,7 @@ abstract class XMLHttpRequest(val lang: Lang) {
 
             sendGet()
         } catch (e: Exception) {
-            PrimaryLoader.console.printStackTrace(e)
+            e.print()
         }
     }
 
@@ -162,7 +161,7 @@ abstract class XMLHttpRequest(val lang: Lang) {
 
             this.methodCallback.trigger(this)
         } catch (e: Exception) {
-            PrimaryLoader.console.printStackTrace(e)
+            e.print()
         }
 
     }

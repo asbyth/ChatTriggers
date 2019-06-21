@@ -1,11 +1,12 @@
 package com.chattriggers.ctjs.engine
 
-import com.chattriggers.ctjs.engine.PrimaryLoader.console
 import com.chattriggers.ctjs.engine.module.Module
 import com.chattriggers.ctjs.triggers.OnTrigger
 import com.chattriggers.ctjs.triggers.TriggerType
 import com.chattriggers.ctjs.utils.config.Config
+import com.chattriggers.ctjs.utils.console.Console
 import org.apache.commons.io.FileUtils
+import org.graalvm.polyglot.Context
 import org.graalvm.polyglot.Source
 import org.graalvm.polyglot.Value
 import java.io.File
@@ -14,14 +15,30 @@ class Loader(private val language: Lang) {
     var triggers: MutableList<OnTrigger> = mutableListOf()
     private val toRemove: MutableList<OnTrigger> = mutableListOf()
     private val cachedModules: MutableList<Module> = mutableListOf()
+    private var scriptContext: Context = instanceScriptContext()
+
+    fun synchronized(block: Context.() -> Any?) = synchronized(scriptContext) {
+        block(scriptContext)
+    }
+
+    fun initialize() {
+        synchronized {
+            try {
+                close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                println("Error closing context, probably Ruby")
+            }
+
+            scriptContext = instanceScriptContext()
+            null
+        }
+    }
 
     /**
      * Should configure the loader's script engine, as well as any initial
      * processing or loading that needs to operate on all modules, such as
      * jar loading.
-     *
-     * Note that this function is given every user module, not just the ones
-     * that match this loader's language.
      */
     fun preload() {
         cachedModules.clear()
@@ -30,14 +47,18 @@ class Loader(private val language: Lang) {
                 "/${language.providedLibsName}",
                 File(modulesFolder.parentFile,
                         "chattriggers-provided-libs.${language.extension}"
-                ),
-                true
+                )
         )
 
-        try {
-            PrimaryLoader.scriptContext.eval(language.graalName, providedLibsScript)
-        } catch (e: Exception) {
-            console.printStackTrace(e)
+        synchronized {
+            try {
+                println("Evaling the following in ${language.graalName}:")
+                println(providedLibsScript)
+                eval(language.graalName, providedLibsScript)
+            } catch (e: Exception) {
+                Console.out.println("Error loading provided libs for language ${language.langName}")
+                Console.printStackTrace(e)
+            }
         }
     }
 
@@ -63,32 +84,34 @@ class Loader(private val language: Lang) {
      */
     fun loadExtra(module: Module) {
         if (cachedModules.any {
-                it.name == module.name
-            }) return
+                    it.name == module.name
+                }) return
 
         cachedModules.add(module)
 
         loadFiles(module)
     }
 
-    private fun loadFiles(module: Module) = try {
-        val scriptFiles = module.getFilesWithExtension(".${language.extension}")
+    private fun loadFiles(module: Module) = synchronized {
+        try {
+            val scriptFiles = module.getFilesWithExtension(".${language.extension}")
 
-        scriptFiles.forEach {
-            val source = Source.newBuilder(language.graalName, it).build()
+            scriptFiles.forEach {
+                val source = Source.newBuilder(language.graalName, it).build()
 
-            PrimaryLoader.scriptContext.eval(source)
+                eval(source)
+            }
+        } catch (e: Exception) {
+            Console.out.println("Error loading module ${module.name}")
+            Console.printStackTrace(e)
         }
-    } catch (e: Exception) {
-        console.out.println("Error loading module ${module.name}")
-        console.printStackTrace(e)
     }
 
     /**
      * Tells the loader that it should activate all triggers
      * of a certain type with the specified arguments.
      */
-    fun exec(type: TriggerType, vararg args: Any?) {
+    fun fireTrigger(type: TriggerType, vararg args: Any?) {
         val newTriggers = triggers.toMutableList()
         newTriggers.removeAll(toRemove)
         toRemove.clear()
@@ -101,11 +124,6 @@ class Loader(private val language: Lang) {
 
         triggers = newTriggers
     }
-
-    /**
-     * Gets the result from evaluating a certain line of code in this loader
-     */
-    fun eval(code: String): Value = PrimaryLoader.scriptContext.eval(language.graalName, code)
 
     /**
      * Adds a trigger to this loader to be activated during the game
@@ -138,7 +156,7 @@ class Loader(private val language: Lang) {
         try {
             method.executeVoid(*args)
         } catch (e: Exception) {
-            console.printStackTrace(e)
+            Console.printStackTrace(e)
             removeTrigger(trigger)
         }
     }
@@ -156,7 +174,7 @@ class Loader(private val language: Lang) {
      * @param outputFile file to save to
      * @param replace whether or not to replace the file being saved to
      */
-    private fun saveResource(resourceName: String?, outputFile: File, replace: Boolean): String {
+    private fun saveResource(resourceName: String?, outputFile: File): String {
         if (resourceName == null || resourceName == "") {
             throw IllegalArgumentException("ResourcePath cannot be null or empty")
         }
@@ -169,6 +187,12 @@ class Loader(private val language: Lang) {
         FileUtils.write(outputFile, res)
         return res
     }
+
+    private fun instanceScriptContext() = Context
+            .newBuilder(language.graalName)
+            .allowAllAccess(true)
+            .out(Console.out)
+            .build()
 
     companion object {
         internal val modulesFolder = File(Config.modulesFolder)

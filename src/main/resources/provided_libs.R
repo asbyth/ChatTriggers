@@ -5,6 +5,11 @@
 # keyboard <- java.type('org.lwjgl.input.Keyboard')
 # reflection_helper <- java.type('net.minecraftforge.fml.relauncher.ReflectionHelper')
 #
+# # Triggers
+# trigger_register <- java.type('com.chattriggers.ctjs.engine.langs.py.PyRegister')$INSTANCE
+# trigger_result <- on_trigger$TriggerResult
+# priority <- on_trigger$Priority
+#
 # # Trigger types
 # on_chat_trigger <- java.type('com.chattriggers.ctjs.triggers.OnChatTrigger')
 # on_command_trigger <- java.type('com.chattriggers.ctjs.triggers.OnCommandTrigger')
@@ -13,11 +18,7 @@
 # on_sound_play_trigger <- java.type('com.chattriggers.ctjs.triggers.OnSoundPlayTrigger')
 # on_step_trigger <- java.type('com.chattriggers.ctjs.triggers.OnStepTrigger')
 # on_trigger <- java.type('com.chattriggers.ctjs.triggers.OnTrigger')
-#
-# # Triggers
-# trigger_register <- java.type('com.chattriggers.ctjs.engine.langs.py.PyRegister')$INSTANCE
-# trigger_result <- on_trigger$TriggerResult
-# priority <- on_trigger$Priority
+# interact_action <- java.type('new.minecraftforge.event.entity.player.PlayerInteractEvent.Action')
 #
 # # Libraries
 # chat_lib <- java.type('com.chattriggers.ctjs.minecraft.libs.ChatLib')
@@ -34,16 +35,16 @@
 # image <- java.type('com.chattriggers.ctjs.minecraft.libs.renderer.Image')
 #
 # # Object
-# xml_http_request <- java.type('com.chattriggers.ctjs.engine.langs.py.PyXMLHttpRequest')
-# display <- java.type('com.chattriggers.ctjs.engine.langs.py.PyDisplay')
-# display_line <- java.type('com.chattriggers.ctjs.engine.langs.py.PyDisplayLine')
-# gui <- java.type('com.chattriggers.ctjs.engine.langs.py.PyGui')
-# display_handler <- java.type('com.chattriggers.ctjs.minecraft.objects.display.DisplayHandler')
-# message <- java.type('com.chattriggers.ctjs.minecraft.objects.message.Message')
-# text_component <- java.type('com.chattriggers.ctjs.minecraft.objects.message.TextComponent')
-# book <- java.type('com.chattriggers.ctjs.minecraft.objects.Book')
-# key_bind <- java.type('com.chattriggers.ctjs.minecraft.objects.KeyBind')
-# sound <- java.type('com.chattriggers.ctjs.minecraft.objects.Sound')
+# xml_http_request <- java.type('com.chattriggers.ctjs.engine.RXMLHttpRequest');
+# display <- java.type('com.chattriggers.ctjs.minecraft.objects.display.DisplayHandler');
+# display_line <- java.type('com.chattriggers.ctjs.engine.RDisplay');
+# gui <- java.type('com.chattriggers.ctjs.engine.RDisplayLine');
+# display_handler <- java.type('com.chattriggers.ctjs.engine.RGui');
+# message <- java.type('com.chattriggers.ctjs.minecraft.objects.message.Message');
+# text_component <- java.type('com.chattriggers.ctjs.minecraft.objects.message.TextComponent');
+# book <- java.type('com.chattriggers.ctjs.minecraft.objects.Book');
+# key_bind <- java.type('com.chattriggers.ctjs.minecraft.objects.KeyBind');
+# sound <- java.type('com.chattriggers.ctjs.minecraft.objects.Sound');
 #
 # # Wrappers
 # client <- java.type('com.chattriggers.ctjs.minecraft.wrappers.Client')
@@ -65,3 +66,32 @@
 # # Misc
 # config <- java.type('com.chattriggers.ctjs.utils.config.Config'$INSTANCE
 # chat_triggers <- java.type('com.chattriggers.ctjs.Reference')$INSTANCE
+#
+# cancel <- function(event) {
+#     tryCatch({
+#         EventLib$cancel(event)
+#     }, error = function(e) {
+#         if (!event$isCancelable()) return();
+#         event$setCanceled(TRUE)
+#     })
+# }
+#
+# register <- function(trigger_type, method_name) {
+#     TriggerRegister$register(trigger_type, method_name)
+# }
+#
+# ease_out <- function(start, finish, speed, jump) {
+#     if (!jump) {
+#         jump <- 1;
+#     }
+#
+#     if (floor(abs(finish - start) / jump) > 0) {
+#         return(start + (finish-start) / speed)
+#     } else {
+#         return(finish)
+#     }
+# }
+#
+# set_timeout <- function(func, delay) {
+#     new(thread(func))$start();
+# }

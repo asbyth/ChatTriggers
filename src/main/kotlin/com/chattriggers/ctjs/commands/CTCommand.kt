@@ -2,7 +2,6 @@ package com.chattriggers.ctjs.commands
 
 import com.chattriggers.ctjs.Reference
 import com.chattriggers.ctjs.engine.ModuleManager
-import com.chattriggers.ctjs.engine.PrimaryLoader
 import com.chattriggers.ctjs.engine.module.ModulesGui
 import com.chattriggers.ctjs.minecraft.libs.ChatLib
 import com.chattriggers.ctjs.minecraft.listeners.ChatListener
@@ -11,6 +10,7 @@ import com.chattriggers.ctjs.minecraft.objects.message.Message
 import com.chattriggers.ctjs.minecraft.objects.message.TextComponent
 import com.chattriggers.ctjs.print
 import com.chattriggers.ctjs.utils.config.GuiConfig
+import com.chattriggers.ctjs.utils.console.Console
 import net.minecraft.command.CommandBase
 import net.minecraft.command.CommandException
 import net.minecraft.command.ICommandSender
@@ -60,7 +60,7 @@ object CTCommand : CommandBase() {
         }
 
         when (args[0].toLowerCase()) {
-            "load" -> Reference.loadCT(asCommand = true)
+            "load" -> Reference.loadCT()
             "reload" -> Reference.reloadCT()
             "unload" -> Reference.unloadCT()
             "files", "file" -> openFileLocation()
@@ -72,11 +72,11 @@ object CTCommand : CommandBase() {
                 else ChatLib.chat((if (ModuleManager.deleteModule(args[1])) "&aDeleted " else "&cFailed to delete ") + args[1])
             "modules" -> GuiHandler.openGui(ModulesGui)
             "console" ->
-                PrimaryLoader.console.showConsole()
+                Console.showConsole()
             "config", "settings", "setting" ->
                 GuiHandler.openGui(GuiConfig())
             "sim", "simulate" ->
-                ChatLib.simulateChat(Arrays.copyOfRange(args, 1, args.size).joinToString(" "))
+                ChatLib.simulateChat(args.slice(1..args.size).joinToString(" "))
             "dump" -> dumpChat(args)
             "copy" -> copyArgsToClipboard(args)
             else -> ChatLib.chat(getUsage())

@@ -1,6 +1,6 @@
 package com.chattriggers.ctjs.triggers
 
-import com.chattriggers.ctjs.engine.ModuleManager
+import com.chattriggers.ctjs.engine.PrimaryLoader
 
 enum class TriggerType {
     // client
@@ -33,7 +33,7 @@ enum class TriggerType {
     OTHER;
 
     fun trigger(vararg args: Any?) {
-        ModuleManager.trigger(this, *args)
+        PrimaryLoader.trigger(this, *args)
     }
 
     fun triggerAll(vararg args: Any?) {
