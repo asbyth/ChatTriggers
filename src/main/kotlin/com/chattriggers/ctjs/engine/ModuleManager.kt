@@ -16,6 +16,8 @@ import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
 import java.net.URL
+import kotlin.streams.toList
+import kotlin.system.measureTimeMillis
 
 object ModuleManager {
     var cachedModules = mutableListOf<Module>()
@@ -33,9 +35,9 @@ object ModuleManager {
         toDownload.forEach { importModule(it, false) }
         toDownload.clear()
 
-        getFoldersInDir(modulesFolder).map {
+        getFoldersInDir(modulesFolder).parallelStream().map {
             getModule(it, updateCheck)
-        }.flatten().distinctBy {
+        }.toList().flatten().distinctBy {
             it.name.toLowerCase()
         }.also { PrimaryLoader.initialize(it) }
     }

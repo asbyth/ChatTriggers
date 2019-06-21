@@ -50,8 +50,8 @@ object PrimaryLoader {
         // Luckily, it looks like we can load our modules in all of our loaders
         // simultaneously.
         // From rough estimates it seems to save ~650 millis (2268 vs 2920) on load.
-        loaders.forEach { it.preload() }
-        loaders.forEach { it.load(modules) }
+        loaders.parallelStream().forEach { it.preload() }
+        loaders.parallelStream().forEach { it.load(modules) }
     }
 
     fun loadExtra(module: Module) {
