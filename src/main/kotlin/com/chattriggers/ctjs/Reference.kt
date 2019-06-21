@@ -12,6 +12,7 @@ import com.chattriggers.ctjs.triggers.TriggerType
 import com.chattriggers.ctjs.utils.console.Console
 import net.minecraft.launchwrapper.Launch
 import net.minecraftforge.client.ClientCommandHandler
+import kotlin.concurrent.thread
 
 object Reference {
     const val MODID = "ct.js"
@@ -51,22 +52,24 @@ object Reference {
 
         ChatLib.chat("&cReloading ct.js scripts...")
 
-        try {
-            (ClientCommandHandler.instance as IClientCommandHandler).removeCTCommands()
+        thread {
+            try {
+                (ClientCommandHandler.instance as IClientCommandHandler).removeCTCommands()
 
-            CTJS.loadConfig()
+                CTJS.loadConfig()
 
-            ModuleManager.loadModules(updateCheck)
+                ModuleManager.loadModules(updateCheck)
 
-            ChatLib.chat("&aDone reloading scripts!")
+                ChatLib.chat("&aDone reloading scripts!")
 
-            TriggerType.GAME_LOAD.triggerAll()
-            if (World.isLoaded())
-                TriggerType.WORLD_LOAD.triggerAll()
+                TriggerType.GAME_LOAD.triggerAll()
+                if (World.isLoaded())
+                    TriggerType.WORLD_LOAD.triggerAll()
 
-            this.isLoaded = true
-        } catch (e: Exception) {
-            e.print()
+                this.isLoaded = true
+            } catch (e: Exception) {
+                e.print()
+            }
         }
     }
 }

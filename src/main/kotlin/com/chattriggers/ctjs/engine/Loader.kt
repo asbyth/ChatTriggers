@@ -52,8 +52,6 @@ class Loader(private val language: Lang) {
 
         synchronized {
             try {
-                println("Evaling the following in ${language.graalName}:")
-                println(providedLibsScript)
                 eval(language.graalName, providedLibsScript)
             } catch (e: Exception) {
                 Console.out.println("Error loading provided libs for language ${language.langName}")
@@ -72,7 +70,6 @@ class Loader(private val language: Lang) {
      */
     fun load(modules: List<Module>) {
         modules.forEach { loadFiles(it) }
-
         cachedModules.addAll(modules)
     }
 
@@ -119,7 +116,9 @@ class Loader(private val language: Lang) {
         newTriggers.filter {
             it.type == type
         }.forEach {
-            it.trigger(*args)
+            synchronized {
+                it.trigger(*args)
+            }
         }
 
         triggers = newTriggers

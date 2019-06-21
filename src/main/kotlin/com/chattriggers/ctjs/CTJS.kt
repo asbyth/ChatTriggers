@@ -70,11 +70,13 @@ object CTJS {
 
     @Mod.EventHandler
     fun init(event: FMLInitializationEvent) {
-        try {
-            ModuleManager.loadModules(true)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            e.print()
+        thread {
+            try {
+                ModuleManager.loadModules(true)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                e.print()
+            }
         }
 
         registerHooks()
