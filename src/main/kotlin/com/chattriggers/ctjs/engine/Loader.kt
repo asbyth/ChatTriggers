@@ -199,9 +199,9 @@ class Loader(private val language: Lang) {
         internal fun getFoldersInDir(dir: File): List<File> {
             if (!dir.isDirectory) return emptyList()
 
-            return dir.listFiles().filter {
+            return dir.listFiles()?.filter {
                 it.isDirectory
-            }
+            } ?: listOf()
         }
     }
 }
