@@ -26,7 +26,7 @@ class Loader(private val language: Lang) {
             try {
                 close()
             } catch (e: Exception) {
-                e.printStackTrace()
+//                e.printStackTrace()
                 println("Error closing context, probably Ruby")
             }
 
