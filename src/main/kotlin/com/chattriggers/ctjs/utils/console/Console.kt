@@ -1,20 +1,17 @@
 package com.chattriggers.ctjs.utils.console
 
 import com.chattriggers.ctjs.engine.Lang
-import com.chattriggers.ctjs.engine.ModuleManager
 import com.chattriggers.ctjs.engine.PrimaryLoader
 import com.chattriggers.ctjs.triggers.OnTrigger
 import com.chattriggers.ctjs.utils.config.Config
 import io.sentry.Sentry
 import net.minecraft.network.ThreadQuickExitException
-import org.graalvm.polyglot.Value
 import java.awt.*
 import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
-import java.awt.event.WindowEvent
 import java.io.PrintStream
 import javax.swing.*
-
+import javax.swing.text.DefaultCaret
 object Console {
     private val frame: JFrame = JFrame("ct.js Console")
     private val taos: TextAreaOutputStream
@@ -34,6 +31,9 @@ object Console {
         this.languageSelector = JComboBox(Lang.values().map { it.langName }.toTypedArray())
         textArea.isEditable = false
         textArea.font = Font("DejaVu Sans Mono", Font.PLAIN, 15)
+        textArea.autoscrolls = true
+        val caret = textArea.caret as DefaultCaret
+        caret.updatePolicy = DefaultCaret.ALWAYS_UPDATE
         val inputField = JTextField(1)
         inputField.isFocusable = true
         inputField.caretColor = Color.WHITE
