@@ -16,6 +16,7 @@ import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
 import java.net.URL
+import kotlin.concurrent.thread
 import kotlin.streams.toList
 import kotlin.system.measureTimeMillis
 
@@ -59,9 +60,9 @@ object ModuleManager {
      * Imports a module from the CT website to the user's module directory
      */
     fun importModule(name: String, extra: Boolean = true, isRequired: Boolean = false) = if (extra) {
-        run {
+        thread {
             ChatLib.chat("&7Importing $name...")
-            val modules = importModuleHelper(name) ?: return@run
+            val modules = importModuleHelper(name) ?: return@thread
 
             modules.forEach { module ->
                 cachedModules.add(module)
