@@ -12,6 +12,7 @@ import java.awt.event.KeyListener
 import java.io.PrintStream
 import javax.swing.*
 import javax.swing.text.DefaultCaret
+
 object Console {
     private val frame: JFrame = JFrame("ct.js Console")
     private val taos: TextAreaOutputStream
@@ -28,7 +29,7 @@ object Console {
         val jpanel = JPanel(BorderLayout())
         val textArea = JTextArea()
         this.taos = TextAreaOutputStream(textArea)
-        this.languageSelector = JComboBox(Lang.values().map { it.langName }.toTypedArray())
+        this.languageSelector = JComboBox(Lang.values().map { it.extension }.toTypedArray())
         textArea.isEditable = false
         textArea.font = Font("DejaVu Sans Mono", Font.PLAIN, 15)
         textArea.autoscrolls = true
@@ -61,11 +62,11 @@ object Console {
 
                         taos.println("${languageSelector.selectedItem}> $command")
 
-                        val language = Lang.values().first { it.langName == languageSelector.selectedItem }
+                        val language = Lang.values().first { it.extension == languageSelector.selectedItem }
                         PrimaryLoader.getLoader(language).synchronized {
                             try {
                                 val value = eval(language.graalName, command)
-                                taos.println(value.asString())
+                                taos.println(value.toString())
                             } catch (e: ThreadQuickExitException) {
                             } catch (e: Exception) {
                                 e.printStackTrace()
