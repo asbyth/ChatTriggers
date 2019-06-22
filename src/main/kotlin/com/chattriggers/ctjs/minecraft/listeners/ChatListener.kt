@@ -24,14 +24,14 @@ object ChatListener {
                 if (chatHistory.size > 1000) chatHistory.removeAt(0)
 
                 // normal Chat Message
-                TriggerType.CHAT.triggerAll(ChatLib.getChatMessage(event, false), event)
+                TriggerType.CHAT.trigger(ChatLib.getChatMessage(event, false), event)
 
                 // print to console
                 if (Config.printChatToConsole) {
                     "[CHAT] ${ChatLib.replaceFormatting(ChatLib.getChatMessage(event, true))}".print()
                 }
             }
-            2 -> TriggerType.ACTION_BAR.triggerAll(ChatLib.getChatMessage(event, false), event)
+            2 -> TriggerType.ACTION_BAR.trigger(ChatLib.getChatMessage(event, false), event)
         }
     }
 }

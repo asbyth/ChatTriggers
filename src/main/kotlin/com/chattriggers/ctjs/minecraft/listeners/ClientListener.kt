@@ -41,7 +41,7 @@ object ClientListener {
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (World.getWorld() == null) return
 
-        TriggerType.TICK.triggerAll(this.ticksPassed)
+        TriggerType.TICK.trigger(this.ticksPassed)
         this.ticksPassed++
 
         Scoreboard.resetCache()
@@ -56,7 +56,7 @@ object ClientListener {
             // normal clicked
             if (Mouse.isButtonDown(button) == this.mouseState[button]) continue
 
-            TriggerType.CLICKED.triggerAll(
+            TriggerType.CLICKED.trigger(
                     Client.getMouseX(),
                     Client.getMouseY(),
                     button,
@@ -77,7 +77,7 @@ object ClientListener {
         if (button !in draggedState)
             return
 
-        TriggerType.DRAGGED.triggerAll(
+        TriggerType.DRAGGED.trigger(
                 Client.getMouseX() - (this.draggedState[button]?.x ?: 0f),
                 Client.getMouseY() - (this.draggedState[button]?.y ?: 0f),
                 Client.getMouseX(),
@@ -91,7 +91,7 @@ object ClientListener {
 
     @SubscribeEvent
     fun onRenderWorld(event: RenderWorldLastEvent) {
-        TriggerType.RENDER_WORLD.triggerAll(event.partialTicks)
+        TriggerType.RENDER_WORLD.trigger(event.partialTicks)
     }
 
     @SubscribeEvent
@@ -103,7 +103,7 @@ object ClientListener {
         if (event.type != RenderGameOverlayEvent.ElementType.TEXT)
             return
 
-        TriggerType.STEP.triggerAll()
+        TriggerType.STEP.trigger()
 
         handleMouseInput()
     }
@@ -112,23 +112,23 @@ object ClientListener {
         val element = event.type
 
         when (element) {
-            RenderGameOverlayEvent.ElementType.PLAYER_LIST -> TriggerType.RENDER_PLAYER_LIST.triggerAll(event)
-            RenderGameOverlayEvent.ElementType.CROSSHAIRS -> TriggerType.RENDER_CROSSHAIR.triggerAll(event)
-            RenderGameOverlayEvent.ElementType.DEBUG -> TriggerType.RENDER_DEBUG.triggerAll(event)
-            RenderGameOverlayEvent.ElementType.BOSSHEALTH -> TriggerType.RENDER_BOSS_HEALTH.triggerAll(event)
-            RenderGameOverlayEvent.ElementType.HEALTH -> TriggerType.RENDER_HEALTH.triggerAll(event)
-            RenderGameOverlayEvent.ElementType.FOOD -> TriggerType.RENDER_FOOD.triggerAll(event)
-            RenderGameOverlayEvent.ElementType.HEALTHMOUNT -> TriggerType.RENDER_MOUNT_HEALTH.triggerAll(event)
-            RenderGameOverlayEvent.ElementType.EXPERIENCE -> TriggerType.RENDER_EXPERIENCE.triggerAll(event)
-            RenderGameOverlayEvent.ElementType.HOTBAR -> TriggerType.RENDER_HOTBAR.triggerAll(event)
-            RenderGameOverlayEvent.ElementType.AIR -> TriggerType.RENDER_AIR.triggerAll(event)
-            RenderGameOverlayEvent.ElementType.TEXT -> TriggerType.RENDER_OVERLAY.triggerAll(event)
+            RenderGameOverlayEvent.ElementType.PLAYER_LIST -> TriggerType.RENDER_PLAYER_LIST.trigger(event)
+            RenderGameOverlayEvent.ElementType.CROSSHAIRS -> TriggerType.RENDER_CROSSHAIR.trigger(event)
+            RenderGameOverlayEvent.ElementType.DEBUG -> TriggerType.RENDER_DEBUG.trigger(event)
+            RenderGameOverlayEvent.ElementType.BOSSHEALTH -> TriggerType.RENDER_BOSS_HEALTH.trigger(event)
+            RenderGameOverlayEvent.ElementType.HEALTH -> TriggerType.RENDER_HEALTH.trigger(event)
+            RenderGameOverlayEvent.ElementType.FOOD -> TriggerType.RENDER_FOOD.trigger(event)
+            RenderGameOverlayEvent.ElementType.HEALTHMOUNT -> TriggerType.RENDER_MOUNT_HEALTH.trigger(event)
+            RenderGameOverlayEvent.ElementType.EXPERIENCE -> TriggerType.RENDER_EXPERIENCE.trigger(event)
+            RenderGameOverlayEvent.ElementType.HOTBAR -> TriggerType.RENDER_HOTBAR.trigger(event)
+            RenderGameOverlayEvent.ElementType.AIR -> TriggerType.RENDER_AIR.trigger(event)
+            RenderGameOverlayEvent.ElementType.TEXT -> TriggerType.RENDER_OVERLAY.trigger(event)
         }
     }
 
     @SubscribeEvent
     fun onGuiOpened(event: GuiOpenEvent) {
-        TriggerType.GUI_OPENED.triggerAll(event)
+        TriggerType.GUI_OPENED.trigger(event)
     }
 
     @SubscribeEvent
@@ -141,7 +141,7 @@ object ClientListener {
                 event.target.blockPos.z.toDouble()
         )
 
-        TriggerType.BLOCK_HIGHLIGHT.triggerAll(event, position)
+        TriggerType.BLOCK_HIGHLIGHT.trigger(event, position)
     }
 
     @SubscribeEvent
@@ -163,7 +163,7 @@ object ClientListener {
                 item.motionZ
         )
 
-        TriggerType.PICKUP_ITEM.triggerAll(
+        TriggerType.PICKUP_ITEM.trigger(
                 //#if MC<=10809
                 Item(item.entityItem),
                 //#else
@@ -193,7 +193,7 @@ object ClientListener {
                 entityItem.motionZ
         )
 
-        TriggerType.DROP_ITEM.triggerAll(
+        TriggerType.DROP_ITEM.trigger(
                 //#if MC<=10809
                 Item(entityItem.entityItem),
                 //#else
@@ -207,7 +207,7 @@ object ClientListener {
 
     @SubscribeEvent
     fun onItemTooltip(e: ItemTooltipEvent) {
-        TriggerType.TOOLTIP.triggerAll(
+        TriggerType.TOOLTIP.trigger(
                 e.toolTip,
                 Item(e.itemStack)
         )
@@ -215,7 +215,7 @@ object ClientListener {
 
     @SubscribeEvent
     fun onLeftClick(e: PlayerInteractEvent) {
-        TriggerType.PLAYER_INTERACT.triggerAll(
+        TriggerType.PLAYER_INTERACT.trigger(
             e.action,
             World.getBlockAt(e.pos?.x?.toLong() ?: 0, e.pos?.y?.toLong() ?: 0, e.pos?.z?.toLong() ?: 0),
             e

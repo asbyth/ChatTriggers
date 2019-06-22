@@ -30,7 +30,7 @@ public abstract class MixinScreenShotHelper {
     )
     private static void saveScreenshot(File gameDirectory, int width, int height, Framebuffer buffer, CallbackInfoReturnable<IChatComponent> ci) {
         File file = getTimestampedPNGFileForDirectory(new File(gameDirectory, "screenshots"));
-        TriggerType.SCREENSHOT_TAKEN.triggerAll(file.getName(), ci);
+        TriggerType.SCREENSHOT_TAKEN.trigger(file.getName(), ci);
     }
     //#else
     //$$ @Inject(
@@ -40,7 +40,7 @@ public abstract class MixinScreenShotHelper {
     //$$ )
     //$$ private static void saveScreenshot(File gameDirectory, int width, int height, Framebuffer buffer, CallbackInfoReturnable<ITextComponent> ci) {
     //$$     File file = getTimestampedPNGFileForDirectory(new File(gameDirectory, "screenshots"));
-    //$$     TriggerType.SCREENSHOT_TAKEN.triggerAll(file.getName(), ci);
+    //$$     TriggerType.SCREENSHOT_TAKEN.trigger(file.getName(), ci);
     //$$ }
     //#endif
 }

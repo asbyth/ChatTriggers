@@ -29,8 +29,8 @@ object Reference {
     fun reloadCT() = loadCT(true)
 
     fun unloadCT(asCommand: Boolean = true) {
-        TriggerType.WORLD_UNLOAD.triggerAll()
-        TriggerType.GAME_UNLOAD.triggerAll()
+        TriggerType.WORLD_UNLOAD.trigger()
+        TriggerType.GAME_UNLOAD.trigger()
 
         DisplayHandler.clearDisplays()
         GuiHandler.clearGuis()
@@ -62,9 +62,9 @@ object Reference {
 
                 ChatLib.chat("&aDone reloading scripts!")
 
-                TriggerType.GAME_LOAD.triggerAll()
+                TriggerType.GAME_LOAD.trigger()
                 if (World.isLoaded())
-                    TriggerType.WORLD_LOAD.triggerAll()
+                    TriggerType.WORLD_LOAD.trigger()
 
                 this.isLoaded = true
             } catch (e: Exception) {

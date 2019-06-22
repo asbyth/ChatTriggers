@@ -37,8 +37,4 @@ enum class TriggerType {
     fun trigger(vararg args: Any?) {
         PrimaryLoader.trigger(this, *args)
     }
-
-    fun triggerAll(vararg args: Any?) {
-        trigger(*args)
-    }
 }

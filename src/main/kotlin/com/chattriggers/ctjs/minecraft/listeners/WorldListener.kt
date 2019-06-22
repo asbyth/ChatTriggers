@@ -1,11 +1,9 @@
 package com.chattriggers.ctjs.minecraft.listeners
 
 import com.chattriggers.ctjs.CTJS
-import com.chattriggers.ctjs.minecraft.wrappers.Player
 import com.chattriggers.ctjs.minecraft.wrappers.Server
 import com.chattriggers.ctjs.minecraft.wrappers.World
 import com.chattriggers.ctjs.minecraft.wrappers.objects.PlayerMP
-import com.chattriggers.ctjs.minecraft.wrappers.objects.block.Block
 import com.chattriggers.ctjs.triggers.TriggerType
 import com.chattriggers.ctjs.utils.kotlin.KotlinListener
 import io.sentry.Sentry
@@ -37,7 +35,7 @@ object WorldListener {
         // world loadExtra trigger
         if (!shouldTriggerWorldLoad) return
 
-        TriggerType.WORLD_LOAD.triggerAll()
+        TriggerType.WORLD_LOAD.trigger()
         shouldTriggerWorldLoad = false
 
         CTJS.sounds
@@ -50,7 +48,7 @@ object WorldListener {
 
     @SubscribeEvent
     fun onWorldUnload(event: WorldEvent.Unload) {
-        TriggerType.WORLD_UNLOAD.triggerAll()
+        TriggerType.WORLD_UNLOAD.trigger()
         Sentry.getStoredClient().serverName = "Not connected"
     }
 
@@ -65,7 +63,7 @@ object WorldListener {
         val vol = try { event.sound.volume } catch (ignored: Exception) { 0 }
         val pitch = try { event.sound.volume } catch (ignored: Exception) { 1 }
 
-        TriggerType.SOUND_PLAY.triggerAll(
+        TriggerType.SOUND_PLAY.trigger(
                 event,
                 position,
                 event.name,
@@ -87,7 +85,7 @@ object WorldListener {
                 event.pos.z.toDouble()
         )
 
-        TriggerType.NOTE_BLOCK_PLAY.triggerAll(
+        TriggerType.NOTE_BLOCK_PLAY.trigger(
                 event,
                 position,
                 event.note.name,
@@ -103,7 +101,7 @@ object WorldListener {
                 event.pos.z.toDouble()
         )
 
-        TriggerType.NOTE_BLOCK_CHANGE.triggerAll(
+        TriggerType.NOTE_BLOCK_CHANGE.trigger(
                 event,
                 position,
                 event.note.name,
@@ -117,7 +115,7 @@ object WorldListener {
             !playerList.contains(it.getName())
         }.forEach {
             playerList.add(it.getName())
-            TriggerType.PLAYER_JOIN.triggerAll(this)
+            TriggerType.PLAYER_JOIN.trigger(this)
             return@forEach
         }
 
@@ -130,7 +128,7 @@ object WorldListener {
                 World.getPlayerByName(it)
             } catch (exception: Exception) {
                 this.playerList.remove(it)
-                TriggerType.PLAYER_LEAVE.triggerAll(it)
+                TriggerType.PLAYER_LEAVE.trigger(it)
                 break
             }
         }
@@ -138,7 +136,7 @@ object WorldListener {
 
     @SubscribeEvent
     fun blockBreak(event: BlockEvent.BreakEvent) {
-        TriggerType.BLOCK_BREAK.triggerAll(
+        TriggerType.BLOCK_BREAK.trigger(
             World.getBlockAt(event.pos.x.toLong(), event.pos.y.toLong(), event.pos.z.toLong()),
             PlayerMP(event.player),
             event
