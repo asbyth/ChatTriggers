@@ -639,4 +639,40 @@ abstract class Register(val lang: Lang) {
     fun registerBlockBreak(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.BLOCK_BREAK, lang)
     }
+
+    /**
+     * Passes in mouseX, mouseY, and the open gui instance
+     */
+    fun registerGuiRender(method: Value): OnRegularTrigger {
+        return OnRegularTrigger(method, TriggerType.GUI_RENDER, lang)
+    }
+
+    /**
+     * Passes in the character typed, the keycode typed (see [org.lwjgl.input.Keyboard], the open gui instance,
+     * and the event (which can be cancelled).
+     */
+    fun registerGuiKey(method: Value): OnRegularTrigger {
+        return OnRegularTrigger(method, TriggerType.GUI_KEY, lang)
+    }
+
+    /**
+     * Passes in the mouseX, mouseY, mouseButton, the open gui instance, and the event (which can be cancelled).
+     */
+    fun registerGuiMouseClick(method: Value): OnRegularTrigger {
+        return OnRegularTrigger(method, TriggerType.GUI_MOUSE_CLICK, lang)
+    }
+
+    /**
+     * Passes in the mouseX, mouseY, mouseButton, the open gui instance, and the event (which can be cancelled).
+     */
+    fun registerGuiMouseRelease(method: Value): OnRegularTrigger {
+        return OnRegularTrigger(method, TriggerType.GUI_MOUSE_RELEASE, lang)
+    }
+
+    /**
+     * Passes in the mouseX, mouseY, mouseButton, the open gui instance, and the event (which can be cancelled).
+     */
+    fun registerGuiMouseDrag(method: Value): OnRegularTrigger {
+        return OnRegularTrigger(method, TriggerType.GUI_MOUSE_DRAG, lang)
+    }
 }
