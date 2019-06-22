@@ -224,7 +224,7 @@ object ClientListener {
 
     @SubscribeEvent
     fun onGuiRender(e: GuiScreenEvent.BackgroundDrawnEvent) {
-        TriggerType.GUI_RENDER.triggerAll(
+        TriggerType.GUI_RENDER.trigger(
             e.mouseX,
             e.mouseY,
             e.gui

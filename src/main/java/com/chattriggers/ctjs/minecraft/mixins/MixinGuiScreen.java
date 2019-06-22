@@ -31,7 +31,7 @@ public abstract class MixinGuiScreen {
             cancellable = true
     )
     private void onKeyInput(CallbackInfo ci) {
-        TriggerType.GUI_KEY.triggerAll(
+        TriggerType.GUI_KEY.trigger(
                 Keyboard.getEventCharacter(),
                 Keyboard.getEventKey(),
                 this,
@@ -46,7 +46,7 @@ public abstract class MixinGuiScreen {
             locals = LocalCapture.CAPTURE_FAILSOFT
     )
     private void onMouseClick(CallbackInfo ci, int mouseX, int mouseY, int mouseButton) {
-        TriggerType.GUI_MOUSE_CLICK.triggerAll(
+        TriggerType.GUI_MOUSE_CLICK.trigger(
                 mouseX,
                 mouseY,
                 mouseButton,
@@ -62,7 +62,7 @@ public abstract class MixinGuiScreen {
             locals = LocalCapture.CAPTURE_FAILSOFT
     )
     private void onMouseRelease(CallbackInfo ci, int mouseX, int mouseY, int mouseButton) {
-        TriggerType.GUI_MOUSE_RELEASE.triggerAll(
+        TriggerType.GUI_MOUSE_RELEASE.trigger(
                 mouseX,
                 mouseY,
                 mouseButton,
@@ -78,7 +78,7 @@ public abstract class MixinGuiScreen {
             locals = LocalCapture.CAPTURE_FAILSOFT
     )
     private void onMouseDrag(CallbackInfo ci, int mouseX, int mouseY, int mouseButton, long timeSinceClicked) {
-        TriggerType.GUI_MOUSE_DRAG.triggerAll(
+        TriggerType.GUI_MOUSE_DRAG.trigger(
                 mouseX,
                 mouseY,
                 mouseButton,
