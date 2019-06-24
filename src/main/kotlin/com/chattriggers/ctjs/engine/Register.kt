@@ -675,4 +675,11 @@ abstract class Register(val lang: Lang) {
     fun registerGuiMouseDrag(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.GUI_MOUSE_DRAG, lang)
     }
+
+    /**
+     * Passes in the packet (which can be cancelled).
+     */
+    fun registerPacketSent(method: Value): OnRegularTrigger {
+        return OnRegularTrigger(method, TriggerType.PACKET_SENT, lang)
+    }
 }
