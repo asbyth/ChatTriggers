@@ -677,9 +677,24 @@ abstract class Register(val lang: Lang) {
     }
 
     /**
-     * Passes in the packet (which can be cancelled).
+     * Passes in the packet and the event (which can be cancelled).
      */
     fun registerPacketSent(method: Value): OnRegularTrigger {
         return OnRegularTrigger(method, TriggerType.PACKET_SENT, lang)
+    }
+
+    /**
+     * Passes in the chat component and the event (which can be cancelled).
+     */
+    fun registerChatComponentClicked(method: Value): OnRegularTrigger {
+        return OnRegularTrigger(method, TriggerType.CHAT_COMPONENT_CLICKED, lang)
+    }
+
+    /**
+     * Passes in the chat component, the x and y coordinates, and the
+     * event (which can be cancelled).
+     */
+    fun registerChatComponentHovered(method: Value): OnRegularTrigger {
+        return OnRegularTrigger(method, TriggerType.CHAT_COMPONENT_HOVERED, lang)
     }
 }
