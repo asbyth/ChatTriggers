@@ -1,0 +1,13 @@
+1.15 api changes:
+World.getPlayerByName returns null instead of throwing an exception if a player with the specified name is not found
+World.playRecord takes a bunch of new parameters
+World.getChunk renamed to World.getChunkAt
+World.getChunkAt no longer needs y coordinate
+Bunch of World methods no longer have null assertions, and instead throw IllegalStateExceptions
+Added a Settings.setDifficulty that accepts a string
+Added Settings methods at the bottom
+PlayerMP#getDisplayName() returns null instead of empty String
+ClientListner.onBlockHighlight uses a Vec3d instead of a Vec3f
+ClientListner.onPickupEvent uses a Vec3d instead of a Vec3f
+Completely changed Sound
+trigger method now returns result of method
