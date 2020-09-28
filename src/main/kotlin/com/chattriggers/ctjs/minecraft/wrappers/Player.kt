@@ -279,7 +279,7 @@ object Player {
      */
     @JvmStatic
     fun setTabDisplayName(textComponent: TextComponent) {
-        getPlayerInfo().displayName = textComponent.chatComponentText
+        getPlayerInfo().displayName = textComponent
     }
 
     @JvmStatic
